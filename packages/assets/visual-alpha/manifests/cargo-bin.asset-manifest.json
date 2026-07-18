@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "assetId": "visual-alpha/cargo-bin",
+  "version": "0.1.0",
+  "kind": "generic",
+  "format": "glb",
+  "fileFrame": "visual-alpha/cargo-bin",
+  "fileCoordinate": {
+    "handedness": "right",
+    "upAxis": "+Z",
+    "forwardAxis": "+X",
+    "metersPerUnit": 1
+  },
+  "coreFrame": "lk-world",
+  "fileToCoreTransform": {
+    "sourceFrame": "visual-alpha/cargo-bin",
+    "targetFrame": "lk-world",
+    "translation": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "boundsInCoreMeters": {
+    "frame": "lk-world",
+    "min": [
+      -0.47,
+      -0.37,
+      0
+    ],
+    "max": [
+      0.47,
+      0.37,
+      0.7
+    ]
+  },
+  "integrity": {
+    "sha256": "b06c74925e62615ff76783c3abab0e38000f3b4b7189da1f56a72002294a2d3e"
+  }
+}

@@ -1,0 +1,18 @@
+import { defineConfig } from "tsup";
+
+export default defineConfig({
+  entry: {
+    index: "src/index.ts",
+    fixtures: "src/fixtures.ts",
+    contracts: "src/contracts.ts",
+    provenance: "src/provenance.ts",
+  },
+  format: ["esm"],
+  target: "es2022",
+  outDir: "dist",
+  clean: true,
+  dts: true,
+  sourcemap: true,
+  splitting: false,
+  treeshake: true,
+});

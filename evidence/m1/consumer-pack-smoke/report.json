@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-07-17T02:21:27.422Z",
+  "passed": true,
+  "registryPublished": false,
+  "packageSourceImports": false,
+  "artifactDirectory": "artifacts\\package-smoke",
+  "consumerDirectory": "C:\\Users\\seoul\\AppData\\Local\\Temp\\lkds3d-a1-consumer-MWu7fX",
+  "steps": [
+    {
+      "id": "build-packages",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs build",
+      "passed": true,
+      "durationMs": 14177,
+      "stdout": "Scope: 4 of 5 workspace projects\npackages/core build$ tsup\npackages/core build: \u001b[34mCLI\u001b[39m Building entry: {\"index\":\"src/index.ts\",\"coordinates\":\"src/coordinates.ts\",\"entities\":\"src/entities.ts\",\"camera\":\"src/camera.ts\",\"interaction\":\"src/interaction.ts\",\"renderer\":\"src/renderer.ts\",\"time\":\"src/time.ts\",\"theme\":\"src/theme.ts\"}\npackages/core build: \u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\npackages/core build: \u001b[34mCLI\u001b[39m tsup v8.5.1\npackages/core build: \u001b[34mCLI\u001b[39m Using tsup config: C:\\Users\\seoul\\Documents\\LK Design System 3D\\packages\\core\\tsup.config.ts\npackages/core build: \u001b[34mCLI\u001b[39m Target: es2022\npackages/core build: \u001b[34mCLI\u001b[39m Cleaning output folder\npackages/core build: \u001b[34mESM\u001b[39m Build start\npackages/core build: Generated an empty chunk: \"camera\".\npackages/core build: Generated an empty chunk: \"interaction\".\npackages/core build: Generated an empty chunk: \"theme\".\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\index.js           \u001b[22m\u001b[32m11.79 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\interaction.js     \u001b[22m\u001b[32m80.00 B\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\coordinates.js     \u001b[22m\u001b[32m10.73 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\theme.js           \u001b[22m\u001b[32m68.00 B\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\entities.js        \u001b[22m\u001b[32m1.09 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\camera.js          \u001b[22m\u001b[32m70.00 B\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\renderer.js        \u001b[22m\u001b[32m242.00 B\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\time.js            \u001b[22m\u001b[32m1.62 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\index.js.map       \u001b[22m\u001b[32m29.27 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\interaction.js.map \u001b[22m\u001b[32m75.00 B\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\theme.js.map       \u001b[22m\u001b[32m69.00 B\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\coordinates.js.map \u001b[22m\u001b[32m26.54 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\camera.js.map      \u001b[22m\u001b[32m70.00 B\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\entities.js.map    \u001b[22m\u001b[32m3.32 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\renderer.js.map    \u001b[22m\u001b[32m1.09 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m \u001b[1mdist\\time.js.map        \u001b[22m\u001b[32m4.72 KB\u001b[39m\npackages/core build: \u001b[32mESM\u001b[39m ⚡️ Build success in 239ms\npackages/core build: \u001b[34mDTS\u001b[39m Build start\npackages/core build: \u001b[32mDTS\u001b[39m ⚡️ Build success in 2289ms\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\index.d.ts                \u001b[22m\u001b[32m1.54 KB\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\camera.d.ts               \u001b[22m\u001b[32m1.88 KB\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\entities.d.ts             \u001b[22m\u001b[32m1.57 KB\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\interaction.d.ts          \u001b[22m\u001b[32m1.82 KB\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\coordinates.d.ts          \u001b[22m\u001b[32m4.14 KB\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\renderer.d.ts             \u001b[22m\u001b[32m860.00 B\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\theme.d.ts                \u001b[22m\u001b[32m464.00 B\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\time.d.ts                 \u001b[22m\u001b[32m468.00 B\u001b[39m\npackages/core build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\identifiers-CaT_PuIh.d.ts \u001b[22m\u001b[32m1.07 KB\u001b[39m\npackages/core build: Done\npackages/assets build$ tsup\npackages/assets build: \u001b[34mCLI\u001b[39m Building entry: {\"index\":\"src/index.ts\",\"schema\":\"src/schema.ts\",\"legacy\":\"src/legacy.ts\"}\npackages/assets build: \u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\npackages/assets build: \u001b[34mCLI\u001b[39m tsup v8.5.1\npackages/assets build: \u001b[34mCLI\u001b[39m Using tsup config: C:\\Users\\seoul\\Documents\\LK Design System 3D\\packages\\assets\\tsup.config.ts\npackages/assets build: \u001b[34mCLI\u001b[39m Target: es2022\npackages/assets build: \u001b[34mCLI\u001b[39m Cleaning output folder\npackages/assets build: \u001b[34mESM\u001b[39m Build start\npackages/assets build: \u001b[32mESM\u001b[39m \u001b[1mdist\\index.js      \u001b[22m\u001b[32m22.31 KB\u001b[39m\npackages/assets build: \u001b[32mESM\u001b[39m \u001b[1mdist\\legacy.js     \u001b[22m\u001b[32m4.06 KB\u001b[39m\npackages/assets build: \u001b[32mESM\u001b[39m \u001b[1mdist\\schema.js     \u001b[22m\u001b[32m3.27 KB\u001b[39m\npackages/assets build: \u001b[32mESM\u001b[39m \u001b[1mdist\\index.js.map  \u001b[22m\u001b[32m55.69 KB\u001b[39m\npackages/assets build: \u001b[32mESM\u001b[39m \u001b[1mdist\\legacy.js.map \u001b[22m\u001b[32m15.47 KB\u001b[39m\npackages/assets build: \u001b[32mESM\u001b[39m \u001b[1mdist\\schema.js.map \u001b[22m\u001b[32m6.82 KB\u001b[39m\npackages/assets build: \u001b[32mESM\u001b[39m ⚡️ Build success in 189ms\npackages/assets build: \u001b[34mDTS\u001b[39m Build start\npackages/assets build: \u001b[32mDTS\u001b[39m ⚡️ Build success in 2342ms\npackages/assets build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\index.d.ts             \u001b[22m\u001b[32m5.76 KB\u001b[39m\npackages/assets build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\legacy.d.ts            \u001b[22m\u001b[32m1.03 KB\u001b[39m\npackages/assets build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\schema.d.ts            \u001b[22m\u001b[32m5.81 KB\u001b[39m\npackages/assets build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\manifest-CaxFTZAw.d.ts \u001b[22m\u001b[32m1.72 KB\u001b[39m\npackages/assets build: Done\npackages/testing build$ tsup\npackages/testing build: \u001b[34mCLI\u001b[39m Building entry: {\"index\":\"src/index.ts\",\"fixtures\":\"src/fixtures.ts\",\"contracts\":\"src/contracts.ts\",\"provenance\":\"src/provenance.ts\"}\npackages/testing build: \u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\npackages/testing build: \u001b[34mCLI\u001b[39m tsup v8.5.1\npackages/testing build: \u001b[34mCLI\u001b[39m Using tsup config: C:\\Users\\seoul\\Documents\\LK Design System 3D\\packages\\testing\\tsup.config.ts\npackages/testing build: \u001b[34mCLI\u001b[39m Target: es2022\npackages/testing build: \u001b[34mCLI\u001b[39m Cleaning output folder\npackages/testing build: \u001b[34mESM\u001b[39m Build start\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\fixtures.js       \u001b[22m\u001b[32m9.97 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\provenance.js     \u001b[22m\u001b[32m17.91 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\index.js          \u001b[22m\u001b[32m42.12 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\contracts.js      \u001b[22m\u001b[32m31.99 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\fixtures.js.map   \u001b[22m\u001b[32m25.27 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\provenance.js.map \u001b[22m\u001b[32m45.54 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\contracts.js.map  \u001b[22m\u001b[32m74.59 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m \u001b[1mdist\\index.js.map      \u001b[22m\u001b[32m95.84 KB\u001b[39m\npackages/testing build: \u001b[32mESM\u001b[39m ⚡️ Build success in 347ms\npackages/testing build: \u001b[34mDTS\u001b[39m Build start\npackages/testing build: \u001b[32mDTS\u001b[39m ⚡️ Build success in 3116ms\npackages/testing build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\index.d.ts      \u001b[22m\u001b[32m1.70 KB\u001b[39m\npackages/testing build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\contracts.d.ts  \u001b[22m\u001b[32m6.60 KB\u001b[39m\npackages/testing build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\fixtures.d.ts   \u001b[22m\u001b[32m6.37 KB\u001b[39m\npackages/testing build: \u001b[32mDTS\u001b[39m \u001b[1mdist\\provenance.d.ts \u001b[22m\u001b[32m1.55 KB\u001b[39m\npackages/testing build: Done\n",
+      "stderr": "$ pnpm -r --if-present run build\n"
+    },
+    {
+      "id": "publint",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs publint",
+      "passed": true,
+      "durationMs": 6240,
+      "stdout": "Running \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-robotics/design-system-3d-core\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nRunning \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-robotics/design-system-3d-assets\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nRunning \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-robotics/design-system-3d-testing\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nPublint passed for all Alpha.1 packages.\n",
+      "stderr": "$ node scripts/check-package-publint.mjs\n"
+    },
+    {
+      "id": "package-type-resolution",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs attw",
+      "passed": true,
+      "durationMs": 3155,
+      "stdout": "@lk-robotics/design-system-3d-core: ESM-only type resolution passed.\n@lk-robotics/design-system-3d-assets: ESM-only type resolution passed.\n@lk-robotics/design-system-3d-testing: ESM-only type resolution passed.\nPackage type resolution checks passed with the Are The Types Wrong core engine.\n",
+      "stderr": "$ node scripts/check-package-types.mjs\n"
+    },
+    {
+      "id": "pack-core",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs pack --pack-destination C:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke",
+      "passed": true,
+      "durationMs": 784,
+      "stdout": "package: @lk-robotics/design-system-3d-core@0.1.0-alpha.1\nTarball Contents\ndist/camera.d.ts\ndist/camera.js\ndist/camera.js.map\ndist/coordinates.d.ts\ndist/coordinates.js\ndist/coordinates.js.map\ndist/entities.d.ts\ndist/entities.js\ndist/entities.js.map\ndist/identifiers-CaT_PuIh.d.ts\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/interaction.d.ts\ndist/interaction.js\ndist/interaction.js.map\ndist/renderer.d.ts\ndist/renderer.js\ndist/renderer.js.map\ndist/theme.d.ts\ndist/theme.js\ndist/theme.js.map\ndist/time.d.ts\ndist/time.js\ndist/time.js.map\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-core-0.1.0-alpha.1.tgz\n",
+      "stderr": ""
+    },
+    {
+      "id": "pack-assets",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs pack --pack-destination C:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke",
+      "passed": true,
+      "durationMs": 698,
+      "stdout": "package: @lk-robotics/design-system-3d-assets@0.1.0-alpha.1\nTarball Contents\nasset-manifest.v1.schema.json\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/legacy.d.ts\ndist/legacy.js\ndist/legacy.js.map\ndist/manifest-CaxFTZAw.d.ts\ndist/schema.d.ts\ndist/schema.js\ndist/schema.js.map\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-assets-0.1.0-alpha.1.tgz\n",
+      "stderr": ""
+    },
+    {
+      "id": "pack-testing",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs pack --pack-destination C:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke",
+      "passed": true,
+      "durationMs": 784,
+      "stdout": "package: @lk-robotics/design-system-3d-testing@0.1.0-alpha.1\nTarball Contents\ndist/contracts.d.ts\ndist/contracts.js\ndist/contracts.js.map\ndist/fixtures.d.ts\ndist/fixtures.js\ndist/fixtures.js.map\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/provenance.d.ts\ndist/provenance.js\ndist/provenance.js.map\nFIXTURE_LICENSE.md\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-testing-0.1.0-alpha.1.tgz\n",
+      "stderr": ""
+    },
+    {
+      "id": "consumer-install",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs install --offline --frozen-lockfile=false",
+      "passed": true,
+      "durationMs": 1459,
+      "stdout": "Progress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +4\n++++\nProgress: resolved 4, reused 4, downloaded 0, added 4, done\n\ndependencies:\n+ @lk-robotics/design-system-3d-assets 0.1.0-alpha.1\n+ @lk-robotics/design-system-3d-core 0.1.0-alpha.1\n+ @lk-robotics/design-system-3d-testing 0.1.0-alpha.1\n\ndevDependencies:\n+ typescript 5.9.3 (7.0.2 is available)\n\nDone in 1.3s using pnpm v11.9.0\n",
+      "stderr": ""
+    },
+    {
+      "id": "consumer-typecheck",
+      "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs exec tsc --noEmit",
+      "passed": true,
+      "durationMs": 2559,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "id": "consumer-esm-runtime",
+      "command": "C:\\nvm4w\\nodejs\\node.exe runtime.mjs",
+      "passed": true,
+      "durationMs": 174,
+      "stdout": "{\"esm\":true,\"asset\":true,\"roundTrip\":true}\n",
+      "stderr": ""
+    }
+  ]
+}

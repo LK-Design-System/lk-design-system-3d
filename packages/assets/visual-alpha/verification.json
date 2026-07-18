@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/generate-visual-alpha-assets.mjs",
+  "passed": true,
+  "assetCount": 6,
+  "assets": [
+    {
+      "file": "amr.glb",
+      "bytes": 21332,
+      "sha256": "0e9a6a8026c761cad87a63faaec05b17b1e8b81b0d44c3c6c50478508e8d20d6",
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.6,
+          -0.415,
+          0
+        ],
+        "max": [
+          0.613,
+          0.415,
+          0.687
+        ]
+      },
+      "valid": true,
+      "glbVersion": "2.0",
+      "nodes": 18,
+      "meshes": 11,
+      "materials": 14,
+      "accessors": 9,
+      "uniqueTriangles": 936,
+      "renderedTriangles": 1740,
+      "jsonChunkBytes": 8248,
+      "binaryChunkBytes": 13056
+    },
+    {
+      "file": "rack.glb",
+      "bytes": 7512,
+      "sha256": "f7ae21b8060e1a769e96da5870d7963b4ef8de10de82a6ba5b43378606c6698f",
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.5225,
+          -1.22,
+          0
+        ],
+        "max": [
+          0.52,
+          1.22,
+          2.4375
+        ]
+      },
+      "valid": true,
+      "glbVersion": "2.0",
+      "nodes": 22,
+      "meshes": 2,
+      "materials": 14,
+      "accessors": 3,
+      "uniqueTriangles": 24,
+      "renderedTriangles": 264,
+      "jsonChunkBytes": 6836,
+      "binaryChunkBytes": 648
+    },
+    {
+      "file": "pallet.glb",
+      "bytes": 6932,
+      "sha256": "a15c4692e91a51eb37891c63fe006cda67d7d7b04223d17e3ad5a48cd27bda0b",
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.6,
+          -0.42,
+          0
+        ],
+        "max": [
+          0.6,
+          0.42,
+          0.22
+        ]
+      },
+      "valid": true,
+      "glbVersion": "2.0",
+      "nodes": 20,
+      "meshes": 1,
+      "materials": 14,
+      "accessors": 3,
+      "uniqueTriangles": 12,
+      "renderedTriangles": 240,
+      "jsonChunkBytes": 6256,
+      "binaryChunkBytes": 648
+    },
+    {
+      "file": "cargo-bin.glb",
+      "bytes": 6548,
+      "sha256": "b06c74925e62615ff76783c3abab0e38000f3b4b7189da1f56a72002294a2d3e",
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.47,
+          -0.37,
+          0
+        ],
+        "max": [
+          0.47,
+          0.37,
+          0.7
+        ]
+      },
+      "valid": true,
+      "glbVersion": "2.0",
+      "nodes": 15,
+      "meshes": 5,
+      "materials": 14,
+      "accessors": 3,
+      "uniqueTriangles": 60,
+      "renderedTriangles": 180,
+      "jsonChunkBytes": 5872,
+      "binaryChunkBytes": 648
+    },
+    {
+      "file": "charging-station.glb",
+      "bytes": 9480,
+      "sha256": "fb5c12e45877d83381d4218e866a77fce85ed78cb184396f9400fd15ab3745b9",
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.36,
+          -0.41,
+          0
+        ],
+        "max": [
+          0.513048,
+          0.41,
+          1.36
+        ]
+      },
+      "valid": true,
+      "glbVersion": "2.0",
+      "nodes": 10,
+      "meshes": 7,
+      "materials": 14,
+      "accessors": 6,
+      "uniqueTriangles": 252,
+      "renderedTriangles": 288,
+      "jsonChunkBytes": 5828,
+      "binaryChunkBytes": 3624
+    },
+    {
+      "file": "safety-cone.glb",
+      "bytes": 21768,
+      "sha256": "986a2c408460923639bb1d8f211e457216b3f03673f3fd3726f3580d039ebda5",
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.25,
+          -0.25,
+          0
+        ],
+        "max": [
+          0.25,
+          0.25,
+          0.785
+        ]
+      },
+      "valid": true,
+      "glbVersion": "2.0",
+      "nodes": 6,
+      "meshes": 6,
+      "materials": 14,
+      "accessors": 15,
+      "uniqueTriangles": 504,
+      "renderedTriangles": 504,
+      "jsonChunkBytes": 6308,
+      "binaryChunkBytes": 15432
+    }
+  ]
+}

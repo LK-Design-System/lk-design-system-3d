@@ -1,0 +1,55 @@
+{
+  "name": "@lk-robotics/design-system-3d-testing",
+  "version": "0.1.0-alpha.1",
+  "description": "Runner-neutral golden fixtures and contract checks for LK Design System 3D",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "FIXTURE_LICENSE.md"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./fixtures": {
+      "types": "./dist/fixtures.d.ts",
+      "import": "./dist/fixtures.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts.d.ts",
+      "import": "./dist/contracts.js"
+    },
+    "./provenance": {
+      "types": "./dist/provenance.d.ts",
+      "import": "./dist/provenance.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "api-report": "api-extractor run --local"
+  },
+  "dependencies": {
+    "@lk-robotics/design-system-3d-assets": "workspace:*",
+    "@lk-robotics/design-system-3d-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "UNLICENSED",
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

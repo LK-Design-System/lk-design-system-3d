@@ -1,0 +1,54 @@
+{
+  "name": "@lk-robotics/design-system-3d-three",
+  "version": "0.1.0-alpha.1",
+  "description": "Imperative Three.js scene host and resource lifecycle adapter for LK Design System 3D.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./coordinates": {
+      "types": "./dist/coordinates.d.ts",
+      "import": "./dist/coordinates.js"
+    },
+    "./r3f-bridge": {
+      "types": "./dist/r3f-bridge.d.ts",
+      "import": "./dist/r3f-bridge.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --config vitest.config.ts",
+    "api-report": "api-extractor run --local"
+  },
+  "dependencies": {
+    "@lk-robotics/design-system-3d-assets": "workspace:*",
+    "@lk-robotics/design-system-3d-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "three": ">=0.185.1 <1"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "catalog:",
+    "@types/three": "0.185.1",
+    "three": "0.185.1",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

@@ -1,0 +1,13 @@
+node_modules/
+.pnpm-store/
+dist/
+storybook-static/
+artifacts/package-smoke/*.tgz
+artifacts/technical-storybook-subagent/
+*.tgz
+temp/
+.turbo/
+coverage/
+*.tsbuildinfo
+apps/docs/storybook.log
+apps/docs/storybook.error.log

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "assetId": "visual-alpha/amr",
+  "version": "0.1.0",
+  "kind": "robot",
+  "format": "glb",
+  "fileFrame": "visual-alpha/amr",
+  "fileCoordinate": {
+    "handedness": "right",
+    "upAxis": "+Z",
+    "forwardAxis": "+X",
+    "metersPerUnit": 1
+  },
+  "coreFrame": "lk-world",
+  "fileToCoreTransform": {
+    "sourceFrame": "visual-alpha/amr",
+    "targetFrame": "lk-world",
+    "translation": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "boundsInCoreMeters": {
+    "frame": "lk-world",
+    "min": [
+      -0.6,
+      -0.415,
+      0
+    ],
+    "max": [
+      0.613,
+      0.415,
+      0.687
+    ]
+  },
+  "integrity": {
+    "sha256": "0e9a6a8026c761cad87a63faaec05b17b1e8b81b0d44c3c6c50478508e8d20d6"
+  }
+}

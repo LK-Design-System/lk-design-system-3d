@@ -1,0 +1,50 @@
+{
+  "name": "@lk-robotics/design-system-3d-assets",
+  "version": "0.1.0-alpha.1",
+  "description": "Validated glTF asset manifests and renderer-neutral loading ownership contracts for LK Design System 3D.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "asset-manifest.v1.schema.json",
+    "README.md"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js"
+    },
+    "./legacy": {
+      "types": "./dist/legacy.d.ts",
+      "import": "./dist/legacy.js"
+    },
+    "./asset-manifest.v1.schema.json": "./asset-manifest.v1.schema.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --config vitest.config.ts",
+    "api-report": "api-extractor run --local"
+  },
+  "dependencies": {
+    "@lk-robotics/design-system-3d-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

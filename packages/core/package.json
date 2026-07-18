@@ -1,0 +1,66 @@
+{
+  "name": "@lk-robotics/design-system-3d-core",
+  "version": "0.1.0-alpha.1",
+  "description": "Renderer-neutral coordinate, entity, camera, interaction, and lifecycle contracts for LK Design System 3D.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./coordinates": {
+      "types": "./dist/coordinates.d.ts",
+      "import": "./dist/coordinates.js"
+    },
+    "./entities": {
+      "types": "./dist/entities.d.ts",
+      "import": "./dist/entities.js"
+    },
+    "./camera": {
+      "types": "./dist/camera.d.ts",
+      "import": "./dist/camera.js"
+    },
+    "./interaction": {
+      "types": "./dist/interaction.d.ts",
+      "import": "./dist/interaction.js"
+    },
+    "./renderer": {
+      "types": "./dist/renderer.d.ts",
+      "import": "./dist/renderer.js"
+    },
+    "./time": {
+      "types": "./dist/time.d.ts",
+      "import": "./dist/time.js"
+    },
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --config vitest.config.ts",
+    "api-report": "api-extractor run --local"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "catalog:",
+    "fast-check": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "collectionId": "lk-design-system-3d/visual-alpha",
+  "version": "0.1.0",
+  "description": "Original industrial GLB assets for LK Design System 3D Visual Alpha.",
+  "coordinateSystem": {
+    "handedness": "right",
+    "upAxis": "+Z",
+    "forwardAxis": "+X",
+    "metersPerUnit": 1,
+    "coreFrame": "lk-world"
+  },
+  "source": {
+    "type": "original-procedural",
+    "generator": "scripts/generate-visual-alpha-assets.mjs",
+    "deterministic": true,
+    "externalSourceAssets": false
+  },
+  "license": {
+    "spdx": "CC0-1.0",
+    "attributionRequired": false,
+    "holder": "LK Robotics"
+  },
+  "provenance": {
+    "designRevision": "visual-alpha-v0",
+    "method": "deterministic primitive mesh composition",
+    "customerData": false
+  },
+  "assets": [
+    {
+      "id": "visual-alpha/amr",
+      "label": "Autonomous Mobile Robot",
+      "description": "Compact differential-drive AMR with lidar, safety bumpers, status lighting, and visible wheel geometry.",
+      "kind": "robot",
+      "file": "./amr.glb",
+      "manifest": "./manifests/amr.asset-manifest.json",
+      "format": "glb",
+      "coordinateSystem": {
+        "handedness": "right",
+        "upAxis": "+Z",
+        "forwardAxis": "+X",
+        "metersPerUnit": 1
+      },
+      "floorOrigin": true,
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.6,
+          -0.415,
+          0
+        ],
+        "max": [
+          0.613,
+          0.415,
+          0.687
+        ]
+      },
+      "integrity": {
+        "sha256": "0e9a6a8026c761cad87a63faaec05b17b1e8b81b0d44c3c6c50478508e8d20d6"
+      },
+      "source": {
+        "type": "original-procedural",
+        "generator": "scripts/generate-visual-alpha-assets.mjs",
+        "externalSourceAssets": false
+      },
+      "license": {
+        "spdx": "CC0-1.0",
+        "attributionRequired": false,
+        "holder": "LK Robotics"
+      },
+      "provenance": {
+        "designRevision": "visual-alpha-v0",
+        "method": "deterministic primitive mesh composition",
+        "customerData": false
+      }
+    },
+    {
+      "id": "visual-alpha/rack",
+      "label": "Industrial Storage Rack",
+      "description": "Three-level warehouse bay with uprights, beams, shelf decks, foot plates, and rear cross bracing.",
+      "kind": "building",
+      "file": "./rack.glb",
+      "manifest": "./manifests/rack.asset-manifest.json",
+      "format": "glb",
+      "coordinateSystem": {
+        "handedness": "right",
+        "upAxis": "+Z",
+        "forwardAxis": "+X",
+        "metersPerUnit": 1
+      },
+      "floorOrigin": true,
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.5225,
+          -1.22,
+          0
+        ],
+        "max": [
+          0.52,
+          1.22,
+          2.4375
+        ]
+      },
+      "integrity": {
+        "sha256": "f7ae21b8060e1a769e96da5870d7963b4ef8de10de82a6ba5b43378606c6698f"
+      },
+      "source": {
+        "type": "original-procedural",
+        "generator": "scripts/generate-visual-alpha-assets.mjs",
+        "externalSourceAssets": false
+      },
+      "license": {
+        "spdx": "CC0-1.0",
+        "attributionRequired": false,
+        "holder": "LK Robotics"
+      },
+      "provenance": {
+        "designRevision": "visual-alpha-v0",
+        "method": "deterministic primitive mesh composition",
+        "customerData": false
+      }
+    },
+    {
+      "id": "visual-alpha/pallet",
+      "label": "Euro-style Pallet",
+      "description": "Reusable timber pallet with separated top boards, stringers, and support blocks.",
+      "kind": "generic",
+      "file": "./pallet.glb",
+      "manifest": "./manifests/pallet.asset-manifest.json",
+      "format": "glb",
+      "coordinateSystem": {
+        "handedness": "right",
+        "upAxis": "+Z",
+        "forwardAxis": "+X",
+        "metersPerUnit": 1
+      },
+      "floorOrigin": true,
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.6,
+          -0.42,
+          0
+        ],
+        "max": [
+          0.6,
+          0.42,
+          0.22
+        ]
+      },
+      "integrity": {
+        "sha256": "a15c4692e91a51eb37891c63fe006cda67d7d7b04223d17e3ad5a48cd27bda0b"
+      },
+      "source": {
+        "type": "original-procedural",
+        "generator": "scripts/generate-visual-alpha-assets.mjs",
+        "externalSourceAssets": false
+      },
+      "license": {
+        "spdx": "CC0-1.0",
+        "attributionRequired": false,
+        "holder": "LK Robotics"
+      },
+      "provenance": {
+        "designRevision": "visual-alpha-v0",
+        "method": "deterministic primitive mesh composition",
+        "customerData": false
+      }
+    },
+    {
+      "id": "visual-alpha/cargo-bin",
+      "label": "Stackable Cargo Bin",
+      "description": "Open-top logistics tote with a reinforced rim, recessed side panels, feet, and visible cargo blocks.",
+      "kind": "generic",
+      "file": "./cargo-bin.glb",
+      "manifest": "./manifests/cargo-bin.asset-manifest.json",
+      "format": "glb",
+      "coordinateSystem": {
+        "handedness": "right",
+        "upAxis": "+Z",
+        "forwardAxis": "+X",
+        "metersPerUnit": 1
+      },
+      "floorOrigin": true,
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.47,
+          -0.37,
+          0
+        ],
+        "max": [
+          0.47,
+          0.37,
+          0.7
+        ]
+      },
+      "integrity": {
+        "sha256": "b06c74925e62615ff76783c3abab0e38000f3b4b7189da1f56a72002294a2d3e"
+      },
+      "source": {
+        "type": "original-procedural",
+        "generator": "scripts/generate-visual-alpha-assets.mjs",
+        "externalSourceAssets": false
+      },
+      "license": {
+        "spdx": "CC0-1.0",
+        "attributionRequired": false,
+        "holder": "LK Robotics"
+      },
+      "provenance": {
+        "designRevision": "visual-alpha-v0",
+        "method": "deterministic primitive mesh composition",
+        "customerData": false
+      }
+    },
+    {
+      "id": "visual-alpha/charging-station",
+      "label": "AMR Charging Station",
+      "description": "Floor-mounted charging dock with tapered guide rails, contact pads, a service column, and status beacon.",
+      "kind": "generic",
+      "file": "./charging-station.glb",
+      "manifest": "./manifests/charging-station.asset-manifest.json",
+      "format": "glb",
+      "coordinateSystem": {
+        "handedness": "right",
+        "upAxis": "+Z",
+        "forwardAxis": "+X",
+        "metersPerUnit": 1
+      },
+      "floorOrigin": true,
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.36,
+          -0.41,
+          0
+        ],
+        "max": [
+          0.513048,
+          0.41,
+          1.36
+        ]
+      },
+      "integrity": {
+        "sha256": "fb5c12e45877d83381d4218e866a77fce85ed78cb184396f9400fd15ab3745b9"
+      },
+      "source": {
+        "type": "original-procedural",
+        "generator": "scripts/generate-visual-alpha-assets.mjs",
+        "externalSourceAssets": false
+      },
+      "license": {
+        "spdx": "CC0-1.0",
+        "attributionRequired": false,
+        "holder": "LK Robotics"
+      },
+      "provenance": {
+        "designRevision": "visual-alpha-v0",
+        "method": "deterministic primitive mesh composition",
+        "customerData": false
+      }
+    },
+    {
+      "id": "visual-alpha/safety-cone",
+      "label": "Warehouse Safety Cone",
+      "description": "High-visibility floor cone with weighted base, tapered body, and two contrasting reflective bands.",
+      "kind": "generic",
+      "file": "./safety-cone.glb",
+      "manifest": "./manifests/safety-cone.asset-manifest.json",
+      "format": "glb",
+      "coordinateSystem": {
+        "handedness": "right",
+        "upAxis": "+Z",
+        "forwardAxis": "+X",
+        "metersPerUnit": 1
+      },
+      "floorOrigin": true,
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [
+          -0.25,
+          -0.25,
+          0
+        ],
+        "max": [
+          0.25,
+          0.25,
+          0.785
+        ]
+      },
+      "integrity": {
+        "sha256": "986a2c408460923639bb1d8f211e457216b3f03673f3fd3726f3580d039ebda5"
+      },
+      "source": {
+        "type": "original-procedural",
+        "generator": "scripts/generate-visual-alpha-assets.mjs",
+        "externalSourceAssets": false
+      },
+      "license": {
+        "spdx": "CC0-1.0",
+        "attributionRequired": false,
+        "holder": "LK Robotics"
+      },
+      "provenance": {
+        "designRevision": "visual-alpha-v0",
+        "method": "deterministic primitive mesh composition",
+        "customerData": false
+      }
+    }
+  ]
+}

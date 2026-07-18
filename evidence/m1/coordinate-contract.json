@@ -1,0 +1,180 @@
+{
+  "generatedAt": "2026-07-17T15:33:12.957Z",
+  "roundTrip": {
+    "passed": true,
+    "tolerance": 0.000001,
+    "maxAbsoluteError": 0,
+    "sourcePoint": {
+      "frame": "fixture-source-map",
+      "value": [
+        1012.5,
+        -487.25,
+        3.5
+      ]
+    },
+    "corePoint": {
+      "frame": "lk-core",
+      "value": [
+        12.5,
+        12.75,
+        1.5
+      ]
+    },
+    "recoveredSourcePoint": {
+      "frame": "fixture-source-map",
+      "value": [
+        1012.5,
+        -487.25,
+        3.5
+      ]
+    },
+    "checks": [
+      {
+        "id": "source-to-core-value",
+        "passed": true,
+        "message": "Source to core maximum absolute error is 0.",
+        "measurements": {
+          "maximumAbsoluteError": 0,
+          "tolerance": 0.000001
+        }
+      },
+      {
+        "id": "source-to-core-frame",
+        "passed": true,
+        "message": "Expected frame lk-core; received lk-core."
+      },
+      {
+        "id": "round-trip-value",
+        "passed": true,
+        "message": "Round-trip maximum absolute error is 0.",
+        "measurements": {
+          "maximumAbsoluteError": 0,
+          "tolerance": 0.000001
+        }
+      },
+      {
+        "id": "round-trip-frame",
+        "passed": true,
+        "message": "Expected frame fixture-source-map; received fixture-source-map."
+      }
+    ]
+  },
+  "shiftedOrigin": {
+    "passed": true,
+    "tolerance": 0.000001,
+    "maxAbsoluteError": 0,
+    "coordinateSystem": {
+      "handedness": "right",
+      "upAxis": "+Z",
+      "forwardAxis": "+X",
+      "metersPerUnit": 1
+    },
+    "fixtureIds": [
+      "shifted-origin",
+      "coordinate-axes"
+    ],
+    "checks": [
+      {
+        "id": "right-handed",
+        "passed": true,
+        "message": "Core handedness is right."
+      },
+      {
+        "id": "z-up",
+        "passed": true,
+        "message": "Core up axis is +Z."
+      },
+      {
+        "id": "x-forward",
+        "passed": true,
+        "message": "Core forward axis is +X."
+      },
+      {
+        "id": "meters",
+        "passed": true,
+        "message": "Core meters per unit is 1."
+      },
+      {
+        "id": "source-to-core-value",
+        "passed": true,
+        "message": "Source to core maximum absolute error is 0.",
+        "measurements": {
+          "maximumAbsoluteError": 0,
+          "tolerance": 0.000001
+        }
+      },
+      {
+        "id": "source-to-core-frame",
+        "passed": true,
+        "message": "Expected frame lk-core; received lk-core."
+      },
+      {
+        "id": "round-trip-value",
+        "passed": true,
+        "message": "Round-trip maximum absolute error is 0.",
+        "measurements": {
+          "maximumAbsoluteError": 0,
+          "tolerance": 0.000001
+        }
+      },
+      {
+        "id": "round-trip-frame",
+        "passed": true,
+        "message": "Expected frame fixture-source-map; received fixture-source-map."
+      },
+      {
+        "id": "composed-inverse",
+        "passed": true,
+        "message": "Composed transform and inverse maximum absolute error is 0.",
+        "measurements": {
+          "maximumAbsoluteError": 0,
+          "tolerance": 0.000001
+        }
+      }
+    ]
+  },
+  "floorHitProjection": {
+    "passed": true,
+    "tolerance": 0.000001,
+    "maxAbsoluteError": 4.440892098500626e-16,
+    "fixtureId": "authoritative-floor-hit",
+    "projection": {
+      "coreHit": {
+        "frame": "lk-core",
+        "value": [
+          7,
+          -2.9999999999999996,
+          0
+        ]
+      },
+      "productMapHit": {
+        "frame": "fixture-product-map",
+        "value": [
+          97,
+          193,
+          0
+        ]
+      }
+    },
+    "checks": [
+      {
+        "id": "render-to-core",
+        "passed": true,
+        "message": "Render to core maximum absolute error is 4.440892098500626e-16.",
+        "measurements": {
+          "maximumAbsoluteError": 4.440892098500626e-16,
+          "tolerance": 0.000001
+        }
+      },
+      {
+        "id": "core-to-product-map",
+        "passed": true,
+        "message": "Core to product-map maximum absolute error is 0.",
+        "measurements": {
+          "maximumAbsoluteError": 0,
+          "tolerance": 0.000001
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "requiredStages": [
+    "overview",
+    "usage",
+    "variants-states",
+    "interaction",
+    "accessibility-motion",
+    "responsive",
+    "scenario"
+  ],
+  "stories": {
+    "lds-3d-primitives--scene-canvas": {
+      "actualWebgl": true,
+      "atoms": [
+        "SceneCanvas",
+        "CameraRig",
+        "CoreSpace",
+        "SceneEnvironment",
+        "GroundPlane",
+        "GroundGrid"
+      ],
+      "scenarioStoryId": "visual-alpha--actual-lds-composition",
+      "stages": {
+        "overview": "One headless host owns the CoreSpace basis, CameraRig, and one SceneEnvironment; application chrome remains outside R3F.",
+        "usage": "The live canvas mounts one SceneCanvas and configures its environment through the public host API.",
+        "variants-states": "Home, top, and focus camera modes are exercised with the diagnostic axes enabled on the same host-managed floor and grid.",
+        "interaction": "The LDS SegmentedControl requests camera mode through the host callback; the renderer does not manufacture camera buttons.",
+        "accessibility-motion": "The canvas has an accessible name, the current camera state is exposed in DOM, and the static review uses demand rendering with no ambient goal motion.",
+        "responsive": "Resize the Storybook canvas from wide to 320 CSS px: the host remains one full-width canvas and owns no page layout or inspector chrome.",
+        "scenario": "visual-alpha--actual-lds-composition proves the same host contract inside the approved LDS viewer composition."
+      }
+    },
+    "lds-3d-primitives--selection": {
+      "actualWebgl": true,
+      "atoms": ["Selectable"],
+      "scenarioStoryId": "visual-alpha--actual-lds-composition",
+      "stages": {
+        "overview": "Selectable supplies transient hover and one persistent spatial identifier only; product commands stay outside the renderer.",
+        "usage": "The live canvas wraps plain WebGL meshes in Selectable and controls hover and selection through the public callbacks.",
+        "variants-states": "The three visible states are neutral, hover, and persistent selection; no product workflow state is implied.",
+        "interaction": "Pointer hover and click update the controlled identifier, and the LDS action clears it without creating a renderer-owned button.",
+        "accessibility-motion": "The named canvas is complemented by DOM hovered and selected summaries; selection has no ambient animation.",
+        "responsive": "At constrained width the spatial subtree remains inside the host canvas while the DOM summary wraps through LDS Stack rather than inventing a canvas layout.",
+        "scenario": "visual-alpha--actual-lds-composition forwards the selected identifier into the LDS selection inspector."
+      }
+    },
+    "lds-3d-primitives--amr-robot": {
+      "actualWebgl": true,
+      "atoms": ["AmrRobot"],
+      "scenarioStoryId": "visual-alpha--actual-lds-composition",
+      "stages": {
+        "overview": "AmrRobot is a semantic fallback AMR visual, not a task card, command surface, or asset registry.",
+        "usage": "The live canvas renders framed RobotEntity input directly through AmrRobot.",
+        "variants-states": "Idle, live, warning, and error use different spatial material and geometry treatment, with persistent selection shown separately.",
+        "interaction": "Clicking a robot updates the shared selection contract only.",
+        "accessibility-motion": "The named canvas has a DOM selected-entity summary; this fallback visual has no autonomous motion in review.",
+        "responsive": "At constrained width the robot geometry scales with the one host canvas; entity details remain a caller-owned DOM concern.",
+        "scenario": "visual-alpha--actual-lds-composition combines AMR status with LDS inspector and viewport state."
+      }
+    },
+    "lds-3d-primitives--goal-marker": {
+      "actualWebgl": true,
+      "atoms": ["GoalMarker"],
+      "scenarioStoryId": "visual-alpha--actual-lds-composition",
+      "stages": {
+        "overview": "GoalMarker communicates spatial intent only; a product-owned LDS action must still confirm or commit a goal.",
+        "usage": "The live canvas renders framed GoalEntity input directly through GoalMarker.",
+        "variants-states": "Valid, preview, and invalid goals differ through solid, wireframe, and invalid-cross geometry as well as tone.",
+        "interaction": "Clicking a marker updates persistent selection but does not issue a robot command.",
+        "accessibility-motion": "The named canvas exposes selected goal identity in DOM; animated is false so reduced-motion behavior is inspectable without a loop.",
+        "responsive": "At constrained width the marker remains viewport geometry while any confirmation copy or action stays in the LDS composition boundary.",
+        "scenario": "visual-alpha--actual-lds-composition places a planned goal and an invalid goal in the real viewer scenario."
+      }
+    },
+    "lds-3d-primitives--path-ribbon": {
+      "actualWebgl": true,
+      "atoms": ["PathRibbon"],
+      "scenarioStoryId": "visual-alpha--actual-lds-composition",
+      "stages": {
+        "overview": "PathRibbon is passive route geometry by default; route editor workflow and navigation lists are not part of this atom.",
+        "usage": "The live canvas renders framed PathEntity points directly through PathRibbon with opt-in selection.",
+        "variants-states": "Actual, executing, planned, and blocked paths differ through route treatment, beacon, and blocked marks as well as tone.",
+        "interaction": "Selection is enabled explicitly in this review and updates only the shared selected identifier.",
+        "accessibility-motion": "The named canvas has a DOM selected-route summary; animated is false so the executing beacon is deterministic and reduced-motion-safe.",
+        "responsive": "At constrained width the ribbon remains spatial geometry inside one canvas; route metadata belongs to the adjacent LDS DOM layer.",
+        "scenario": "visual-alpha--actual-lds-composition combines actual, executing, planned, and blocked paths in one real scene."
+      }
+    },
+    "lds-3d-primitives--runtime-states": {
+      "actualWebgl": true,
+      "atoms": ["SceneStateMarker"],
+      "scenarioStoryId": "visual-alpha--loading-error-empty",
+      "stages": {
+        "overview": "SceneStateMarker is host-driven WebGL lifecycle geometry, not a page-level recovery policy or duplicate application error shell.",
+        "usage": "The live SceneCanvas receives a public renderState and mounts SceneStateMarker only when that state is non-ready.",
+        "variants-states": "Ready, loading, empty, and recoverable error are individually inspectable without replacing the host canvas.",
+        "interaction": "The LDS SegmentedControl changes only review state, while the LDS reset action demonstrates caller-owned recovery policy.",
+        "accessibility-motion": "The named canvas is paired with the opt-in DOM status overlay and LDS status badge; no ambient motion is required for comprehension.",
+        "responsive": "At constrained width the marker and its opt-in status overlay remain bounded by the host; page-level layout remains LDS-owned.",
+        "scenario": "visual-alpha--loading-error-empty verifies the same renderer states inside the LDS composition boundary."
+      }
+    },
+    "lds-3d-primitives--gltf-model": {
+      "actualWebgl": true,
+      "atoms": ["GltfModel"],
+      "scenarioStoryId": "visual-alpha--actual-lds-composition",
+      "stages": {
+        "overview": "GltfModel owns placement, loading, source-convention normalization, and placement lifecycle; product asset registry and workflow remain outside it.",
+        "usage": "The live canvas loads the actual AMR GLB through GltfModel with an explicit core source convention.",
+        "variants-states": "The visible load badge records loading-to-ready state for the real asset; lifecycle error and retry behavior are asserted by the focused package tests.",
+        "interaction": "Clicking the loaded GLB forwards one selected identifier through the shared spatial interaction contract.",
+        "accessibility-motion": "The named canvas is complemented by DOM load and selection summaries; the asset has no ambient review animation.",
+        "responsive": "At constrained width the GLB remains inside the one WebGL host while asset metadata and recovery actions remain DOM composition concerns.",
+        "scenario": "visual-alpha--actual-lds-composition proves the actual asset contract beside LDS viewport and inspector surfaces."
+      }
+    },
+    "lds-3d-primitives--point-cloud-layer": {
+      "actualWebgl": true,
+      "atoms": ["PointCloudLayer"],
+      "scenarioStoryId": "lds-3d-scenes-point-cloud-foundation--lds-integration",
+      "stages": {
+        "overview": "PointCloudLayer is a headless WebGL adapter for one validated LK-core point-cloud snapshot; it owns only adapter-created point geometry and material. ROS transport, TF, PCD parsing, LOD, picking, and product viewer UI remain outside this atom.",
+        "usage": "The live SceneCanvas receives a caller-retained XYZ/RGB Float32Array snapshot with an explicit frame and point budget.",
+        "variants-states": "RGB-ready, XYZ-fallback, replacement, empty, over-budget, and frame-mismatch fixtures are directly inspectable; no state creates a DOM or SVG point-cloud substitute.",
+        "interaction": "The LDS Select changes only Storybook fixture state. PointCloudLayer installs no spatial command, point picking, or renderer-owned DOM action.",
+        "accessibility-motion": "The named canvas is paired with an LDS description list containing frame, requested/accepted count, and layer eligibility; the static snapshots use demand rendering and no ambient motion.",
+        "responsive": "At constrained width the point geometry stays inside one SceneCanvas while the LDS summary wraps outside the renderer without creating a second viewer shell.",
+        "scenario": "lds-3d-scenes-point-cloud-foundation--lds-integration proves the same actual WebGL layer inside the LDS Scene3DFrame composition."
+      }
+    }
+  }
+}

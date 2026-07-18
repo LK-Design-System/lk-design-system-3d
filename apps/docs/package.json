@@ -1,0 +1,35 @@
+{
+  "name": "@lk-robotics/design-system-3d-docs",
+  "version": "0.1.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "storybook": "storybook dev --config-dir .storybook --port 6006",
+    "build-storybook": "storybook build --config-dir .storybook --output-dir ../../storybook-static"
+  },
+  "dependencies": {
+    "@lk-robotics/design-system-3d-assets": "workspace:*",
+    "@lk-robotics/design-system-3d-core": "workspace:*",
+    "@lk-robotics/design-system-3d-pointcloud": "workspace:*",
+    "@lk-robotics/design-system-3d-r3f": "workspace:*",
+    "@lk-robotics/design-system-3d-testing": "workspace:*",
+    "@lk-robotics/design-system-3d-three": "workspace:*",
+    "@lk-robotics/design-system-core": "link:../../../LK Design System",
+    "@react-three/drei": "catalog:",
+    "@react-three/fiber": "catalog:",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "three": "catalog:"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "9.1.10",
+    "@storybook/addon-docs": "9.1.10",
+    "@storybook/react-vite": "9.1.10",
+    "@types/react": "19.1.16",
+    "@types/react-dom": "19.1.9",
+    "storybook": "9.1.10",
+    "typescript": "5.9.3",
+    "vite": "7.1.12"
+  }
+}

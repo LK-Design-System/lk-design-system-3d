@@ -1,0 +1,30 @@
+{
+  "executedAt": "2026-07-17",
+  "stories": {
+    "atom": "lds-3d-primitives--point-cloud-layer",
+    "ldsIntegration": "lds-3d-scenes-point-cloud-foundation--lds-integration"
+  },
+  "environment": {
+    "webgl": true,
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 SUPER (0x000021C4) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "rendererClass": "physical GPU"
+  },
+  "checks": {
+    "actualWebglPointGeometry": true,
+    "rgbSnapshot": true,
+    "xyzFallbackSnapshot": true,
+    "budgetExceededRejectsGeometry": true,
+    "frameMismatchRejectsGeometry": true,
+    "canvasRemainsForRejectedSnapshots": true,
+    "ldsScene3DFrameComposition": true,
+    "narrowAtomControlUsesLdsSelect": true,
+    "narrowScenarioFitsViewport": true,
+    "contextLossRestoreRepaintsPointCloud": true
+  },
+  "limitations": [
+    "This records functional WebGL and lifecycle evidence only, not a throughput, FPS, memory, or product-readiness claim.",
+    "ROS transport, PointCloud2/PCD parsing, TF, streaming, LOD, picking, and product workflow remain out of scope."
+  ]
+}

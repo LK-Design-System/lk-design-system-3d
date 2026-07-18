@@ -1,0 +1,139 @@
+{
+  "generatedAt": "2026-07-17T15:33:12.965Z",
+  "passed": true,
+  "expectedFixtureCount": 13,
+  "provenanceRecordCount": 13,
+  "issues": [],
+  "records": [
+    {
+      "fixtureId": "unit-cube",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Analytic one-meter cube centered at the core origin.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "d2d5fa5d2b36f214c6ea9796c7c01c55cd7332e18ec4b3e74bb9ecdc40d814cf"
+    },
+    {
+      "fixtureId": "coordinate-axes",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Analytic LK right-handed +Z-up, +X-forward basis.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "302ef512a67dd4efb07ff15a8cb0ba5f628a3054f13cabe1487c610ea541aee5"
+    },
+    {
+      "fixtureId": "shifted-origin",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Synthetic source-map point translated into the LK core frame.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "83fccf11495f52a91f8b39657ab1ab4eae14a318f84fef8835543bab36e3f144"
+    },
+    {
+      "fixtureId": "robot-pose",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Synthetic robot pose at a fixed core-frame position and yaw.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "9406abd7f5038586ff907007895badb6880be0da3d9ee0ea7325645557ab36cf"
+    },
+    {
+      "fixtureId": "path",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Synthetic four-point path with non-zero elevation samples.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "03ddc9adcf99f17a26e83d5b7819c0bf40707d45b4c25701c6fd032ccf9c826e"
+    },
+    {
+      "fixtureId": "y-up-glb-manifest",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Synthetic metadata for a right-handed +Y-up GLB basis.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "e092cc733bfdfc0d15f2b0f2a6a09dfa324a854b1d2beffa1f3b6a3ee62243e1"
+    },
+    {
+      "fixtureId": "legacy-z-up-glb-manifest",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Synthetic metadata for a right-handed +Z-up legacy GLB basis.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "d33593a444f16194a902bd34ccc3d47260301707646efd24b7b82b84cccdebd6"
+    },
+    {
+      "fixtureId": "authoritative-floor-hit",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Synthetic authoritative render hit and two rigid transforms.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "516fe543004ea2900e6fea717db3609b7c8eae08a7b6c7b69071b075775f7452"
+    },
+    {
+      "fixtureId": "invalid-axis",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Y-up manifest mutated to use an opposite forward axis.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "8a1dbd0d2842c1db1a62762db914819fbf0d84ff1d2cf17e6688ca74ea117d68"
+    },
+    {
+      "fixtureId": "invalid-unit",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Y-up manifest mutated to use zero meters per unit.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "cc65d7b06cc55d63b730d0aba13c970feff59b1a42bd08eabd2066f2c3a7987d"
+    },
+    {
+      "fixtureId": "invalid-frame",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Y-up manifest mutated to use a mismatched transform source frame.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "1399c89104309cef98589430d0919747312e0f7be055e7729c0fa10ba95d4e2f"
+    },
+    {
+      "fixtureId": "invalid-bounds",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Y-up manifest mutated so minimum X exceeds maximum X.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "6c9a291ea164edd64cc8a737f62bdaff166a382b0878c37f18456a6ad57d37da"
+    },
+    {
+      "fixtureId": "invalid-checksum",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Y-up manifest mutated to use a malformed SHA-256 value.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "5d22e87c31c898f783bd4e24c57d7e059d106e3f9026554c86aede6259c99d98"
+    }
+  ]
+}

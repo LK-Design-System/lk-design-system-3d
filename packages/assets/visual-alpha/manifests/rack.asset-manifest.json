@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "assetId": "visual-alpha/rack",
+  "version": "0.1.0",
+  "kind": "building",
+  "format": "glb",
+  "fileFrame": "visual-alpha/rack",
+  "fileCoordinate": {
+    "handedness": "right",
+    "upAxis": "+Z",
+    "forwardAxis": "+X",
+    "metersPerUnit": 1
+  },
+  "coreFrame": "lk-world",
+  "fileToCoreTransform": {
+    "sourceFrame": "visual-alpha/rack",
+    "targetFrame": "lk-world",
+    "translation": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "boundsInCoreMeters": {
+    "frame": "lk-world",
+    "min": [
+      -0.5225,
+      -1.22,
+      0
+    ],
+    "max": [
+      0.52,
+      1.22,
+      2.4375
+    ]
+  },
+  "integrity": {
+    "sha256": "f7ae21b8060e1a769e96da5870d7963b4ef8de10de82a6ba5b43378606c6698f"
+  }
+}

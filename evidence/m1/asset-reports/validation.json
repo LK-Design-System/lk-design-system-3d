@@ -1,0 +1,429 @@
+{
+  "generatedAt": "2026-07-17T15:33:12.961Z",
+  "contracts": {
+    "passed": true,
+    "results": [
+      {
+        "fixtureId": "y-up-glb-manifest",
+        "expectedValid": true,
+        "report": {
+          "passed": true,
+          "expectedValid": true,
+          "validation": {
+            "valid": true,
+            "issues": [],
+            "manifest": {
+              "schemaVersion": 1,
+              "assetId": "fixture-y-up-glb",
+              "version": "1.0.0",
+              "kind": "generic",
+              "format": "glb",
+              "fileFrame": "fixture-y-up-glb-file",
+              "fileCoordinate": {
+                "handedness": "right",
+                "upAxis": "+Y",
+                "forwardAxis": "+Z",
+                "metersPerUnit": 1
+              },
+              "coreFrame": "lk-core",
+              "fileToCoreTransform": {
+                "sourceFrame": "fixture-y-up-glb-file",
+                "targetFrame": "lk-core",
+                "translation": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0.5,
+                  0.5,
+                  0.5,
+                  0.5
+                ]
+              },
+              "boundsInCoreMeters": {
+                "frame": "lk-core",
+                "min": [
+                  -0.5,
+                  -0.5,
+                  0
+                ],
+                "max": [
+                  0.5,
+                  0.5,
+                  1
+                ]
+              },
+              "integrity": {
+                "sha256": "d52ea15ab28b6a8dbc5a7623dd23c044eaa0f6460322c22030cc6b976e365637"
+              }
+            }
+          },
+          "missingIssueCodes": [],
+          "missingIssuePaths": [],
+          "checks": [
+            {
+              "id": "expected-validity",
+              "passed": true,
+              "message": "Expected valid=true; received valid=true."
+            },
+            {
+              "id": "validation-report-shape",
+              "passed": true,
+              "message": "A valid report must expose its parsed manifest."
+            },
+            {
+              "id": "expected-issue-codes",
+              "passed": true,
+              "message": "All expected issue codes were reported."
+            },
+            {
+              "id": "expected-issue-paths",
+              "passed": true,
+              "message": "All expected issue paths were reported."
+            }
+          ]
+        }
+      },
+      {
+        "fixtureId": "legacy-z-up-glb-manifest",
+        "expectedValid": true,
+        "report": {
+          "passed": true,
+          "expectedValid": true,
+          "validation": {
+            "valid": true,
+            "issues": [],
+            "manifest": {
+              "schemaVersion": 1,
+              "assetId": "fixture-legacy-z-up-glb",
+              "version": "1.0.0",
+              "kind": "generic",
+              "format": "glb",
+              "fileFrame": "fixture-legacy-z-up-glb-file",
+              "fileCoordinate": {
+                "handedness": "right",
+                "upAxis": "+Z",
+                "forwardAxis": "+X",
+                "metersPerUnit": 1
+              },
+              "coreFrame": "lk-core",
+              "fileToCoreTransform": {
+                "sourceFrame": "fixture-legacy-z-up-glb-file",
+                "targetFrame": "lk-core",
+                "translation": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "boundsInCoreMeters": {
+                "frame": "lk-core",
+                "min": [
+                  -1,
+                  -1,
+                  0
+                ],
+                "max": [
+                  1,
+                  1,
+                  2
+                ]
+              },
+              "integrity": {
+                "sha256": "d52ea15ab28b6a8dbc5a7623dd23c044eaa0f6460322c22030cc6b976e365637"
+              }
+            }
+          },
+          "missingIssueCodes": [],
+          "missingIssuePaths": [],
+          "checks": [
+            {
+              "id": "expected-validity",
+              "passed": true,
+              "message": "Expected valid=true; received valid=true."
+            },
+            {
+              "id": "validation-report-shape",
+              "passed": true,
+              "message": "A valid report must expose its parsed manifest."
+            },
+            {
+              "id": "expected-issue-codes",
+              "passed": true,
+              "message": "All expected issue codes were reported."
+            },
+            {
+              "id": "expected-issue-paths",
+              "passed": true,
+              "message": "All expected issue paths were reported."
+            }
+          ]
+        }
+      },
+      {
+        "fixtureId": "invalid-axis",
+        "expectedValid": false,
+        "report": {
+          "passed": true,
+          "expectedValid": false,
+          "validation": {
+            "valid": false,
+            "issues": [
+              {
+                "path": "$.fileCoordinate",
+                "code": "coordinate.invalid_axis_pair",
+                "message": "upAxis and forwardAxis cannot use the same or opposite base axis.",
+                "severity": "error"
+              }
+            ]
+          },
+          "missingIssueCodes": [],
+          "missingIssuePaths": [],
+          "checks": [
+            {
+              "id": "expected-validity",
+              "passed": true,
+              "message": "Expected valid=false; received valid=false."
+            },
+            {
+              "id": "validation-report-shape",
+              "passed": true,
+              "message": "An invalid report must not expose a parsed manifest."
+            },
+            {
+              "id": "expected-issue-codes",
+              "passed": true,
+              "message": "All expected issue codes were reported."
+            },
+            {
+              "id": "expected-issue-paths",
+              "passed": true,
+              "message": "All expected issue paths were reported."
+            }
+          ]
+        }
+      },
+      {
+        "fixtureId": "invalid-unit",
+        "expectedValid": false,
+        "report": {
+          "passed": true,
+          "expectedValid": false,
+          "validation": {
+            "valid": false,
+            "issues": [
+              {
+                "path": "$.fileCoordinate.metersPerUnit",
+                "code": "coordinate.invalid_unit",
+                "message": "metersPerUnit must be a finite positive number.",
+                "severity": "error"
+              }
+            ]
+          },
+          "missingIssueCodes": [],
+          "missingIssuePaths": [],
+          "checks": [
+            {
+              "id": "expected-validity",
+              "passed": true,
+              "message": "Expected valid=false; received valid=false."
+            },
+            {
+              "id": "validation-report-shape",
+              "passed": true,
+              "message": "An invalid report must not expose a parsed manifest."
+            },
+            {
+              "id": "expected-issue-codes",
+              "passed": true,
+              "message": "All expected issue codes were reported."
+            },
+            {
+              "id": "expected-issue-paths",
+              "passed": true,
+              "message": "All expected issue paths were reported."
+            }
+          ]
+        }
+      },
+      {
+        "fixtureId": "invalid-frame",
+        "expectedValid": false,
+        "report": {
+          "passed": true,
+          "expectedValid": false,
+          "validation": {
+            "valid": false,
+            "issues": [
+              {
+                "path": "$.fileToCoreTransform.sourceFrame",
+                "code": "transform.source_frame_mismatch",
+                "message": "Transform sourceFrame must equal manifest fileFrame.",
+                "severity": "error"
+              }
+            ]
+          },
+          "missingIssueCodes": [],
+          "missingIssuePaths": [],
+          "checks": [
+            {
+              "id": "expected-validity",
+              "passed": true,
+              "message": "Expected valid=false; received valid=false."
+            },
+            {
+              "id": "validation-report-shape",
+              "passed": true,
+              "message": "An invalid report must not expose a parsed manifest."
+            },
+            {
+              "id": "expected-issue-codes",
+              "passed": true,
+              "message": "All expected issue codes were reported."
+            },
+            {
+              "id": "expected-issue-paths",
+              "passed": true,
+              "message": "All expected issue paths were reported."
+            }
+          ]
+        }
+      },
+      {
+        "fixtureId": "invalid-bounds",
+        "expectedValid": false,
+        "report": {
+          "passed": true,
+          "expectedValid": false,
+          "validation": {
+            "valid": false,
+            "issues": [
+              {
+                "path": "$.boundsInCoreMeters",
+                "code": "bounds.invalid_order",
+                "message": "Every bounds minimum must be less than or equal to its maximum.",
+                "severity": "error"
+              }
+            ]
+          },
+          "missingIssueCodes": [],
+          "missingIssuePaths": [],
+          "checks": [
+            {
+              "id": "expected-validity",
+              "passed": true,
+              "message": "Expected valid=false; received valid=false."
+            },
+            {
+              "id": "validation-report-shape",
+              "passed": true,
+              "message": "An invalid report must not expose a parsed manifest."
+            },
+            {
+              "id": "expected-issue-codes",
+              "passed": true,
+              "message": "All expected issue codes were reported."
+            },
+            {
+              "id": "expected-issue-paths",
+              "passed": true,
+              "message": "All expected issue paths were reported."
+            }
+          ]
+        }
+      },
+      {
+        "fixtureId": "invalid-checksum",
+        "expectedValid": false,
+        "report": {
+          "passed": true,
+          "expectedValid": false,
+          "validation": {
+            "valid": false,
+            "issues": [
+              {
+                "path": "$.integrity.sha256",
+                "code": "integrity.invalid_sha256",
+                "message": "sha256 must contain exactly 64 hexadecimal characters.",
+                "severity": "error"
+              }
+            ]
+          },
+          "missingIssueCodes": [],
+          "missingIssuePaths": [],
+          "checks": [
+            {
+              "id": "expected-validity",
+              "passed": true,
+              "message": "Expected valid=false; received valid=false."
+            },
+            {
+              "id": "validation-report-shape",
+              "passed": true,
+              "message": "An invalid report must not expose a parsed manifest."
+            },
+            {
+              "id": "expected-issue-codes",
+              "passed": true,
+              "message": "All expected issue codes were reported."
+            },
+            {
+              "id": "expected-issue-paths",
+              "passed": true,
+              "message": "All expected issue paths were reported."
+            }
+          ]
+        }
+      }
+    ],
+    "validFixtureCount": 2,
+    "invalidFixtureCount": 5,
+    "yUpNormalization": {
+      "passed": true,
+      "fixtureId": "y-up-glb-manifest",
+      "normalizedUp": {
+        "frame": "lk-core",
+        "value": [
+          0,
+          0,
+          1
+        ]
+      },
+      "normalizedForward": {
+        "frame": "lk-core",
+        "value": [
+          1,
+          0,
+          0
+        ]
+      },
+      "checks": [
+        {
+          "id": "y-up-to-z-up",
+          "passed": true,
+          "message": "File +Y to core +Z maximum absolute error is 0.",
+          "measurements": {
+            "maximumAbsoluteError": 0,
+            "tolerance": 0.000001
+          }
+        },
+        {
+          "id": "file-forward-to-core-forward",
+          "passed": true,
+          "message": "File +Z to core +X maximum absolute error is 0.",
+          "measurements": {
+            "maximumAbsoluteError": 0,
+            "tolerance": 0.000001
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "assetId": "visual-alpha/pallet",
+  "version": "0.1.0",
+  "kind": "generic",
+  "format": "glb",
+  "fileFrame": "visual-alpha/pallet",
+  "fileCoordinate": {
+    "handedness": "right",
+    "upAxis": "+Z",
+    "forwardAxis": "+X",
+    "metersPerUnit": 1
+  },
+  "coreFrame": "lk-world",
+  "fileToCoreTransform": {
+    "sourceFrame": "visual-alpha/pallet",
+    "targetFrame": "lk-world",
+    "translation": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "boundsInCoreMeters": {
+    "frame": "lk-world",
+    "min": [
+      -0.6,
+      -0.42,
+      0
+    ],
+    "max": [
+      0.6,
+      0.42,
+      0.22
+    ]
+  },
+  "integrity": {
+    "sha256": "a15c4692e91a51eb37891c63fe006cda67d7d7b04223d17e3ad5a48cd27bda0b"
+  }
+}
