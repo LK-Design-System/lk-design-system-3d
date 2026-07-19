@@ -348,11 +348,12 @@ export interface PathRibbonProps {
     // (undocumented)
     readonly entity: PathEntity;
     readonly selectable?: boolean;
-    // Warning: (ae-forgotten-export) The symbol "PathRibbonVariant" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     readonly variant?: PathRibbonVariant;
 }
+
+// @public (undocumented)
+export type PathRibbonVariant = "actual" | "planned" | "executing" | "blocked";
 
 // @public (undocumented)
 export interface PathSegment {

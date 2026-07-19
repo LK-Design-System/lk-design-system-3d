@@ -3,7 +3,7 @@ import { assertValidEntityId, type EntityId } from "./identifiers.js";
 
 export type SpatialEditOperation = "delete" | "restore";
 
-interface SpatialEditVolumeBase {
+export interface SpatialEditVolumeBase {
   readonly id: EntityId;
   readonly operation: SpatialEditOperation;
   readonly pose: Pose3;

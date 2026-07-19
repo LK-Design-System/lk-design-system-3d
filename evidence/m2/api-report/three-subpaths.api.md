@@ -15,8 +15,6 @@ import { Vec3 } from '@lk-robotics/design-system-3d-core';
 // @public
 function cloneThreeSceneInstance(source: Object3D, castShadow: boolean, receiveShadow: boolean): Object3D;
 
-// Warning: (ae-forgotten-export) The symbol "ThreeAssetHandle" needs to be exported by the entry point public-subpaths.d.ts
-//
 // @public
 function consumeThreeAssetOwnership(token: AssetOwnershipToken<ThreeAssetHandle>): ThreeResolvedAsset;
 
@@ -48,6 +46,7 @@ function createThreeVisualInstance(input: ThreeVisualInput): ThreeVisualInstance
 
 declare namespace r3fBridge {
     export {
+        ThreeAssetHandle,
         ThreeResolvedAsset,
         ThreeVisualInput,
         ThreeVisualInstance,
@@ -61,6 +60,12 @@ declare namespace r3fBridge {
 
 // @public
 function releaseThreeSceneInstance(instance: Object3D): void;
+
+// @public
+interface ThreeAssetHandle {
+    // (undocumented)
+    readonly __opaque: "ThreeAssetHandle";
+}
 
 // @public
 interface ThreeResolvedAsset {

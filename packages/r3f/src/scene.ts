@@ -1,5 +1,6 @@
 export { CameraRig, type CameraRigProps } from "./CameraRig.js";
 export { CoreSpace, type CoreSpaceProps } from "./CoreSpace.js";
+export { type PathRibbonVariant } from "./path-ribbon.js";
 export {
   SceneCanvas,
   type SceneCameraChangeSource,

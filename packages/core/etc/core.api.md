@@ -830,8 +830,6 @@ export const SPATIAL_AUTHORING_AREA_EPSILON_SQUARE_METERS = 1e-7;
 // @public
 export const SPATIAL_AUTHORING_LINEAR_EPSILON_METERS = 1e-7;
 
-// Warning: (ae-forgotten-export) The symbol "SpatialNodeBase" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export interface SpatialAssetNode extends SpatialNodeBase {
     // (undocumented)
@@ -887,8 +885,6 @@ export interface SpatialCylinderGeometry {
     readonly radiusMeters: number;
 }
 
-// Warning: (ae-forgotten-export) The symbol "SpatialEditVolumeBase" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export interface SpatialEditBox extends SpatialEditVolumeBase {
     // (undocumented)
@@ -910,6 +906,16 @@ export interface SpatialEditSphere extends SpatialEditVolumeBase {
 
 // @public
 export type SpatialEditVolume = SpatialEditSphere | SpatialEditBox;
+
+// @public (undocumented)
+export interface SpatialEditVolumeBase {
+    // (undocumented)
+    readonly id: EntityId;
+    // (undocumented)
+    readonly operation: SpatialEditOperation;
+    // (undocumented)
+    readonly pose: Pose3;
+}
 
 // @public (undocumented)
 export interface SpatialEvent {
@@ -995,6 +1001,20 @@ export interface SpatialMaterialSlots {
     readonly side?: SpatialPbrMaterial;
     // (undocumented)
     readonly top?: SpatialPbrMaterial;
+}
+
+// @public (undocumented)
+export interface SpatialNodeBase {
+    // (undocumented)
+    readonly id: EntityId;
+    // (undocumented)
+    readonly name?: string;
+    // (undocumented)
+    readonly parentId?: EntityId;
+    // (undocumented)
+    readonly transform: SpatialNodeTransform;
+    // (undocumented)
+    readonly visible?: boolean;
 }
 
 // @public (undocumented)

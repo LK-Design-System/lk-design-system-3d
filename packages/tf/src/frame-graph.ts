@@ -28,7 +28,7 @@ export interface FrameTransformSample {
   readonly static: boolean;
 }
 
-interface FrameEdge {
+export interface FrameEdge {
   readonly sourceFrame: FrameId;
   readonly targetFrame: FrameId;
   readonly samples: readonly FrameTransformSample[];

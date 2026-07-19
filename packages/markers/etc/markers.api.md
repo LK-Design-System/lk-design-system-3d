@@ -14,8 +14,6 @@ import { RigidTransform3 } from '@lk-robotics/design-system-3d-core';
 import { Timestamp } from '@lk-robotics/design-system-3d-core';
 import { Vec3 } from '@lk-robotics/design-system-3d-core';
 
-// Warning: (ae-forgotten-export) The symbol "MarkerBaseInput" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export interface ArrowMarkerInput extends MarkerBaseInput {
     // (undocumented)
@@ -23,8 +21,6 @@ export interface ArrowMarkerInput extends MarkerBaseInput {
     readonly scale: Vec3;
 }
 
-// Warning: (ae-forgotten-export) The symbol "MarkerBaseSnapshot" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export interface ArrowMarkerSnapshot extends MarkerBaseSnapshot {
     // (undocumented)
@@ -57,6 +53,38 @@ export interface LineStripMarkerSnapshot extends MarkerBaseSnapshot {
     readonly points: readonly Vec3[];
     // (undocumented)
     readonly width: number;
+}
+
+// @public (undocumented)
+export interface MarkerBaseInput {
+    // (undocumented)
+    readonly color?: MarkerColor;
+    // (undocumented)
+    readonly id: EntityId;
+    // (undocumented)
+    readonly namespace?: string;
+    // (undocumented)
+    readonly pose: Pose3;
+    // (undocumented)
+    readonly selectable?: boolean;
+    // (undocumented)
+    readonly visible?: boolean;
+}
+
+// @public (undocumented)
+export interface MarkerBaseSnapshot {
+    // (undocumented)
+    readonly color: MarkerColor;
+    // (undocumented)
+    readonly id: EntityId;
+    // (undocumented)
+    readonly namespace: string;
+    // (undocumented)
+    readonly pose: Pose3;
+    // (undocumented)
+    readonly selectable: boolean;
+    // (undocumented)
+    readonly visible: boolean;
 }
 
 // @public (undocumented)
@@ -99,8 +127,6 @@ export type MarkerFreshnessState = {
     readonly staleAfterSeconds: number;
 };
 
-// Warning: (ae-forgotten-export) The symbol "MarkerLayerRenderStateBase" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export type MarkerLayerRenderState = (MarkerLayerRenderStateBase & {
     readonly kind: "ready";
@@ -121,6 +147,18 @@ export type MarkerLayerRenderState = (MarkerLayerRenderStateBase & {
     readonly expectedSceneFrame: FrameId;
     readonly actualSceneFrame: FrameId;
 });
+
+// @public (undocumented)
+export interface MarkerLayerRenderStateBase {
+    // (undocumented)
+    readonly acceptedMarkerCount: number;
+    // (undocumented)
+    readonly freshness: MarkerFreshnessState;
+    // (undocumented)
+    readonly layerId: LayerId;
+    // (undocumented)
+    readonly markerCount: number;
+}
 
 // @public (undocumented)
 export interface MarkerLayerSnapshot {

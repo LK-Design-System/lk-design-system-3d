@@ -2,8 +2,10 @@
 
 import type { Axis, RigidTransform3, Vec3 } from "@lk-robotics/design-system-3d-core";
 
-import type { AssetManifestV1 } from "./manifest.js";
+import type { FileCoordinate } from "./manifest.js";
 import { axisToVector, rotateVectorByQuaternion } from "./spatial.js";
+
+export type { FileCoordinate } from "./manifest.js";
 
 /** @deprecated Migration-only evidence. Use an owner-approved manifest. */
 export interface LegacyAssetEvidence {
@@ -18,7 +20,7 @@ export interface LegacyAssetEvidence {
 export interface LegacyAssetInferenceReport {
   readonly inferred: boolean;
   readonly confidence: "low" | "medium" | "high";
-  readonly coordinate?: AssetManifestV1["fileCoordinate"];
+  readonly coordinate?: FileCoordinate;
   readonly warnings: readonly string[];
 }
 

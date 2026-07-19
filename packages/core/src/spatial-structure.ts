@@ -39,7 +39,7 @@ export interface SpatialNodeTransform {
   readonly scale: Vec3;
 }
 
-interface SpatialNodeBase {
+export interface SpatialNodeBase {
   readonly id: EntityId;
   readonly parentId?: EntityId;
   readonly name?: string;

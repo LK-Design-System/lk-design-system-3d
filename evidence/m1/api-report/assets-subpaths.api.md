@@ -4,10 +4,7 @@
 
 ```ts
 
-import { AssetId } from '@lk-robotics/design-system-3d-core';
 import { Axis } from '@lk-robotics/design-system-3d-core';
-import { Bounds3 } from '@lk-robotics/design-system-3d-core';
-import { FrameId } from '@lk-robotics/design-system-3d-core';
 import { RigidTransform3 } from '@lk-robotics/design-system-3d-core';
 import { Vec3 } from '@lk-robotics/design-system-3d-core';
 
@@ -166,11 +163,24 @@ const assetManifestV1Schema: {
     };
 };
 
+// @public (undocumented)
+interface FileCoordinate {
+    // (undocumented)
+    readonly forwardAxis: Axis;
+    // (undocumented)
+    readonly handedness: "right";
+    // (undocumented)
+    readonly metersPerUnit: number;
+    // (undocumented)
+    readonly upAxis: Axis;
+}
+
 // @public @deprecated (undocumented)
 function inferLegacyAssetCoordinate(input: LegacyAssetEvidence): LegacyAssetInferenceReport;
 
 declare namespace legacy {
     export {
+        FileCoordinate,
         LegacyAssetEvidence,
         LegacyAssetInferenceReport,
         inferLegacyAssetCoordinate
@@ -192,10 +202,8 @@ interface LegacyAssetEvidence {
 interface LegacyAssetInferenceReport {
     // (undocumented)
     readonly confidence: "low" | "medium" | "high";
-    // Warning: (ae-forgotten-export) The symbol "AssetManifestV1" needs to be exported by the entry point public-subpaths.d.ts
-    //
     // (undocumented)
-    readonly coordinate?: AssetManifestV1["fileCoordinate"];
+    readonly coordinate?: FileCoordinate;
     // (undocumented)
     readonly inferred: boolean;
     // (undocumented)

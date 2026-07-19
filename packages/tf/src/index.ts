@@ -3,6 +3,7 @@ export {
   createFrameGraph,
   createFrameTransformSample,
   lookupFrameTransform,
+  type FrameEdge,
   type FrameGraph,
   type FrameLookupOptions,
   type FrameLookupResult,

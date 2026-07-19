@@ -12,3 +12,4 @@ export {
   type ThreeVisualInstance,
   type ThreeVisualUpdateInput,
 } from "./runtime.js";
+export type { ThreeAssetHandle } from "./asset-resource.js";

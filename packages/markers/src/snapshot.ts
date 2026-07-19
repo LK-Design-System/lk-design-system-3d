@@ -28,7 +28,7 @@ export interface MarkerColor {
   readonly a: number;
 }
 
-interface MarkerBaseInput {
+export interface MarkerBaseInput {
   readonly id: EntityId;
   readonly pose: Pose3;
   readonly namespace?: string;
@@ -37,7 +37,7 @@ interface MarkerBaseInput {
   readonly selectable?: boolean;
 }
 
-interface MarkerBaseSnapshot {
+export interface MarkerBaseSnapshot {
   readonly id: EntityId;
   readonly pose: Pose3;
   readonly namespace: string;
@@ -186,7 +186,7 @@ export type MarkerFreshnessState =
   | { readonly kind: "fresh"; readonly ageSeconds: number }
   | { readonly kind: "stale"; readonly ageSeconds: number; readonly staleAfterSeconds: number };
 
-interface MarkerLayerRenderStateBase {
+export interface MarkerLayerRenderStateBase {
   readonly layerId: LayerId;
   readonly markerCount: number;
   readonly acceptedMarkerCount: number;

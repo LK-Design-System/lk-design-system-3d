@@ -16,8 +16,17 @@ export function createFrameGraph(inputs: readonly FrameTransformSampleInput[]): 
 export function createFrameTransformSample(input: FrameTransformSampleInput): FrameTransformSample;
 
 // @public (undocumented)
+export interface FrameEdge {
+    // (undocumented)
+    readonly samples: readonly FrameTransformSample[];
+    // (undocumented)
+    readonly sourceFrame: FrameId;
+    // (undocumented)
+    readonly targetFrame: FrameId;
+}
+
+// @public (undocumented)
 export interface FrameGraph {
-    // Warning: (ae-forgotten-export) The symbol "FrameEdge" needs to be exported by the entry point index.d.ts
     readonly edges: readonly FrameEdge[];
     // (undocumented)
     readonly samples: readonly FrameTransformSample[];
