@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc/minimal-level",
+  "name": "Minimal Level",
+  "coordinate": {
+    "handedness": "right",
+    "up": "+Z",
+    "forward": "+X",
+    "unitsLength": "meter",
+    "unitsAngle": "radian",
+    "origin": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] },
+    "raster": {
+      "imageOrigin": "top-left",
+      "gridRow0": "min-Y",
+      "rowFlip": "cell.row = heightCells - 1 - pixel.rowFromTop",
+      "rosYamlOrigin": "lower-left",
+      "dataIndex": "row * width + column",
+      "originYaw": 0,
+      "negate": 0,
+      "occupiedThresh": 0.65,
+      "freeThresh": 0.196,
+      "anchor": {
+        "anchorPixel": [0, 0],
+        "metersPerPixel": 0.05,
+        "levelPose": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] },
+        "yaw": 0
+      }
+    }
+  },
+  "structure": {
+    "levels": [
+      {
+        "kind": "level",
+        "id": "level/1f",
+        "elevationMeters": 0,
+        "transform": {
+          "sourceFrame": "level/1f",
+          "targetFrame": "lk-map",
+          "translation": [0, 0, 0],
+          "rotation": [0, 0, 0, 1],
+          "scale": [1, 1, 1]
+        }
+      }
+    ],
+    "vertices": [
+      { "id": "v/1", "levelId": "level/1f", "position": [0, 0, 0] },
+      { "id": "v/2", "levelId": "level/1f", "position": [4, 0, 0] },
+      { "id": "v/3", "levelId": "level/1f", "position": [4, 3, 0] },
+      { "id": "v/4", "levelId": "level/1f", "position": [0, 3, 0] }
+    ],
+    "floors": [
+      { "id": "floor/1", "levelId": "level/1f", "vertexIds": ["v/1", "v/2", "v/3", "v/4"] }
+    ],
+    "walls": [
+      {
+        "id": "wall/north",
+        "levelId": "level/1f",
+        "vertexIds": ["v/4", "v/3"],
+        "thicknessMeters": 0.1,
+        "heightMeters": 2.4
+      }
+    ]
+  },
+  "semantics": {
+    "routeGraph": {
+      "waypoints": [
+        { "id": "wp/a", "levelId": "level/1f", "vertexId": "v/1" },
+        { "id": "wp/b", "levelId": "level/1f", "vertexId": "v/3" }
+      ],
+      "edges": [
+        {
+          "id": "edge/ab",
+          "fromWaypointId": "wp/a",
+          "toWaypointId": "wp/b",
+          "direction": "bidirectional",
+          "widthMeters": 0.8
+        }
+      ]
+    }
+  }
+}
