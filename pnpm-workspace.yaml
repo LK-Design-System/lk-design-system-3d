@@ -19,3 +19,9 @@ catalog:
   tsup: 8.5.1
   typescript: 5.9.3
   vitest: 3.2.4
+
+minimumReleaseAgeExclude:
+  - '@lk-robotics/lds-core@0.1.0-rc.0'
+  - '@lk-robotics/lds-product@0.1.0-rc.0'
+  - '@lk-robotics/lds-robotics-ui@0.1.0-rc.0 || 0.1.0-rc.1'
+  - '@lk-robotics/lds-theme@0.1.0-rc.0'

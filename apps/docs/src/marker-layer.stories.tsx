@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DescriptionList, Stack, StatusBadge } from "@lk-robotics/design-system-core";
+import { Stack, StatusBadge } from "@lk-robotics/lds-core";
+import { DescriptionList } from "@lk-robotics/lds-product";
 import { MarkerLayer, SceneCanvas, type SceneCameraPose } from "@lk-robotics/design-system-3d-r3f";
 import { resolveMarkerLayerRenderState } from "@lk-robotics/design-system-3d-markers";
 

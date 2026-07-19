@@ -4,11 +4,11 @@ import {
   Card,
   ContentBadge,
   FormField,
-  Legend,
   Stack,
   StatusBadge,
-} from "@lk-robotics/design-system-core";
-import { SegmentedControl } from "@lk-robotics/design-system-core/components/selection/SegmentedControl";
+} from "@lk-robotics/lds-core";
+import { Legend } from "@lk-robotics/lds-product";
+import { SegmentedControl } from "@lk-robotics/lds-core/components/selection/SegmentedControl";
 import { useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import {
   GoalMarker,

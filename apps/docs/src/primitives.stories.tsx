@@ -5,12 +5,12 @@ import tronModelUrl from "@lk-robotics/design-system-3d-assets/robots/tron/tron.
 import {
   Button,
   Code,
-  DescriptionList,
   SegmentedControl,
   Select,
   Stack,
   StatusBadge,
-} from "@lk-robotics/design-system-core";
+} from "@lk-robotics/lds-core";
+import { DescriptionList } from "@lk-robotics/lds-product";
 import {
   AmrRobot as AmrRobotPrimitive,
   EditVolume as EditVolumePrimitive,

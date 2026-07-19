@@ -1,24 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
-  CanvasEditorCommandBar,
-  CanvasEditorShell,
   ConfirmDialog,
-  DescriptionList,
   Divider,
   DropdownMenu,
-  EditorToolbar,
   FormField,
   Icon,
-  NumberField,
-  Scene3DFrame,
   SegmentedControl,
-  SelectionInspector,
   StatusBadge,
+} from "@lk-robotics/lds-core";
+import { DescriptionList, NumberField } from "@lk-robotics/lds-product";
+import {
+  CanvasEditorCommandBar,
+  CanvasEditorShell,
+  EditorToolbar,
+  Scene3DFrame,
+  SelectionInspector,
   ViewerToolbar,
   ViewerToolbarButton,
   ViewportStatusBar,
-} from "@lk-robotics/design-system-core";
+} from "@lk-robotics/lds-robotics-ui";
 import {
   EditVolume,
   PointCloudLayer,
