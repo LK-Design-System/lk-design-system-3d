@@ -183,6 +183,37 @@ Spatial state is not color-only.
   depth/occlusion, overlap, scale, selection, accessibility, and reduced-motion
   contract.
 
+### 2D reference and occupancy raster coordinate semantics
+
+This subsection is the authoritative statement of raster-to-level coordinate
+mapping for both the 2D reference image a user traces over and the derived ROS
+occupancy raster. ADR-0002 (`공통 맵 의미`) and IMPLEMENTATION_PLAN (M5-A/M5-C)
+reference this subsection instead of restating these rules.
+
+- A source raster (2D reference image or occupancy PNG) addresses pixels with
+  pixel `(0, 0)` at the top-left of the image and `rowFromTop` growing
+  downward (`OccupancyGridImagePixel`, `packages/core/src/occupancy-grid.ts`).
+- Grid/level space is Y-up in-plane: occupancy cell `row 0` is the grid's
+  minimum-Y row, columns grow along local `+X`, and rows grow along local
+  `+Y`. Image space and grid space therefore differ by a vertical row flip,
+  `cell.row = heightCells - 1 - pixel.rowFromTop` (`occupancyImagePixelToCell`),
+  and `occupancyCellToImagePixel` is its exact inverse.
+- A calibrated anchor pixel maps to a metric level-frame pose by flipping the
+  pixel to its cell, scaling by `resolutionMeters` (meters-per-pixel), and
+  applying the grid's `gridToFrame` rigid transform, which carries the level
+  origin, yaw, and elevation. The anchor pixel plus meters-per-pixel, origin,
+  and yaw fully determine the pose; no axis, scale, or origin is inferred from
+  the file.
+- ROS occupancy YAML uses a lower-left origin: `origin` is the metric position
+  of the bottom-left cell and `data` is row-major from that bottom-left row
+  (`occupancyCellDataIndex = row * width + column`). This is consistent with
+  grid `row 0` = minimum-Y, which is exactly why the top-left image row is
+  flipped on import and export.
+- Every adapter and the Native Builder reference calibration must ship an
+  `image -> level -> image` round-trip fixture proving the anchor pixel is
+  restored (image pixel -> level pose -> image pixel), alongside the ROS
+  `cell <-> dataIndex` round-trip.
+
 ## Occupancy-grid LDS composition audit
 
 Baseline: the current sibling LDS checkout is commit
@@ -211,6 +242,11 @@ do not rely on colour alone. The renderer owns no DOM focus, action, threshold,
 editing, or persistence behavior. The Story's LDS buttons advance and clear the
 same controlled selection as pointer picking, and a polite DOM announcement
 reports the selected cell without making the headless renderer own keyboard UI.
+
+The raster's pixel-to-cell row flip, anchor-pixel-to-level-pose mapping, and
+ROS occupancy YAML lower-left origin are not redefined here; they follow the
+`2D reference and occupancy raster coordinate semantics` rules under
+[Asset and coordinate boundary](#asset-and-coordinate-boundary) above.
 
 ## Point-cloud layer-set LDS composition audit
 
@@ -529,7 +565,13 @@ only for genuine display layers.
 On wide surfaces, the viewport remains the dominant region beside only the
 approved supporting panels. On narrow surfaces,
 `CanvasEditorShell.mobileActiveRegion` plus its public responsive navigation
-exposes exactly one of scene, an approved hierarchy/layer region, or properties. Finishing a canvas
+exposes exactly one of scene, an approved hierarchy/layer region, or properties.
+`CanvasEditorCommandBar` has no automatic overflow contract, so a narrow product
+command bar reaches lower-priority document commands by composing the public LDS
+`DropdownMenu` and an LDS action trigger into `CanvasEditorCommandBar.children`; a
+custom overflow menu is forbidden. A reusable automatic-overflow behavior that
+detects width and collapses commands is a separate additive LDS gap and is not
+owned or built by LDS3D here. Finishing a canvas
 gesture does not force an unexpected switch to the properties region. Every
 declared shortcut must be backed by a handler that ignores editable fields and
 IME composition.
@@ -569,7 +611,11 @@ serialized or installed as repeated blocks.
 External Import uses the same frames, level ownership, stable `EntityId`,
 selection and semantic overlays. Imported source geometry is locked by default;
 only a recognized common primitive may be converted to editable structure after
-an explicit product decision. Reimport uses durable source IDs when available
+an explicit product decision. The V1 Isaac/OpenUSD golden fixture takes as input
+a versioned LK mapping manifest plus namespaced, durable (`lk:`-prefixed) entity
+metadata, not arbitrary mesh geometry or prim-name inference; a common primitive
+is recognized from that manifest and metadata, never inferred from mesh shape or
+scene-graph names. Reimport uses durable source IDs when available
 and a saved normalized base/per-field ownership for 3-way diff. Path-only
 bindings are weak and become `remap-required` after rename/reparent instead of
 being auto-deleted. File selection, source registry, merge choice, overwrite,

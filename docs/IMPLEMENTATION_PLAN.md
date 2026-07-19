@@ -486,6 +486,10 @@ M5 contract/API review 전 완료된 package로 취급하지 않는다. Unity·U
 - native/imported ownership, source tool/version/document/hash, durable/weak entity
   binding, 이전 normalized base, per-field ownership/fingerprint, tombstone,
   extension/migration과 unknown-field 보존 정책을 정의한다.
+- V1 Isaac/OpenUSD import fixture의 입력을 arbitrary mesh geometry나 name
+  inference가 아니라 versioned LK mapping manifest와 namespaced durable entity
+  metadata로 계약에 고정한다. scene-graph path/이름만으로 묶는 path-only
+  binding은 durable identity가 아니라 weak이며 remap-required로 남긴다.
 - site/building/level, polygon floor, polyline wall, attached door, level transition,
   waypoint-edge route graph, area, goal, charger/dock, native primitive와 asset
   instance의 공통 subset을 정의한다.
@@ -494,6 +498,13 @@ M5 contract/API review 전 완료된 package로 취급하지 않는다. Unity·U
 - GLB preview와 level별 ROS occupancy를 authored source로 되돌릴 수 없는 비정본
   cache로 기록한다. Source artifact hash, adapter/generator version, export profile과
   생성 매개변수가 있을 때만 재현 가능하다고 판단한다.
+- 2D reference 이미지와 파생 occupancy raster의 좌표 정본을 고정한다: 이미지 pixel
+  `(0, 0)`은 좌상단, level/grid는 row flip(`cell.row = heightCells - 1 - pixel.rowFromTop`)으로
+  연결, anchor pixel은 meters-per-pixel·origin·yaw와 `gridToFrame`으로 metric level
+  pose에 매핑, ROS occupancy YAML은 lower-left origin을 쓰며, image → level → image
+  round-trip fixture를 요구한다. 정본 규칙은
+  [SPATIAL_PRIMITIVES_GUIDE.md](SPATIAL_PRIMITIVES_GUIDE.md)의
+  `Asset and coordinate boundary`를 따른다.
 
 #### M5-B — Native 2.5D Builder
 
@@ -516,6 +527,13 @@ M5 contract/API review 전 완료된 package로 취급하지 않는다. Unity·U
 1. Engine SDK와 file orchestration이 없는 pure codec/normalizer boundary를 먼저
    정의하고, Isaac/OpenUSD reference adapter와 golden fixture로 axis, unit, origin,
    level mapping, durable/weak binding, unknown metadata 보존과 derived GLB를 검증한다.
+   이때 golden fixture의 입력은 arbitrary mesh geometry나 name inference가 아니라
+   versioned LK mapping manifest와 namespaced durable entity metadata이며, 공통
+   primitive는 이 manifest·metadata로만 인식한다. 또한 occupancy/2D reference raster
+   좌표(좌상단 image pixel ↔ ROS lower-left origin, row flip)와 image → level →
+   image round-trip fixture 정합을 함께 검증하며, 규칙은
+   [SPATIAL_PRIMITIVES_GUIDE.md](SPATIAL_PRIMITIVES_GUIDE.md)의
+   `Asset and coordinate boundary`를 따른다.
 2. 같은 conformance fixture를 사용하는 Unreal USD adapter를 추가한다.
 3. Unity는 공통 contract가 고정된 뒤 전용 exporter/adapter를 검토하며
    experimental USD package에 production contract를 종속하지 않는다.
@@ -556,7 +574,9 @@ M5 contract/API review 전 완료된 package로 취급하지 않는다. Unity·U
   viewport → task panel → passive status다. Narrow에서는
   `CanvasEditorShell.mobileActiveRegion`으로 scene/approved layers/panel 중 하나만
   주 영역으로 노출한다.
-- 320px/390px에서 command overflow/priority, navigation focus, hidden-region tab stop
+- 320px/390px에서 자동 overflow 없는 command 도달성(낮은 우선순위 document
+  command는 제품이 `CanvasEditorCommandBar.children`에 조합한 public LDS
+  `DropdownMenu`로 노출), navigation focus, hidden-region tab stop
   제거, pointer-capture 종료와 logical draft 보존, canvas-only tool rail, reachable
   status/navigation과 selection sync를 검증한다.
 - Storybook은 in-memory native gesture, deterministic import normalization과 diff

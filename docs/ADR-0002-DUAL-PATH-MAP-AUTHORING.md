@@ -81,6 +81,15 @@ state machine으로 합치지 않는다. 공통 `area`와 제품 업무 `zone`�
 구분하며, 제품별 permission·operation rule은 document extension 또는 제품 schema가
 소유한다.
 
+2D reference 이미지와 파생 occupancy raster의 좌표 의미는 이 ADR에서 재정의하지
+않는다. 이미지 pixel `(0, 0)`은 원본 이미지의 좌상단이고 `rowFromTop`은 아래로
+증가한다. level/grid 공간은 Y-up이라 occupancy cell `row 0`이 최소 Y 행이며, 두
+공간은 row flip(`cell.row = heightCells - 1 - pixel.rowFromTop`)으로 연결된다.
+보정된 anchor pixel은 meters-per-pixel과 origin·yaw를 담은 `gridToFrame`으로
+metric level pose에 매핑되고, ROS occupancy YAML은 lower-left origin(bottom-left
+cell)을 쓴다. 정본 규칙은 [SPATIAL_PRIMITIVES_GUIDE.md](SPATIAL_PRIMITIVES_GUIDE.md)의
+`Asset and coordinate boundary`를 따른다.
+
 ## `LK Map Bundle` 목표 구조
 
 `LK Map Bundle`은 npm package가 아니라 맵 교환을 위한 논리적 파일 묶음의 작업
@@ -142,7 +151,10 @@ wall도 box를 반복 배치하지 않고 연속 선을 기준으로 생성한�
 외부에서 가져온 geometry는 기본적으로 잠근다. 사용자는 좌표·단위·origin과
 level mapping을 먼저 확인하고, 공통 의미를 매핑하거나 web-authored overlay를
 추가한다. importer가 명확히 인식한 공통 floor/wall/door primitive만 사용자의
-명시적 동의 후 editable structure로 변환할 수 있다.
+명시적 동의 후 editable structure로 변환할 수 있다. 여기서 “인식”은 mesh 형상이나
+prim 이름 추론이 아니라 versioned LK mapping manifest와 `lk:` namespaced durable
+entity metadata를 근거로 하며, 이 입력이 없으면 importer는 어떤 geometry도 editable
+structure로 승격하지 않는다.
 
 재가져오기는 원본 전체 덮어쓰기가 아니라 다음 순서를 따른다.
 
@@ -190,6 +202,13 @@ override layer에 기록한다. 편집 round-trip 중 stage flatten은 compositi
 | Visual round-trip | engine material, shader, Blueprint, `MonoBehaviour`, physics/sensor 전체 보존 | 보장하지 않음 |
 | Derived reverse import | GLB 또는 occupancy로 원본 authored scene 복구 | 금지 |
 
+위 세 흐름과 별개로, 2D reference/occupancy raster의 image → level → image 좌표
+왕복은 adapter capability가 아니라 좌표 정본 fixture다. 모든 adapter와 Native
+Builder reference calibration은 pixel → level pose → pixel 동일성을 복원하는
+fixture와 ROS `cell ↔ dataIndex` 왕복을 포함하며, 규칙은
+[SPATIAL_PRIMITIVES_GUIDE.md](SPATIAL_PRIMITIVES_GUIDE.md)의
+`Asset and coordinate boundary`가 정의한다.
+
 ## 도구별 우선순위
 
 | 도구 | 첫 역할 | 결정 |
@@ -197,6 +216,15 @@ override layer에 기록한다. 편집 round-trip 중 stage flatten은 compositi
 | Isaac Sim / OpenUSD | 로봇·충돌·시설 장면의 authoring source | 첫 reference importer와 golden fixture |
 | Unreal Engine / USD | 고품질 시설 저작과 선택된 공통 metadata 교환 | 두 번째 adapter; GLB는 preview 파생물 |
 | Unity | 기존 Unity 팀과 project를 위한 source | 공통 계약 뒤 전용 exporter/adapter 검토; experimental USD에 production 계약을 종속하지 않음 |
+
+첫 golden fixture의 입력은 arbitrary mesh geometry나 name inference가 아니라
+버전이 명시된(versioned) LK mapping manifest와 namespaced durable entity
+metadata다. 여기서 LK mapping manifest는 자산 `AssetManifestV1`이나 bundle
+`manifest.json`이 아니라 LK Map Document/Bundle의 mapping 계약을 가리킨다.
+importer는 prim 이름이나 mesh 형상으로 semantic을 유추하지 않고 이 manifest와
+`lk:` namespaced metadata로만 공통 primitive를 인식한다. scene-graph path/이름만으로
+묶는 path-only binding은 durable identity가 아니라 weak이며 rename/reparent 시
+remap-required가 된다.
 
 엔진 SDK는 `core`, `assets`, `testing`, `three`, `r3f`에 들어가지 않는다. 공통
 schema, 좌표 정규화, validator와 conformance fixture는 LDS3D 후보지만 실제 engine
@@ -250,6 +278,13 @@ document command를 둔다. orbit, pan, zoom, home과 focus는
 `Scene3DFrame`의 `ViewerToolbar`에 둔다. `LayerPanel`은 visibility/lock을 가진
 실제 display layer tree에만 사용한다.
 
+`CanvasEditorCommandBar`에는 자동 overflow 계약이 없다. 좁은 폭에서 낮은
+우선순위 document command는 제품이 public LDS `DropdownMenu`와 LDS action
+trigger를 `CanvasEditorCommandBar.children`에 조합해 도달하게 하며 custom
+overflow menu는 만들지 않는다. 폭을 감지해 command를 자동으로 접는 재사용
+generic auto-overflow 동작은 LDS3D가 여기서 소유·구현하지 않는 별도 additive
+LDS gap이며 이 ADR은 그 변경을 승인하지 않는다.
+
 현재 LDS `CanvasEditorShell.layers`는 display layer용이며 public `Tree`는 controlled
 selection, selected state, lock/visibility, unmapped/diff/validation 상태와 row action을
 제공하지 않는다. 따라서 selectable site/level/object structure tree는 확인된 LDS
@@ -289,8 +324,10 @@ review → locked-source preview+semantic overlay → ready/invalid다. Reimport
 `levelId`, meters-per-pixel, origin, yaw, opacity와 lock을 보정·기록한 뒤 tracing을
 허용한다. Storybook은 실제 파일을 읽지 않고 각 상태를 seeded fixture로 검토한다.
 
-320px/390px narrow acceptance는 다음을 포함한다. document command는 overflow 또는
-priority 정책으로 모두 도달 가능해야 하고 hidden region은 tab order에서 제거한다.
+320px/390px narrow acceptance는 다음을 포함한다. 모든 document command는
+`CanvasEditorCommandBar`의 자동 overflow 없이 도달 가능해야 하며, 낮은 우선순위
+command는 제품이 `CanvasEditorCommandBar.children`에 조합한 public LDS
+`DropdownMenu`로 노출하고 hidden region은 tab order에서 제거한다.
 Region 전환 trigger가 focus를 유지하며 canvas를 떠날 때 pointer capture는 commit 없이
 끝나고 logical draft는 복귀 가능하게 보존한다. Tool rail은 canvas region과 함께만
 노출하고 responsive navigation/status는 계속 도달 가능해야 하며 selection은 region
