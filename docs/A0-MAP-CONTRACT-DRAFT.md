@@ -288,4 +288,10 @@ A0 완료 조건은 다음 fixture와 계약 test의 승인이다(구현이 아�
    계약). 5종 모두 ajv(draft 2020-12)로 스키마 적합 확인, weak-without-path는 거부됨.
    coordinate-roundtrip은 §9-2 test가 담당(총 6종). A0 sign-off 시 fixture와 스키마를
    `testing`/`3d-spatial` package로 승격하고 손으로 쓴 validator를 추가한다.
-5. 그 뒤 A1(unified model 구현)로 진행.
+5. **A1 착수(draft)** — unified production 모델
+   [packages/core/src/lk-map-document.ts](../packages/core/src/lk-map-document.ts)를
+   구현했다: 스키마를 미러링한 TS 타입 + `validateLKMapDocument`/`assertValidLKMapDocument`
+   손 validator로, JSON Schema가 표현 못 하는 referential integrity(vertex/level/waypoint
+   참조), ID 유일성, Contract 1 raster 상수, durable/weak binding 규칙을 강제한다.
+   Story-local V2와 분리돼 있고, sign-off 전이라 `core` index로 **export하지 않으며**
+   test가 직접 강제한다. sign-off 시 index export + `3d-spatial` 승격.
