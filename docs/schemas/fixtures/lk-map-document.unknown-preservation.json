@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc/unknown-preservation",
+  "name": "Unknown Preservation",
+  "coordinate": {
+    "handedness": "right",
+    "up": "+Z",
+    "forward": "+X",
+    "unitsLength": "meter",
+    "unitsAngle": "radian",
+    "origin": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] }
+  },
+  "structure": {
+    "levels": [
+      {
+        "kind": "level",
+        "id": "level/1f",
+        "elevationMeters": 0,
+        "transform": {
+          "sourceFrame": "level/1f",
+          "targetFrame": "lk-map",
+          "translation": [0, 0, 0],
+          "rotation": [0, 0, 0, 1],
+          "scale": [1, 1, 1]
+        }
+      }
+    ]
+  },
+  "extensions": {
+    "lk-web-viz": {
+      "zonePermissions": { "level/1f": "restricted" }
+    }
+  },
+  "x-unknown": {
+    "isaac:physicsScene": {
+      "gravity": [0, 0, -9.81],
+      "solverType": "TGS"
+    },
+    "usd:customLayerData": {
+      "authoringTool": "Isaac Sim 2024.1",
+      "opaqueBlob": "b64:AAECAwQFBgcICQ=="
+    }
+  }
+}

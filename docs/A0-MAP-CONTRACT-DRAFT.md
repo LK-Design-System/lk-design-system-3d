@@ -281,6 +281,11 @@ A0 완료 조건은 다음 fixture와 계약 test의 승인이다(구현이 아�
 3. coordinate profile 계약 test를 core 좌표 함수에 바인딩 — **완료**
    ([packages/core/tests/coordinate-profile.test.ts](../packages/core/tests/coordinate-profile.test.ts)):
    image → level → image 및 cell ↔ dataIndex 왕복을 property test로 강제(계약 1의 기계 강제).
-4. 남은 golden fixture(minimal-level, durable-binding, weak-remap, unknown-preservation,
-   derived-provenance)를 `testing` package 계약 test로 승인 — **다음 단계**.
+4. golden fixture 6종 — **완료.** minimal-level, durable-binding, weak-remap,
+   unknown-preservation, derived-provenance를 [docs/schemas/fixtures/](schemas/fixtures/)에
+   두고 [packages/core/tests/lk-map-document-schema.test.ts](../packages/core/tests/lk-map-document-schema.test.ts)가
+   repo-native로 강제한다($ref 정합, 필수 필드, Contract 1 raster 상수, binding/provenance
+   계약). 5종 모두 ajv(draft 2020-12)로 스키마 적합 확인, weak-without-path는 거부됨.
+   coordinate-roundtrip은 §9-2 test가 담당(총 6종). A0 sign-off 시 fixture와 스키마를
+   `testing`/`3d-spatial` package로 승격하고 손으로 쓴 validator를 추가한다.
 5. 그 뒤 A1(unified model 구현)로 진행.

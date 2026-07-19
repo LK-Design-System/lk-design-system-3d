@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc/durable-binding",
+  "name": "Durable Binding",
+  "coordinate": {
+    "handedness": "right",
+    "up": "+Z",
+    "forward": "+X",
+    "unitsLength": "meter",
+    "unitsAngle": "radian",
+    "origin": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] }
+  },
+  "structure": {
+    "levels": [
+      {
+        "kind": "level",
+        "id": "level/1f",
+        "elevationMeters": 0,
+        "transform": {
+          "sourceFrame": "level/1f",
+          "targetFrame": "lk-map",
+          "translation": [0, 0, 0],
+          "rotation": [0, 0, 0, 1],
+          "scale": [1, 1, 1]
+        }
+      }
+    ]
+  },
+  "binding": {
+    "source": {
+      "tool": "isaac",
+      "version": "2024.1",
+      "documentId": "warehouse.usd",
+      "hash": "sha256:11e0a1c2d3e4f50617283940516273849506172839405162738495061728394a"
+    },
+    "normalizedBaseRef": "sha256:base00112233445566778899aabbccddeeff00112233445566778899aabbccddee",
+    "entities": [
+      {
+        "entityId": "level/1f",
+        "kind": "durable",
+        "durableId": "lk:entityId:warehouse-level-1f",
+        "fingerprint": "fp:level-1f:v1",
+        "fieldOwnership": {
+          "transform.translation": "source",
+          "name": "web"
+        },
+        "tombstone": false
+      }
+    ]
+  }
+}

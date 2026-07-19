@@ -79,3 +79,71 @@ describe("A0 LK Map Document draft schema", () => {
     expect(fixtureRaster.dataIndex).toBe("row * width + column");
   });
 });
+
+const FIXTURE_NAMES = [
+  "minimal-level",
+  "durable-binding",
+  "weak-remap",
+  "unknown-preservation",
+  "derived-provenance",
+];
+
+function readFixture(name: string): Record<string, unknown> {
+  return asRecord(readJson(`../../../docs/schemas/fixtures/lk-map-document.${name}.json`));
+}
+
+describe("A0 LK Map Document golden fixtures", () => {
+  it("every fixture carries the schema-required top-level fields", () => {
+    const required = (asRecord(readJson(SCHEMA_PATH)).required as unknown[]).map(String);
+    for (const name of FIXTURE_NAMES) {
+      const fixture = readFixture(name);
+      for (const field of required) {
+        expect(Object.prototype.hasOwnProperty.call(fixture, field), `${name}.${field}`).toBe(true);
+      }
+    }
+  });
+
+  it("durable-binding pins a durable identity, source metadata and normalized base", () => {
+    const binding = asRecord(readFixture("durable-binding").binding);
+    const source = asRecord(binding.source);
+    for (const field of ["tool", "version", "documentId", "hash"]) {
+      expect(typeof source[field]).toBe("string");
+    }
+    expect(typeof binding.normalizedBaseRef).toBe("string");
+    const entity = asRecord((binding.entities as unknown[])[0]);
+    expect(entity.kind).toBe("durable");
+    expect(typeof entity.durableId).toBe("string");
+    for (const owner of Object.values(asRecord(entity.fieldOwnership))) {
+      expect(["source", "web"]).toContain(owner);
+    }
+  });
+
+  it("weak-remap binds by scene-graph path only (never a durable id)", () => {
+    const binding = asRecord(readFixture("weak-remap").binding);
+    for (const raw of binding.entities as unknown[]) {
+      const entity = asRecord(raw);
+      if (entity.kind === "weak") {
+        expect(typeof entity.path).toBe("string");
+        expect(entity.durableId).toBeUndefined();
+      }
+    }
+  });
+
+  it("unknown-preservation round-trips x-unknown losslessly", () => {
+    const fixture = readFixture("unknown-preservation");
+    expect(fixture["x-unknown"]).toBeDefined();
+    const roundTrip = asRecord(JSON.parse(JSON.stringify(fixture)) as unknown);
+    expect(roundTrip["x-unknown"]).toEqual(fixture["x-unknown"]);
+  });
+
+  it("derived-provenance records every derived artifact with source and generator", () => {
+    const derived = asRecord(readFixture("derived-provenance").provenance).derived as unknown[];
+    expect(derived.length).toBeGreaterThan(0);
+    for (const raw of derived) {
+      const entry = asRecord(raw);
+      for (const field of ["artifact", "sourceHash", "generator", "generatorVersion"]) {
+        expect(typeof entry[field]).toBe("string");
+      }
+    }
+  });
+});

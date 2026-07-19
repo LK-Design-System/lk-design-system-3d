@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc/weak-remap",
+  "name": "Weak Remap",
+  "coordinate": {
+    "handedness": "right",
+    "up": "+Z",
+    "forward": "+X",
+    "unitsLength": "meter",
+    "unitsAngle": "radian",
+    "origin": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] }
+  },
+  "structure": {
+    "levels": [
+      {
+        "kind": "level",
+        "id": "level/1f",
+        "elevationMeters": 0,
+        "transform": {
+          "sourceFrame": "level/1f",
+          "targetFrame": "lk-map",
+          "translation": [0, 0, 0],
+          "rotation": [0, 0, 0, 1],
+          "scale": [1, 1, 1]
+        }
+      }
+    ]
+  },
+  "binding": {
+    "source": {
+      "tool": "unreal",
+      "version": "5.4",
+      "documentId": "Warehouse.umap",
+      "hash": "sha256:22f1b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff0"
+    },
+    "entities": [
+      {
+        "entityId": "level/1f",
+        "kind": "weak",
+        "path": "/Game/Maps/Warehouse/Level_1F",
+        "fingerprint": "fp:level-1f:v1"
+      }
+    ]
+  }
+}

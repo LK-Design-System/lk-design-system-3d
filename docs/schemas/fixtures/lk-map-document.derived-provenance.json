@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "documentId": "doc/derived-provenance",
+  "name": "Derived Provenance",
+  "coordinate": {
+    "handedness": "right",
+    "up": "+Z",
+    "forward": "+X",
+    "unitsLength": "meter",
+    "unitsAngle": "radian",
+    "origin": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] }
+  },
+  "structure": {
+    "levels": [
+      {
+        "kind": "level",
+        "id": "level/1f",
+        "elevationMeters": 0,
+        "transform": {
+          "sourceFrame": "level/1f",
+          "targetFrame": "lk-map",
+          "translation": [0, 0, 0],
+          "rotation": [0, 0, 0, 1],
+          "scale": [1, 1, 1]
+        }
+      }
+    ]
+  },
+  "provenance": {
+    "derived": [
+      {
+        "artifact": "derived/web-preview.glb",
+        "sourceHash": "sha256:33a2b3c4d5e6f7081920314253647586a9b0c1d2e3f40516273849506172a3b4c",
+        "generator": "lk-usd-to-glb",
+        "generatorVersion": "0.1.0",
+        "exportProfile": "web-preview-v1"
+      },
+      {
+        "artifact": "derived/occupancy/level-1f.png",
+        "sourceHash": "sha256:33a2b3c4d5e6f7081920314253647586a9b0c1d2e3f40516273849506172a3b4c",
+        "generator": "lk-occupancy-export",
+        "generatorVersion": "0.1.0",
+        "exportProfile": "ros-occupancy-v1",
+        "params": {
+          "resolutionMeters": 0.05,
+          "occupiedThresh": 0.65,
+          "freeThresh": 0.196,
+          "levelZRange": [0.05, 1.8]
+        }
+      }
+    ]
+  }
+}
