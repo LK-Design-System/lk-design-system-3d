@@ -20,7 +20,7 @@
         "GroundPlane",
         "GroundGrid"
       ],
-      "scenarioStoryId": "lds-3d-lds-integration-operations-viewer--overview",
+      "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "하나의 헤드리스 호스트가 CoreSpace 좌표 기준, CameraRig, 하나의 SceneEnvironment를 소유하며 앱 크롬은 R3F 밖에 둡니다.",
         "usage": "실제 캔버스는 SceneCanvas 하나를 마운트하고 공개 호스트 API로 환경을 설정합니다.",
@@ -28,13 +28,13 @@
         "interaction": "LDS SegmentedControl은 호스트 콜백으로 카메라 모드를 요청하며 렌더러는 카메라 버튼을 만들지 않습니다.",
         "accessibility-motion": "캔버스에 접근 가능한 이름이 있고 현재 카메라 상태를 DOM에 노출하며 정적 검토는 주변 목표 모션 없이 요청 기반 렌더링을 사용합니다.",
         "responsive": "Storybook 캔버스를 넓은 폭에서 320 CSS px까지 줄여도 호스트는 하나의 전체 너비 캔버스를 유지하며 페이지 레이아웃이나 인스펙터 크롬을 소유하지 않습니다.",
-        "scenario": "lds-3d-lds-integration-operations-viewer--overview에서 승인된 LDS 뷰어 조합 안의 같은 호스트 계약을 검증합니다."
+        "scenario": "visual-alpha--operational-neutral에서 승인된 LDS 뷰어 조합 안의 같은 호스트 계약을 검증합니다."
       }
     },
     "lds-3d-primitives-selectable--overview": {
       "actualWebgl": true,
       "atoms": ["Selectable"],
-      "scenarioStoryId": "lds-3d-lds-integration-operations-viewer--overview",
+      "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "Selectable은 일시적 호버와 하나의 지속 공간 식별자만 제공하며 제품 명령은 렌더러 밖에 둡니다.",
         "usage": "실제 캔버스는 일반 WebGL 메시를 Selectable로 감싸고 공개 콜백으로 호버와 선택을 제어합니다.",
@@ -42,13 +42,13 @@
         "interaction": "포인터 호버와 클릭이 제어된 식별자를 갱신하고 LDS 액션이 렌더러 소유 버튼 없이 선택을 해제합니다.",
         "accessibility-motion": "이름이 있는 캔버스를 DOM 호버·선택 요약이 보완하며 선택에는 주변 애니메이션이 없습니다.",
         "responsive": "제한된 너비에서도 공간 하위 트리는 호스트 캔버스 안에 남고 DOM 요약은 새 캔버스 레이아웃을 만들지 않고 LDS Stack을 통해 줄바꿈됩니다.",
-        "scenario": "lds-3d-lds-integration-operations-viewer--overview는 선택 식별자를 LDS 선택 인스펙터로 전달합니다."
+        "scenario": "visual-alpha--operational-neutral는 선택 식별자를 LDS 선택 인스펙터로 전달합니다."
       }
     },
     "lds-3d-primitives-amr-robot--overview": {
       "actualWebgl": true,
       "atoms": ["AmrRobot"],
-      "scenarioStoryId": "lds-3d-lds-integration-operations-viewer--overview",
+      "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "AmrRobot은 의미를 갖는 대체 AMR 시각 요소이며 작업 카드, 명령 표면, 자산 레지스트리가 아닙니다.",
         "usage": "실제 캔버스는 프레임이 지정된 RobotEntity 입력을 AmrRobot으로 직접 렌더링합니다.",
@@ -56,13 +56,13 @@
         "interaction": "로봇 클릭은 공통 선택 계약만 갱신합니다.",
         "accessibility-motion": "이름이 있는 캔버스에 DOM 선택 객체 요약이 있으며 이 대체 시각 요소는 검토 중 자율 모션을 사용하지 않습니다.",
         "responsive": "제한된 너비에서 로봇 형상은 하나의 호스트 캔버스와 함께 조절되고 객체 세부 정보는 호출자 소유 DOM 관심사로 남습니다.",
-        "scenario": "lds-3d-lds-integration-operations-viewer--overview는 AMR 상태를 LDS 인스펙터 및 뷰포트 상태와 조합합니다."
+        "scenario": "visual-alpha--operational-neutral는 AMR 상태를 LDS 인스펙터 및 뷰포트 상태와 조합합니다."
       }
     },
     "lds-3d-primitives-goal-marker--overview": {
       "actualWebgl": true,
       "atoms": ["GoalMarker"],
-      "scenarioStoryId": "lds-3d-lds-integration-operations-viewer--overview",
+      "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "GoalMarker는 공간 의도만 전달하며 목표 확인이나 확정은 제품 소유 LDS 액션이 담당해야 합니다.",
         "usage": "실제 캔버스는 프레임이 지정된 GoalEntity 입력을 GoalMarker로 직접 렌더링합니다.",
@@ -70,13 +70,13 @@
         "interaction": "마커 클릭은 지속 선택을 갱신하지만 로봇 명령을 내리지 않습니다.",
         "accessibility-motion": "이름이 있는 캔버스가 선택 목표 식별 정보를 DOM에 노출하며 animated가 false이므로 루프 없이 모션 감소 동작을 검토할 수 있습니다.",
         "responsive": "제한된 너비에서도 마커는 뷰포트 형상으로 남고 확인 문구나 액션은 LDS 조합 경계에 둡니다.",
-        "scenario": "lds-3d-lds-integration-operations-viewer--overview는 실제 뷰어 시나리오에 계획 목표와 유효하지 않은 목표를 배치합니다."
+        "scenario": "visual-alpha--operational-neutral는 실제 뷰어 시나리오에 계획 목표와 유효하지 않은 목표를 배치합니다."
       }
     },
     "lds-3d-primitives-path-ribbon--overview": {
       "actualWebgl": true,
       "atoms": ["PathRibbon"],
-      "scenarioStoryId": "lds-3d-lds-integration-operations-viewer--overview",
+      "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "PathRibbon은 기본적으로 수동 경로 형상이며 경로 편집기 워크플로와 탐색 목록은 이 프리미티브에 포함하지 않습니다.",
         "usage": "실제 캔버스는 프레임이 지정된 PathEntity 점을 선택이 명시적으로 활성화된 PathRibbon으로 직접 렌더링합니다.",
@@ -84,7 +84,7 @@
         "interaction": "이 검토에서는 선택을 명시적으로 켜며 상태 색상과 패턴을 덮지 않는 별도 외곽선 및 공통 선택 식별자만 갱신합니다.",
         "accessibility-motion": "이름이 있는 캔버스에 DOM 선택 경로 요약이 있고 animated가 false이므로 실행 진행 커서가 결정론적이며 모션 감소에 안전합니다.",
         "responsive": "제한된 너비에서도 리본은 하나의 캔버스 안 공간 형상으로 남고 경로 메타데이터는 인접 LDS DOM 레이어가 소유합니다.",
-        "scenario": "lds-3d-lds-integration-operations-viewer--overview는 하나의 실제 장면에서 실제, 실행 중, 계획, 차단 경로를 조합합니다."
+        "scenario": "visual-alpha--operational-neutral는 하나의 실제 장면에서 실제, 실행 중, 계획, 차단 경로를 조합합니다."
       }
     },
     "lds-3d-primitives-scene-state-marker--overview": {
@@ -104,7 +104,7 @@
     "lds-3d-primitives-gltf-model--overview": {
       "actualWebgl": true,
       "atoms": ["GltfModel"],
-      "scenarioStoryId": "lds-3d-lds-integration-operations-viewer--overview",
+      "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "GltfModel은 배치, 로딩, 소스 규약 정규화, 배치 수명주기를 소유하며 제품 자산 레지스트리와 워크플로는 밖에 둡니다.",
         "usage": "실제 캔버스는 명시적인 core 소스 규약과 함께 GltfModel로 실제 AMR GLB를 로딩합니다.",
@@ -112,7 +112,7 @@
         "interaction": "로딩된 GLB를 클릭하면 공통 공간 상호작용 계약으로 하나의 선택 식별자를 전달합니다.",
         "accessibility-motion": "이름이 있는 캔버스를 DOM 로딩·선택 요약이 보완하며 자산에는 검토용 주변 애니메이션이 없습니다.",
         "responsive": "제한된 너비에서도 GLB는 하나의 WebGL 호스트 안에 남고 자산 메타데이터와 복구 액션은 DOM 조합 관심사로 유지합니다.",
-        "scenario": "lds-3d-lds-integration-operations-viewer--overview는 LDS 뷰포트와 인스펙터 표면 옆에서 실제 자산 계약을 검증합니다."
+        "scenario": "visual-alpha--operational-neutral는 LDS 뷰포트와 인스펙터 표면 옆에서 실제 자산 계약을 검증합니다."
       }
     },
     "lds-3d-primitives-point-cloud-layer--overview": {

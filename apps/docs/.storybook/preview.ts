@@ -116,7 +116,7 @@ const preview: Preview = {
               "Spatial Editing",
             ],
             "LDS Integration",
-            ["Focused Point Cloud Viewer", "Spatial Editor", "Operations Viewer"],
+            ["Focused Point Cloud Viewer", "Spatial Editor"],
           ],
         ],
       },

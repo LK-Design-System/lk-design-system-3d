@@ -800,20 +800,20 @@ hooks, coordinate helpers, and fixed `VisualAlphaModel`/
 not new spatial atoms; their behavior is reviewed through the listed host or
 scenario rather than by a separate product-like Storybook page.
 
-| Overview story                                   | Covered public spatial atoms                                                             | Scenario evidence                                             |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `lds-3d-primitives--scene-canvas`                | `SceneCanvas`, `CameraRig`, `CoreSpace`, `SceneEnvironment`, `GroundPlane`, `GroundGrid` | `lds-3d-lds-integration-operations-viewer--overview`          |
-| `lds-3d-primitives-selectable--overview`         | `Selectable`                                                                             | `lds-3d-lds-integration-operations-viewer--overview`          |
-| `lds-3d-primitives-amr-robot--overview`          | `AmrRobot`                                                                               | `lds-3d-lds-integration-operations-viewer--overview`          |
-| `lds-3d-primitives-goal-marker--overview`        | `GoalMarker`                                                                             | `lds-3d-lds-integration-operations-viewer--overview`          |
-| `lds-3d-primitives-path-ribbon--overview`        | `PathRibbon`                                                                             | `lds-3d-lds-integration-operations-viewer--overview`          |
-| `lds-3d-primitives-point-cloud-layer--overview`  | `PointCloudLayer`, `PointCloudLayers`                                                    | `lds-3d-scenes-point-cloud-foundation--lds-integration`       |
-| `lds-3d-primitives-occupancy-grid-surface--overview` | `OccupancyGridSurface`                                                                | `lds-3d-scenes-occupancy-grid--overview`                      |
-| `lds-3d-primitives-marker-layer--overview`       | `MarkerLayer`                                                                            | `lds-3d-scenes-tf-marker--overview`                           |
-| `lds-3d-primitives-spatial-editing--overview`    | `SectionBox`, `EditVolume`                                                               | `lds-3d-scenes-spatial-editing--overview`                     |
-| `lds-3d-primitives-spatial-authoring--overview`  | `SpatialStructure`, `TransformGizmo`                                                     | `lds-3d-scenes-spatial-authoring-foundation--lds-integration` |
-| `lds-3d-primitives-scene-state-marker--overview` | `SceneStateMarker`                                                                       | `lds-3d-states-renderer-lifecycle--overview`                  |
-| `lds-3d-primitives-gltf-model--overview`         | `GltfModel`                                                                              | `lds-3d-lds-integration-operations-viewer--overview`          |
+| Overview story                                       | Covered public spatial atoms                                                             | Scenario evidence                                             |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `lds-3d-primitives--scene-canvas`                    | `SceneCanvas`, `CameraRig`, `CoreSpace`, `SceneEnvironment`, `GroundPlane`, `GroundGrid` | `visual-alpha--operational-neutral`                           |
+| `lds-3d-primitives-selectable--overview`             | `Selectable`                                                                             | `visual-alpha--operational-neutral`                           |
+| `lds-3d-primitives-amr-robot--overview`              | `AmrRobot`                                                                               | `visual-alpha--operational-neutral`                           |
+| `lds-3d-primitives-goal-marker--overview`            | `GoalMarker`                                                                             | `visual-alpha--operational-neutral`                           |
+| `lds-3d-primitives-path-ribbon--overview`            | `PathRibbon`                                                                             | `visual-alpha--operational-neutral`                           |
+| `lds-3d-primitives-point-cloud-layer--overview`      | `PointCloudLayer`, `PointCloudLayers`                                                    | `lds-3d-scenes-point-cloud-foundation--lds-integration`       |
+| `lds-3d-primitives-occupancy-grid-surface--overview` | `OccupancyGridSurface`                                                                   | `lds-3d-scenes-occupancy-grid--overview`                      |
+| `lds-3d-primitives-marker-layer--overview`           | `MarkerLayer`                                                                            | `lds-3d-scenes-tf-marker--overview`                           |
+| `lds-3d-primitives-spatial-editing--overview`        | `SectionBox`, `EditVolume`                                                               | `lds-3d-scenes-spatial-editing--overview`                     |
+| `lds-3d-primitives-spatial-authoring--overview`      | `SpatialStructure`, `TransformGizmo`                                                     | `lds-3d-scenes-spatial-authoring-foundation--lds-integration` |
+| `lds-3d-primitives-scene-state-marker--overview`     | `SceneStateMarker`                                                                       | `lds-3d-states-renderer-lifecycle--overview`                  |
+| `lds-3d-primitives-gltf-model--overview`             | `GltfModel`                                                                              | `visual-alpha--operational-neutral`                           |
 
 For constrained-width review, resize each technical story between a normal
 width and 320 CSS px. Spatial atoms remain inside the single `SceneCanvas`; they

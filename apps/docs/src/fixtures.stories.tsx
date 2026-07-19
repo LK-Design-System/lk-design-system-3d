@@ -310,7 +310,7 @@ export const FloorHitProjection: Story = {
       <TechnicalStoryLayout
         eyebrow="LDS 3D / 계약 예제"
         title="기준 바닥 교차점 투영"
-        description="Alpha.1은 기존 시스템의 기준 교차점을 받아 렌더-코어-제품 지도 프레임 투영을 검증합니다. 이후 그림자 비교기에서 사용하는 계약이며 이 예제 자체는 레이캐스팅을 수행하지 않습니다."
+        description="이 계약은 기존 시스템의 기준 교차점을 받아 렌더-코어-제품 지도 프레임 투영을 검증합니다. 이후 그림자 비교기에서 사용하는 계약이며 이 예제 자체는 레이캐스팅을 수행하지 않습니다."
       >
         <Grid minItemWidth="min(100%, 24rem)" gap="var(--space-6)">
           <TechnicalSection

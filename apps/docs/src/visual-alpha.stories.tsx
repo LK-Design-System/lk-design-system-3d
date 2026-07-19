@@ -693,6 +693,7 @@ export function RendererStateExperience(): ReactNode {
     <LdsFocusedViewerPage
       cameraMode={cameraMode}
       description="페이지 셸을 유지한 채 렌더러의 로딩·빈 상태·오류·재시도·복구 상태를 확인합니다."
+      eyebrow="LDS 3D / 상태"
       onCameraModeChange={setCameraMode}
       onRetry={() => setRuntimeState("ready")}
       pageTitle="렌더러 수명주기와 복구"
@@ -770,6 +771,7 @@ export function GoalPathStateExperience(): ReactNode {
     <LdsFocusedViewerPage
       cameraMode={cameraMode}
       description="하나의 선택 가능한 창고 장면에서 목표 의도와 경로 실행 상태를 비교합니다."
+      eyebrow="LDS 3D / 상태"
       onCameraModeChange={setCameraMode}
       onClearSelection={() => setSelected(null)}
       pageTitle="목표와 경로 상태 체계"

@@ -18,8 +18,8 @@ export const STORY_ID_REDIRECTS = Object.freeze({
   "visual-alpha--asset-catalog": "lds-3d-scenes-asset-review--overview",
   "visual-alpha--goal-and-path-states": "lds-3d-states-goal-and-path--overview",
   "visual-alpha--loading-error-empty": "lds-3d-states-renderer-lifecycle--overview",
-  "visual-alpha--actual-lds-composition":
-    "lds-3d-lds-integration-operations-viewer--overview",
+  "visual-alpha--actual-lds-composition": "visual-alpha--operational-neutral",
+  "lds-3d-lds-integration-operations-viewer--overview": "visual-alpha--operational-neutral",
 });
 
 export function resolveStoryIdRedirect(href) {

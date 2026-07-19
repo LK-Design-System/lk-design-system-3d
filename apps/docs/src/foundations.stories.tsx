@@ -134,7 +134,7 @@ export const CoordinateSystem: Story = {
     <TechnicalStoryLayout
       eyebrow="LDS 3D / 기반"
       title="LK 코어 좌표계"
-      description="Alpha.1은 렌더러에 독립적인 오른손 좌표 계약을 고정합니다. +Z는 위쪽, +X는 전방이며 단위는 미터입니다. 이 SVG는 기술 다이어그램이며 완성된 WebGL 장면을 대신하지 않습니다."
+      description="이 계약은 렌더러에 독립적인 오른손 좌표계를 고정합니다. +Z는 위쪽, +X는 전방이며 단위는 미터입니다. 이 SVG는 기술 다이어그램이며 완성된 WebGL 장면을 대신하지 않습니다."
     >
       <Grid minItemWidth="min(100%, 24rem)" gap="var(--space-6)">
         <TechnicalSection

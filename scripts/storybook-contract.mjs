@@ -34,7 +34,6 @@ export const expectedStoryIds = [
   "lds-3d-scenes-asset-review--overview",
   "lds-3d-states-goal-and-path--overview",
   "lds-3d-states-renderer-lifecycle--overview",
-  "lds-3d-lds-integration-operations-viewer--overview",
 ].sort();
 
 export const requiredPrimitiveReviewStages = Object.freeze([
