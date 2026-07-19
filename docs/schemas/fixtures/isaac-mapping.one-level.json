@@ -1,0 +1,101 @@
+{
+  "manifestVersion": 1,
+  "targetSchemaVersion": 1,
+  "source": {
+    "tool": "isaac",
+    "version": "2024.1",
+    "documentId": "warehouse.usd",
+    "hash": "sha256:11e0a1c2d3e4f50617283940516273849506172839405162738495061728394a"
+  },
+  "coordinate": {
+    "handedness": "right",
+    "up": "+Z",
+    "forward": "+X",
+    "unitsLength": "meter",
+    "unitsAngle": "radian",
+    "origin": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] },
+    "raster": {
+      "imageOrigin": "top-left",
+      "gridRow0": "min-Y",
+      "rowFlip": "cell.row = heightCells - 1 - pixel.rowFromTop",
+      "rosYamlOrigin": "lower-left",
+      "dataIndex": "row * width + column",
+      "originYaw": 0,
+      "negate": 0,
+      "occupiedThresh": 0.65,
+      "freeThresh": 0.196,
+      "anchor": {
+        "anchorPixel": [0, 0],
+        "metersPerPixel": 0.05,
+        "levelPose": { "frame": "lk-map", "position": [0, 0, 0], "orientation": [0, 0, 0, 1] },
+        "yaw": 0
+      }
+    }
+  },
+  "documentId": "doc/minimal-level",
+  "name": "Minimal Level",
+  "levels": [
+    {
+      "lkId": "level/1f",
+      "durableId": "lk:entityId:warehouse-level-1f",
+      "elevationMeters": 0,
+      "transform": {
+        "sourceFrame": "level/1f",
+        "targetFrame": "lk-map",
+        "translation": [0, 0, 0],
+        "rotation": [0, 0, 0, 1],
+        "scale": [1, 1, 1]
+      }
+    }
+  ],
+  "vertices": [
+    { "lkId": "v/1", "durableId": "lk:entityId:v1", "levelLkId": "level/1f", "position": [0, 0, 0] },
+    { "lkId": "v/2", "durableId": "lk:entityId:v2", "levelLkId": "level/1f", "position": [4, 0, 0] },
+    { "lkId": "v/3", "durableId": "lk:entityId:v3", "levelLkId": "level/1f", "position": [4, 3, 0] },
+    { "lkId": "v/4", "durableId": "lk:entityId:v4", "levelLkId": "level/1f", "position": [0, 3, 0] }
+  ],
+  "floors": [
+    {
+      "lkId": "floor/1",
+      "durableId": "lk:entityId:floor-1",
+      "levelLkId": "level/1f",
+      "vertexLkIds": ["v/1", "v/2", "v/3", "v/4"]
+    }
+  ],
+  "walls": [
+    {
+      "lkId": "wall/north",
+      "durableId": "lk:entityId:wall-north",
+      "levelLkId": "level/1f",
+      "vertexLkIds": ["v/4", "v/3"],
+      "thicknessMeters": 0.1,
+      "heightMeters": 2.4
+    }
+  ],
+  "route": {
+    "waypoints": [
+      {
+        "lkId": "wp/a",
+        "durableId": "lk:entityId:wp-a",
+        "levelLkId": "level/1f",
+        "vertexLkId": "v/1"
+      },
+      {
+        "lkId": "wp/b",
+        "durableId": "lk:entityId:wp-b",
+        "levelLkId": "level/1f",
+        "vertexLkId": "v/3"
+      }
+    ],
+    "edges": [
+      {
+        "lkId": "edge/ab",
+        "durableId": "lk:entityId:edge-ab",
+        "fromWaypointLkId": "wp/a",
+        "toWaypointLkId": "wp/b",
+        "direction": "bidirectional",
+        "widthMeters": 0.8
+      }
+    ]
+  }
+}

@@ -295,3 +295,11 @@ A0 완료 조건은 다음 fixture와 계약 test의 승인이다(구현이 아�
    참조), ID 유일성, Contract 1 raster 상수, durable/weak binding 규칙을 강제한다.
    Story-local V2와 분리돼 있고, sign-off 전이라 `core` index로 **export하지 않으며**
    test가 직접 강제한다. sign-off 시 index export + `3d-spatial` 승격.
+6. **A2 착수(draft, contract 층)** — dual-path 수렴을 계약 층에서 증명했다.
+   [packages/core/src/lk-map-import.ts](../packages/core/src/lk-map-import.ts)의
+   `normalizeIsaacReferenceMapping`이 declared-metadata Isaac 매핑 매니페스트
+   ([schemas/fixtures/isaac-mapping.one-level.json](schemas/fixtures/isaac-mapping.one-level.json),
+   versioned manifest + `lk:entityId` namespaced durable metadata — mesh/name inference
+   아님)를 canonical document로 정규화하고, 그 structure·semantics가 native-authored
+   minimal-level과 **동일**하며 durable binding만 추가됨을 test가 강제한다. 실제 USD
+   파싱, Native Builder 제스처, derived GLB/occupancy 생성은 런타임 경계로 A2 이후다.
