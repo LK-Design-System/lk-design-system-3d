@@ -303,3 +303,9 @@ A0 완료 조건은 다음 fixture와 계약 test의 승인이다(구현이 아�
    아님)를 canonical document로 정규화하고, 그 structure·semantics가 native-authored
    minimal-level과 **동일**하며 durable binding만 추가됨을 test가 강제한다. 실제 USD
    파싱, Native Builder 제스처, derived GLB/occupancy 생성은 런타임 경계로 A2 이후다.
+7. **A5 착수(draft, contract 층)** — reimport 3-way diff를 순수 로직으로 구현했다.
+   [packages/core/src/lk-map-reimport.ts](../packages/core/src/lk-map-reimport.ts)의
+   `computeReimportDiff(base, current, incoming)`가 durable 결합에 add/change/delete/conflict를,
+   source·web 동시 변경 field에 conflict를, path-only weak 결합 소실에 remap-required를
+   만든다(자동 delete 아님). 결과는 결정적이며 입력을 변형하지 않는다. diff **적용**(제품
+   소유 merge·history·persistence)은 계약 밖이다.
