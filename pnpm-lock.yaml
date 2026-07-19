@@ -132,8 +132,8 @@ importers:
         specifier: 0.1.0-rc.0
         version: 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-robotics/lds-robotics-ui':
-        specifier: 0.1.0-rc.0
-        version: 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: 0.1.0-rc.1
+        version: 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-robotics/lds-theme':
         specifier: 0.1.0-rc.0
         version: 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -908,8 +908,8 @@ packages:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-robotics/lds-robotics-ui@0.1.0-rc.0':
-    resolution: {integrity: sha512-NUqgpJtChIXW2eyNCm5gOu4pzt/QRL69CtTTRCt7UuvuQ3ZAQ+kentlEszBRNcFkMvVLEZuyRDQJVFV/gJhCvw==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-robotics-ui/0.1.0-rc.0/32942e7cd4dde4616a63acaf0cca60040cc46409}
+  '@lk-robotics/lds-robotics-ui@0.1.0-rc.1':
+    resolution: {integrity: sha512-GCLXO/0ob9AO7nbeni02JgJ5Iuo7KMYOSBjOeoT0spgg2VSCcwFAZzwxXxrohspjy07ipW9x8rp5c12HCWuVeA==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-robotics-ui/0.1.0-rc.1/d265c8d6b1e782fd73e1ae215d22327dd1de9a0d}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
@@ -3731,7 +3731,7 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-robotics/lds-robotics-ui@0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-robotics/lds-robotics-ui@0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@lk-robotics/lds-core': 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-robotics/lds-product': 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
