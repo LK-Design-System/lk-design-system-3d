@@ -59,7 +59,8 @@ pnpm visual-alpha:runtime-qa
 pnpm package-smoke
 ```
 
-개발 중 Storybook은 `pnpm storybook`으로 확인합니다. API report와 evidence는 각각
+개발 중 Storybook은 `pnpm storybook`으로 확인합니다. 형제 저장소와 동시에 띄울
+수 있도록 `http://127.0.0.1:6007`에 바인딩합니다(코어 `6006`, Robotics UI `6008`). API report와 evidence는 각각
 `pnpm api-report`, `pnpm evidence`로 다시 생성할 수 있습니다. `pnpm lint`는 승인된
 root·subpath API baseline과 필수 package export 집합의 drift도 함께 차단합니다.
 `pnpm visual-alpha:runtime-qa`는 먼저 `pnpm build-storybook`을 실행한 뒤 사용하며,
