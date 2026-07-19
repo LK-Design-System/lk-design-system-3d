@@ -58,7 +58,7 @@ A0에서 **하지 않는 것**: 실제 renderer/authoring 구현, USD codec, nat
 | per-field ownership | 필드 단위 소유자(`source`/`web`) 기록. conflict 판정의 근거. |
 | tombstone | 명시적 삭제 표식(누락된 weak binding과 구분). |
 | coordinate profile | right-handed·Z-up·meter·radian, origin/frame, 2D reference·occupancy raster 좌표 규약(§5). |
-| adapter capability | adapter가 선언하는 지원 계약(`import`/`reimport`/`bundle-read`/`bundle-write`/`source-writeback`/`derived-export` + schema/version). |
+| adapter capability | adapter가 선언하는 지원 계약(`import`/`reimport`/`bundle-read`/`bundle-write`/`source-writeback`/`derived-export` + schema/version). draft 스키마는 [schemas/adapter-capability.v1.draft.schema.json](schemas/adapter-capability.v1.draft.schema.json)이며 `derivedReverseImport`는 `const false`로 ADR 금지선을 강제한다. |
 | derived output | GLB preview, level별 occupancy PNG/YAML. **비정본 cache**(authored source 아님). |
 
 ## 3. `LK Map Document` — JSON Schema 골격

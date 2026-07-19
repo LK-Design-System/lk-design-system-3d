@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "adapterId": "adapter/isaac-openusd-reference",
+  "tool": "isaac",
+  "version": "2024.1",
+  "supportedDocumentSchemaVersions": [1],
+  "capabilities": {
+    "import": true,
+    "reimport": true,
+    "bundleRead": true,
+    "bundleWrite": true,
+    "sourceWriteback": "none",
+    "derivedExport": ["glb", "occupancy-png", "occupancy-yaml"],
+    "visualRoundTrip": false,
+    "derivedReverseImport": false
+  }
+}

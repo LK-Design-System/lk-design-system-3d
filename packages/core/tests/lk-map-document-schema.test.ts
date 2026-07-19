@@ -147,3 +147,29 @@ describe("A0 LK Map Document golden fixtures", () => {
     }
   });
 });
+
+const CAP_SCHEMA_PATH = "../../../docs/schemas/adapter-capability.v1.draft.schema.json";
+const CAP_FIXTURE_PATH = "../../../docs/schemas/fixtures/adapter-capability.isaac-reference.json";
+
+describe("A0 adapter capability contract", () => {
+  it("forbids derived reverse import via a const false in the schema", () => {
+    const schema = asRecord(readJson(CAP_SCHEMA_PATH));
+    const capabilities = asRecord(asRecord(schema.properties).capabilities);
+    const capProps = asRecord(capabilities.properties);
+    expect(asRecord(capProps.derivedReverseImport).const).toBe(false);
+  });
+
+  it("isaac-reference fixture is a read-only reference adapter with derived export", () => {
+    const fixture = asRecord(readJson(CAP_FIXTURE_PATH));
+    expect(fixture.supportedDocumentSchemaVersions as unknown[]).toContain(1);
+    const caps = asRecord(fixture.capabilities);
+    expect(caps.import).toBe(true);
+    expect(caps.reimport).toBe(true);
+    expect(caps.bundleRead).toBe(true);
+    expect(caps.bundleWrite).toBe(true);
+    expect(caps.sourceWriteback).toBe("none");
+    expect(caps.visualRoundTrip).toBe(false);
+    expect(caps.derivedReverseImport).toBe(false);
+    expect(caps.derivedExport as unknown[]).toContain("glb");
+  });
+});

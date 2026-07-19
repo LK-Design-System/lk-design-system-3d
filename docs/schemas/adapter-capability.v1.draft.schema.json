@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.lk-robotics.com/design-system-3d/adapter-capability.v1.draft.schema.json",
+  "title": "LK Map Adapter Capability V1 (DRAFT)",
+  "description": "DRAFT declaration of what an external-tool adapter supports against the LK Map Document/Bundle contract. Pending A0 sign-off; see docs/A0-MAP-CONTRACT-DRAFT.md §2 and ADR-0002 '서로 다른 세 가지 round-trip'. An adapter must not claim capabilities it does not implement; saving an LK sidecar alone is not source-writeback.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "adapterId",
+    "tool",
+    "version",
+    "supportedDocumentSchemaVersions",
+    "capabilities"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "adapterId": { "type": "string", "minLength": 1 },
+    "tool": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "supportedDocumentSchemaVersions": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "import",
+        "reimport",
+        "bundleRead",
+        "bundleWrite",
+        "sourceWriteback",
+        "derivedExport",
+        "visualRoundTrip",
+        "derivedReverseImport"
+      ],
+      "properties": {
+        "import": {
+          "type": "boolean",
+          "description": "external source -> LK read (geometry, hierarchy, transform, coordinate metadata, known semantic binding)."
+        },
+        "reimport": {
+          "type": "boolean",
+          "description": "3-way compare of a new source revision against the previous normalized base + web edits."
+        },
+        "bundleRead": {
+          "type": "boolean",
+          "description": "read an LK Map Bundle. Bundle round-trip is the required contract for every supported adapter."
+        },
+        "bundleWrite": { "type": "boolean", "description": "write an LK Map Bundle." },
+        "sourceWriteback": {
+          "enum": ["none", "semantic", "structural"],
+          "description": "LK -> external source. 'none' = read-only adapter; 'semantic' = route/area/goal/facility to a sidecar/override the tool reads; 'structural' = supported level/floor/wall/door/asset transform subset written to the source."
+        },
+        "derivedExport": {
+          "type": "array",
+          "items": { "enum": ["glb", "occupancy-png", "occupancy-yaml"] },
+          "uniqueItems": true,
+          "description": "non-authoritative derived runtime outputs the adapter can produce."
+        },
+        "visualRoundTrip": {
+          "type": "boolean",
+          "description": "full preservation of engine material/shader/Blueprint/MonoBehaviour/physics/sensor. Not guaranteed by the contract; typically false."
+        },
+        "derivedReverseImport": {
+          "const": false,
+          "description": "recovering an authored scene from GLB/occupancy is forbidden; always false."
+        }
+      }
+    }
+  }
+}
