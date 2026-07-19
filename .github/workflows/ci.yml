@@ -9,15 +9,11 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  # This is the CI compatibility pin for the private LDS dependency. It does
-  # not replace the separately recorded LDS visual-audit baseline.
-  LDS_COMMIT: b5f910c20c87358700c85707b789dcfe489b99b6
 
 jobs:
   quality:
@@ -27,6 +23,8 @@ jobs:
     # setting. The hosted image also includes Chrome for the WebGL runtime QA.
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      NODE_AUTH_TOKEN: ${{ github.token }}
     defaults:
       run:
         shell: pwsh
@@ -39,38 +37,20 @@ jobs:
           path: lk-design-system-3d
           persist-credentials: false
 
-      - name: Verify LDS checkout credential
-        env:
-          LDS_READ_TOKEN: ${{ secrets.LDS_READ_TOKEN }}
-        run: |
-          if ([string]::IsNullOrWhiteSpace($env:LDS_READ_TOKEN)) {
-            throw "LDS_READ_TOKEN must grant read-only Contents access to LK-ROBOTICS/lk-design-system."
-          }
-
-      - name: Checkout pinned LDS
-        uses: actions/checkout@v7.0.0
+      - name: Run pinned LDS conformance
+        id: lds_conformance
+        uses: LK-ROBOTICS/lk-design-system/.github/actions/lds-conformance@b06aef7c605c47bd11ca2bfdc371d25bf7c9ba92
         with:
-          repository: LK-ROBOTICS/lk-design-system
-          ref: ${{ env.LDS_COMMIT }}
-          token: ${{ secrets.LDS_READ_TOKEN }}
-          path: "LK Design System"
-          persist-credentials: false
+          profile: lds3d-ui
+          root: lk-design-system-3d
 
-      - name: Verify LDS package contract
+      - name: Export pinned LDS conformance paths
+        env:
+          CONFORMANCE_CLI: ${{ steps.lds_conformance.outputs.cli }}
+          CONFORMANCE_ROOT: ${{ steps.lds_conformance.outputs.lds_root }}
         run: |
-          $ldsPath = Join-Path $env:GITHUB_WORKSPACE "LK Design System"
-          $actualCommit = git -C $ldsPath rev-parse HEAD
-          if ($actualCommit -ne $env:LDS_COMMIT) {
-            throw "Expected LDS $env:LDS_COMMIT but checked out $actualCommit."
-          }
-
-          $ldsPackage = Get-Content (Join-Path $ldsPath "package.json") -Raw | ConvertFrom-Json
-          if ($ldsPackage.name -ne "@lk-robotics/design-system-core") {
-            throw "Unexpected LDS package name: $($ldsPackage.name)"
-          }
-          if ($ldsPackage.version -ne "0.1.0") {
-            throw "Unexpected LDS package version: $($ldsPackage.version)"
-          }
+          "LDS_CONFORMANCE_CLI=$env:CONFORMANCE_CLI" >> $env:GITHUB_ENV
+          "LDS_CONFORMANCE_ROOT=$env:CONFORMANCE_ROOT" >> $env:GITHUB_ENV
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6.0.9
@@ -81,9 +61,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7.0.0
         with:
-          node-version: 22
+          node-version: 22.17.1
           cache: pnpm
           cache-dependency-path: lk-design-system-3d/pnpm-lock.yaml
+          registry-url: https://npm.pkg.github.com
+          scope: "@lk-robotics"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

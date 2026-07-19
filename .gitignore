@@ -11,3 +11,4 @@ coverage/
 *.tsbuildinfo
 apps/docs/storybook.log
 apps/docs/storybook.error.log
+.claude/

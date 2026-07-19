@@ -466,7 +466,13 @@ function SceneLegend({ profile }: { readonly profile: SceneVisualProfile }): Rea
         description="18 × 12 m · LK 코어 +Z 위쪽"
         elevation="sm"
         padding="var(--space-3)"
-        title="AMR 창고"
+        title={
+          profile === "diagnostic-technical" ? (
+            <span style={{ color: "var(--component-card-fg-dark)" }}>AMR 창고</span>
+          ) : (
+            "AMR 창고"
+          )
+        }
       >
         <Stack as="section" gap="var(--space-2)">
           <Legend
