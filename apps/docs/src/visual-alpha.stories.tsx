@@ -1,6 +1,6 @@
 import { Html } from "@react-three/drei";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SegmentedControl } from "@lk-robotics/design-system-core/components/selection/SegmentedControl";
+import { SegmentedControl } from "@lk-robotics/lds-core/components/selection/SegmentedControl";
 import { useMemo, useState, type ReactNode } from "react";
 import {
   GoalMarker,

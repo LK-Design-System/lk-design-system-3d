@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Code,
-  Grid,
-  Stack,
-  StatusBadge,
-  Table,
-} from "@lk-robotics/design-system-core";
+import { Code, Grid, Stack, StatusBadge } from "@lk-robotics/lds-core";
+import { Table } from "@lk-robotics/lds-product";
 import {
   AUTHORITATIVE_FLOOR_HIT_FIXTURE,
   ROBOT_POSE_FIXTURE,

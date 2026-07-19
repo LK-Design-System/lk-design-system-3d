@@ -1,10 +1,5 @@
-import {
-  Card,
-  Code,
-  Container,
-  PageHeader,
-  Stack,
-} from "@lk-robotics/design-system-core";
+import { Card, Code, Container, Stack } from "@lk-robotics/lds-core";
+import { PageHeader } from "@lk-robotics/lds-product";
 import { useId, type PropsWithChildren, type ReactNode } from "react";
 
 export interface TechnicalStoryLayoutProps extends PropsWithChildren {

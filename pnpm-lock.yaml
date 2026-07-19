@@ -125,9 +125,18 @@ importers:
       '@lk-robotics/design-system-3d-three':
         specifier: workspace:*
         version: link:../../packages/three
-      '@lk-robotics/design-system-core':
-        specifier: link:../../../LK Design System
-        version: link:../../../LK Design System
+      '@lk-robotics/lds-core':
+        specifier: 0.1.0-rc.0
+        version: 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-robotics/lds-product':
+        specifier: 0.1.0-rc.0
+        version: 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-robotics/lds-robotics-ui':
+        specifier: 0.1.0-rc.0
+        version: 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-robotics/lds-theme':
+        specifier: 0.1.0-rc.0
+        version: 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-three/drei':
         specifier: 'catalog:'
         version: 10.7.7(@react-three/fiber@9.6.1(@types/react@19.1.16)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1))(@types/react@19.1.16)(@types/three@0.185.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1)
@@ -886,6 +895,30 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@lk-robotics/lds-core@0.1.0-rc.0':
+    resolution: {integrity: sha512-PKRrZMtEpm9Fl621B9JfqKnZmGnLxVR+6Q3KQl8Imi3KXNLf9bbXQj6JFXAWXr6gMSBX5kcj2FPhTDI7gXIbMg==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-core/0.1.0-rc.0/7d21fc3224c18289bcae763cbff3230d2e0e75fb}
+    peerDependencies:
+      react: '>=18 <20'
+      react-dom: '>=18 <20'
+
+  '@lk-robotics/lds-product@0.1.0-rc.0':
+    resolution: {integrity: sha512-E9B63PiuwmiqbmsDhnaS9/17zK2RZOUIrxWBELa7zKcPBT4seW46ad0IRaIe8cO19vynNGihRFQVxDnrRgxd9Q==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-product/0.1.0-rc.0/2cd60e72d258c071b4b2027e808bc7120d1bd9c7}
+    peerDependencies:
+      react: '>=18 <20'
+      react-dom: '>=18 <20'
+
+  '@lk-robotics/lds-robotics-ui@0.1.0-rc.0':
+    resolution: {integrity: sha512-NUqgpJtChIXW2eyNCm5gOu4pzt/QRL69CtTTRCt7UuvuQ3ZAQ+kentlEszBRNcFkMvVLEZuyRDQJVFV/gJhCvw==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-robotics-ui/0.1.0-rc.0/32942e7cd4dde4616a63acaf0cca60040cc46409}
+    peerDependencies:
+      react: '>=18 <20'
+      react-dom: '>=18 <20'
+
+  '@lk-robotics/lds-theme@0.1.0-rc.0':
+    resolution: {integrity: sha512-3bWqBBMM+HdhwQY+DWUT1RGWC+6x+Fr1y67ZwWL2X6LQZRWOdOmDPUmbup0UWHxpSW39TQSQfB9+K59TrOQ5KQ==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-theme/0.1.0-rc.0/5103342c4106eccf4b649631a3a97f1b2127f47e}
+    peerDependencies:
+      react: '>=18 <20'
+      react-dom: '>=18 <20'
 
   '@loaderkit/resolve@1.0.6':
     resolution: {integrity: sha512-G8FdIoF5CypfwmD9rl8BXod5HDn8JqB0CCNBXDTaRZ+yRYhARrrSToX1zg1zy9jX3zLqigsELwhT4gNtkdQAUg==}
@@ -3686,6 +3719,30 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@lk-robotics/lds-core@0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+
+  '@lk-robotics/lds-product@0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      '@lk-robotics/lds-core': 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+
+  '@lk-robotics/lds-robotics-ui@0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      '@lk-robotics/lds-core': 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-robotics/lds-product': 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+
+  '@lk-robotics/lds-theme@0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      '@lk-robotics/lds-core': 0.1.0-rc.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
 
   '@loaderkit/resolve@1.0.6':
     dependencies:

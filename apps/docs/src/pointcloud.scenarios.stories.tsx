@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DescriptionList, StatusBadge } from "@lk-robotics/design-system-core";
+import { StatusBadge } from "@lk-robotics/lds-core";
+import { DescriptionList } from "@lk-robotics/lds-product";
 import {
   PointCloudLayer,
   SceneCanvas,

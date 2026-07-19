@@ -8,7 +8,11 @@ const config: StorybookConfig = {
       to: "/visual-alpha",
     },
     {
-      from: "../node_modules/@lk-robotics/design-system-core/assets",
+      from: "../node_modules/@lk-robotics/lds-core/assets",
+      to: "/assets",
+    },
+    {
+      from: "../node_modules/@lk-robotics/lds-product/assets",
       to: "/assets",
     },
   ],

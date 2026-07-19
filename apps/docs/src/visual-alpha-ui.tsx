@@ -1,16 +1,16 @@
-import { Button } from "@lk-robotics/design-system-core/components/buttons/Button";
-import { StatusBadge } from "@lk-robotics/design-system-core/components/content/StatusBadge";
-import { CanvasEditorShell } from "@lk-robotics/design-system-core/components/editor/CanvasEditorShell";
-import { SelectionInspector } from "@lk-robotics/design-system-core/components/editor/SelectionInspector";
-import { ViewportStatusBar } from "@lk-robotics/design-system-core/components/editor/ViewportStatusBar";
-import { Icon } from "@lk-robotics/design-system-core/components/icon/Icon";
-import { Container } from "@lk-robotics/design-system-core/components/layout/Container";
-import { Drawer } from "@lk-robotics/design-system-core/components/overlay/Drawer";
-import { Scene3DFrame } from "@lk-robotics/design-system-core/components/viz/Scene3DFrame";
+import { Button } from "@lk-robotics/lds-core/components/buttons/Button";
+import { StatusBadge } from "@lk-robotics/lds-core/components/content/StatusBadge";
+import { CanvasEditorShell } from "@lk-robotics/lds-robotics-ui/components/editor/CanvasEditorShell";
+import { SelectionInspector } from "@lk-robotics/lds-robotics-ui/components/editor/SelectionInspector";
+import { ViewportStatusBar } from "@lk-robotics/lds-robotics-ui/components/editor/ViewportStatusBar";
+import { Icon } from "@lk-robotics/lds-core/components/icon/Icon";
+import { Container } from "@lk-robotics/lds-core/components/layout/Container";
+import { Drawer } from "@lk-robotics/lds-product/components/overlay/Drawer";
+import { Scene3DFrame } from "@lk-robotics/lds-robotics-ui/components/viz/Scene3DFrame";
 import {
   ViewerToolbar,
   ViewerToolbarButton,
-} from "@lk-robotics/design-system-core/components/viz/ViewerToolbar";
+} from "@lk-robotics/lds-robotics-ui/components/viz/ViewerToolbar";
 import {
   useEffect,
   useState,
