@@ -6,6 +6,7 @@
   "sideEffects": false,
   "files": [
     "dist",
+    "robots",
     "asset-manifest.v1.schema.json",
     "README.md"
   ],
@@ -23,6 +24,10 @@
       "types": "./dist/legacy.d.ts",
       "import": "./dist/legacy.js"
     },
+    "./robots/catalog.json": "./robots/catalog.json",
+    "./robots/tron/tron.glb": "./robots/tron/tron.glb",
+    "./robots/tron/tron.asset-manifest.json": "./robots/tron/tron.asset-manifest.json",
+    "./robots/tron/provenance.json": "./robots/tron/provenance.json",
     "./asset-manifest.v1.schema.json": "./asset-manifest.v1.schema.json",
     "./package.json": "./package.json"
   },

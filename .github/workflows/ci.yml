@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # This is the CI compatibility pin for the private LDS dependency. It does
+  # not replace the separately recorded LDS visual-audit baseline.
+  LDS_COMMIT: b5f910c20c87358700c85707b789dcfe489b99b6
+
+jobs:
+  quality:
+    name: Build, test, Storybook, and package checks
+    # A clean Linux checkout preserves the repository's committed LF endings,
+    # so the format gate is independent of a contributor's Windows autocrlf
+    # setting. The hosted image also includes Chrome for the WebGL runtime QA.
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: lk-design-system-3d
+
+    steps:
+      - name: Checkout LDS3D
+        uses: actions/checkout@v7.0.0
+        with:
+          path: lk-design-system-3d
+          persist-credentials: false
+
+      - name: Verify LDS checkout credential
+        env:
+          LDS_READ_TOKEN: ${{ secrets.LDS_READ_TOKEN }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:LDS_READ_TOKEN)) {
+            throw "LDS_READ_TOKEN must grant read-only Contents access to LK-ROBOTICS/lk-design-system."
+          }
+
+      - name: Checkout pinned LDS
+        uses: actions/checkout@v7.0.0
+        with:
+          repository: LK-ROBOTICS/lk-design-system
+          ref: ${{ env.LDS_COMMIT }}
+          token: ${{ secrets.LDS_READ_TOKEN }}
+          path: "LK Design System"
+          persist-credentials: false
+
+      - name: Verify LDS package contract
+        run: |
+          $ldsPath = Join-Path $env:GITHUB_WORKSPACE "LK Design System"
+          $actualCommit = git -C $ldsPath rev-parse HEAD
+          if ($actualCommit -ne $env:LDS_COMMIT) {
+            throw "Expected LDS $env:LDS_COMMIT but checked out $actualCommit."
+          }
+
+          $ldsPackage = Get-Content (Join-Path $ldsPath "package.json") -Raw | ConvertFrom-Json
+          if ($ldsPackage.name -ne "@lk-robotics/design-system-core") {
+            throw "Unexpected LDS package name: $($ldsPackage.name)"
+          }
+          if ($ldsPackage.version -ne "0.1.0") {
+            throw "Unexpected LDS package version: $($ldsPackage.version)"
+          }
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.0.9
+        with:
+          version: 11.9.0
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: lk-design-system-3d/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Locate Chrome
+        run: |
+          $chrome = Get-Command google-chrome -ErrorAction Stop
+          "CHROME_PATH=$($chrome.Source)" >> $env:GITHUB_ENV
+
+      - name: Run Visual Alpha runtime QA
+        run: pnpm visual-alpha:runtime-qa
+
+      - name: Run package consumer smoke test
+        run: pnpm package-smoke
+
+      - name: Regenerate evidence
+        run: pnpm evidence

@@ -26,5 +26,6 @@ export default defineConfig({
     "@lk-robotics/design-system-3d-three/coordinates",
     "@lk-robotics/design-system-3d-three/r3f-bridge",
     "@lk-robotics/design-system-3d-pointcloud",
+    "@lk-robotics/design-system-3d-markers",
   ],
 });

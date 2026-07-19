@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "collectionId": "lk-design-system-3d/robots",
+  "version": "1.0.0",
+  "description": "Creator-authorized reusable robot GLB assets for LK Design System 3D.",
+  "assets": [
+    {
+      "id": "robots/tron",
+      "label": "Tron Robot",
+      "description": "Runtime-optimized Tron robot model with explicit glTF-to-LK coordinate normalization.",
+      "kind": "robot",
+      "format": "glb",
+      "file": "./tron/tron.glb",
+      "manifest": "./tron/tron.asset-manifest.json",
+      "provenance": "./tron/provenance.json",
+      "floorOrigin": true,
+      "coordinateSystem": {
+        "handedness": "right",
+        "upAxis": "+Y",
+        "forwardAxis": "+X",
+        "metersPerUnit": 1
+      },
+      "boundsInCoreMeters": {
+        "frame": "lk-world",
+        "min": [-0.285865992, -0.19572357260980006, 0],
+        "max": [0.21688892255420006, 0.195687026, 0.9978960219459001]
+      },
+      "integrity": {
+        "sha256": "a2ca4479f1fe098c624b6b657ac9e343dc66a800474a45c6d16c49ba75dbf1fa"
+      },
+      "license": {
+        "spdx": "LicenseRef-LK-Robotics-Internal",
+        "holder": "LK Robotics",
+        "attributionRequired": false
+      }
+    }
+  ]
+}

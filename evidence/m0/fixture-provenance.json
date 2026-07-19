@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-17T15:33:12.965Z",
+  "generatedAt": "2026-07-18T16:10:15.491Z",
   "passed": true,
-  "expectedFixtureCount": 13,
-  "provenanceRecordCount": 13,
+  "expectedFixtureCount": 14,
+  "provenanceRecordCount": 14,
   "issues": [],
   "records": [
     {
@@ -34,6 +34,16 @@
       "licenseSpdx": "CC0-1.0",
       "containsCustomerData": false,
       "contentSha256": "83fccf11495f52a91f8b39657ab1ab4eae14a318f84fef8835543bab36e3f144"
+    },
+    {
+      "fixtureId": "rotated-occupancy-grid",
+      "fixtureVersion": "1.0.0",
+      "origin": "generated",
+      "generatedBy": "LK Design System 3D",
+      "generationRecipe": "Synthetic 4x3 occupancy raster with a half-meter resolution and a shifted +90-degree origin.",
+      "licenseSpdx": "CC0-1.0",
+      "containsCustomerData": false,
+      "contentSha256": "1865e13f83f71f2c97d2124014fb99c33af685c02158fa26e6d39d46808521d7"
     },
     {
       "fixtureId": "robot-pose",

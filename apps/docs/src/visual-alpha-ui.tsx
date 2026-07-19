@@ -1,10 +1,10 @@
 import { Button } from "@lk-robotics/design-system-core/components/buttons/Button";
 import { StatusBadge } from "@lk-robotics/design-system-core/components/content/StatusBadge";
-import { CanvasEditorShell } from "@lk-robotics/design-system-core/components/editor/CanvasEditorShell";
 import { SelectionInspector } from "@lk-robotics/design-system-core/components/editor/SelectionInspector";
 import { ViewportStatusBar } from "@lk-robotics/design-system-core/components/editor/ViewportStatusBar";
 import { Icon } from "@lk-robotics/design-system-core/components/icon/Icon";
 import { Container } from "@lk-robotics/design-system-core/components/layout/Container";
+import { DockPanel } from "@lk-robotics/design-system-core/components/layout/DockPanel";
 import { Drawer } from "@lk-robotics/design-system-core/components/overlay/Drawer";
 import { Scene3DFrame } from "@lk-robotics/design-system-core/components/viz/Scene3DFrame";
 import {
@@ -30,6 +30,8 @@ export interface SelectedAssetDetails {
   readonly name: string;
   readonly kind: string;
   readonly status: "live" | "warning" | "error" | "idle";
+  readonly statusLabel?: string;
+  readonly statusTone?: NonNullable<ComponentProps<typeof StatusBadge>["tone"]>;
   readonly pose: readonly [number, number, number];
   readonly battery?: number;
   readonly task?: string;
@@ -50,6 +52,8 @@ export interface LdsFocusedViewerPageProps extends PropsWithChildren {
   readonly onCameraModeChange: (mode: VisualCameraMode) => void;
   readonly onRetry?: () => void;
   readonly onClearSelection?: () => void;
+  readonly emptySelectionLabel?: ReactNode;
+  readonly inspectorActions?: ReactNode;
   readonly reviewControls?: ReactNode;
   readonly storyMeta?: ReactNode;
 }
@@ -66,23 +70,36 @@ const RUNTIME_COPY: Readonly<
     }
   >
 > = Object.freeze({
-  ready: { state: "live", label: "Live" },
+  ready: { state: "live", label: "실시간" },
   loading: {
     state: "loading",
-    label: "Preparing spatial scene",
-    description: "Validating asset manifests and allocating the WebGL renderer.",
+    label: "3D 장면 준비 중",
+    description: "자산 manifest를 검증하고 WebGL 렌더러를 준비하고 있습니다.",
   },
   error: {
     state: "error",
-    label: "3D scene unavailable",
-    description: "Retry the renderer without losing the current scene context.",
+    label: "3D 장면을 사용할 수 없음",
+    description: "현재 장면 맥락을 유지한 채 렌더러를 다시 시도하세요.",
   },
   empty: {
     state: "no-source",
-    label: "No spatial entities",
-    description: "The renderer is ready, but this view contains no spatial entities.",
+    label: "공간 객체 없음",
+    description: "렌더러는 준비되었지만 이 뷰에 표시할 공간 객체가 없습니다.",
   },
 });
+
+function inspectorStatusLabel(status: SelectedAssetDetails["status"]): string {
+  switch (status) {
+    case "live":
+      return "실시간";
+    case "warning":
+      return "주의";
+    case "error":
+      return "오류";
+    case "idle":
+      return "대기";
+  }
+}
 
 function useNarrowViewer(): boolean {
   const [narrow, setNarrow] = useState(
@@ -122,11 +139,11 @@ function inspectorSections(
   if (selected === undefined) return [];
   const sections: NonNullable<ComponentProps<typeof SelectionInspector>["sections"]> = [
     {
-      title: "Spatial identity",
+      title: "공간 식별 정보",
       fields: [
-        { label: "Entity ID", value: selected.id },
+        { label: "객체 ID", value: selected.id },
         {
-          label: "Position",
+          label: "위치",
           value: selected.pose.map((value) => value.toFixed(2)).join(" · "),
           unit: "m",
           align: "right",
@@ -137,23 +154,23 @@ function inspectorSections(
 
   if (selected.battery !== undefined || selected.task !== undefined) {
     sections.push({
-      title: "Operations",
+      title: "운영 정보",
       fields: [
         ...(selected.battery === undefined
           ? []
-          : [{ label: "Battery", value: selected.battery, unit: "%", align: "right" as const }]),
-        ...(selected.task === undefined ? [] : [{ label: "Task", value: selected.task }]),
+          : [{ label: "배터리", value: selected.battery, unit: "%", align: "right" as const }]),
+        ...(selected.task === undefined ? [] : [{ label: "작업", value: selected.task }]),
       ],
     });
   }
 
   if (profile === "diagnostic") {
     sections.push({
-      title: "Diagnostics",
+      title: "진단 정보",
       fields: [
-        { label: "Frame", value: selected.frame ?? "lk-map" },
-        { label: "Source", value: selected.source ?? "fixture/visual-alpha" },
-        { label: "Timestamp", value: selected.timestamp ?? "T+08:42.120" },
+        { label: "프레임", value: selected.frame ?? "lk-map" },
+        { label: "소스", value: selected.source ?? "fixture/visual-alpha" },
+        { label: "관측 시각", value: selected.timestamp ?? "T+08:42.120" },
       ],
     });
   }
@@ -164,28 +181,36 @@ function SelectionDetails({
   selected,
   profile,
   onClearSelection,
+  emptySelectionLabel,
+  actions,
 }: {
   readonly selected: SelectedAssetDetails | undefined;
   readonly profile: VisualProfile;
   readonly onClearSelection: (() => void) | undefined;
+  readonly emptySelectionLabel: ReactNode | undefined;
+  readonly actions: ReactNode | undefined;
 }): ReactNode {
   return (
     <SelectionInspector
-      clearSelectionAriaLabel="Clear selection"
-      clearSelectionLabel="Clear selection"
-      emptyLabel="Select a robot, facility asset, goal, or path in the WebGL scene."
+      clearSelectionAriaLabel="선택 해제"
+      clearSelectionLabel="선택 해제"
+      emptyLabel={
+        emptySelectionLabel ??
+        "WebGL 장면에서 로봇, 시설 자산, 목표 또는 경로를 선택하세요."
+      }
       item={
         selected === undefined
           ? null
           : {
               label: selected.name,
               kind: selected.kind,
-              status: selected.status.toUpperCase(),
-              statusTone: inspectorTone(selected.status),
+              status: selected.statusLabel ?? inspectorStatusLabel(selected.status),
+              statusTone: selected.statusTone ?? inspectorTone(selected.status),
             }
       }
+      actions={actions}
       sections={inspectorSections(selected, profile)}
-      title="Selected spatial entity"
+      title="선택한 공간 객체"
       {...(selected !== undefined && onClearSelection !== undefined
         ? { onClearSelection }
         : {})}
@@ -197,7 +222,7 @@ export function LdsFocusedViewerPage({
   pageTitle,
   sceneTitle,
   description,
-  eyebrow = "LDS 3D / Scene",
+  eyebrow = "LDS 3D / 장면",
   profile,
   runtimeState = "ready",
   cameraMode,
@@ -205,12 +230,14 @@ export function LdsFocusedViewerPage({
   onCameraModeChange,
   onRetry,
   onClearSelection,
+  emptySelectionLabel,
+  inspectorActions,
   reviewControls,
   storyMeta = (
     <>
-      <span>Visual Alpha V0</span>
+      <span>AMR 운영</span>
       <span aria-hidden="true">·</span>
-      <span>6 GLB assets</span>
+      <span>GLB 자산 6개</span>
     </>
   ),
   children,
@@ -238,40 +265,42 @@ export function LdsFocusedViewerPage({
   const resolvedDescription =
     description ??
     (profile === "diagnostic"
-      ? "Read-only diagnostics for renderer, frame, source, and selected spatial entities."
-      : "Read-only spatial operations view for scene selection and inspection.");
-  const profileLabel = profile === "diagnostic" ? "Diagnostic Technical" : "Operational Neutral";
+      ? "렌더러, 프레임, 소스와 선택한 공간 객체를 읽기 전용으로 진단합니다."
+      : "장면을 선택하고 검사하는 읽기 전용 공간 운영 뷰입니다.");
+  const profileLabel = profile === "diagnostic" ? "진단 중심" : "운영 중심";
 
   const inspector = (
     <SelectionDetails
       selected={selected}
       profile={profile}
       onClearSelection={onClearSelection}
+      emptySelectionLabel={emptySelectionLabel}
+      actions={selected === undefined ? undefined : inspectorActions}
     />
   );
 
   const sceneFrame = (
     <Scene3DFrame
       appearance={appearance}
-      variant={isNarrow ? "standalone" : "embedded"}
+      variant="standalone"
       hud={
         <ViewportStatusBar
           data-testid="lds-viewport-status"
           items={[
             {
               key: "selection",
-              label: "Selected",
+              label: "선택",
               value: selectedCount,
               priority: "high",
             },
             {
               key: "camera",
-              label: "Camera",
-              value: cameraMode.toUpperCase(),
+              label: "카메라",
+              value: cameraMode === "home" ? "기본" : cameraMode === "top" ? "상단" : "초점",
             },
             {
               key: "frame",
-              label: "Frame",
+              label: "프레임",
               value: "lk-map",
               mono: true,
               priority: "low",
@@ -279,22 +308,22 @@ export function LdsFocusedViewerPage({
           ]}
         />
       }
-      label={`${sceneTitle} interactive 3D viewport`}
+      label={`${sceneTitle} 인터랙티브 3D 뷰포트`}
       state={runtime.state}
       stateLabel={runtime.label}
-      status="WebGL · R3F · meters"
+      status="WebGL · R3F · 미터"
       style={{ height: "100%", minHeight: 480 }}
       title={sceneTitle}
       toolbar={
         <ViewerToolbar
           appearance={profile === "diagnostic" ? "on-dark" : "surface"}
-          label="Camera and viewport controls"
+          label="카메라와 뷰포트 제어"
           orientation="horizontal"
           style={toolbarEndMargin === undefined ? undefined : { marginInlineEnd: toolbarEndMargin }}
         >
           <ViewerToolbarButton
             kind="toggle"
-            label="Home view"
+            label="기본 시점"
             pressed={cameraMode === "home"}
             onClick={() => onCameraModeChange("home")}
           >
@@ -302,7 +331,7 @@ export function LdsFocusedViewerPage({
           </ViewerToolbarButton>
           <ViewerToolbarButton
             kind="toggle"
-            label="Top view"
+            label="상단 시점"
             pressed={cameraMode === "top"}
             onClick={() => onCameraModeChange("top")}
           >
@@ -311,7 +340,7 @@ export function LdsFocusedViewerPage({
           <ViewerToolbarButton
             disabled={selected === undefined}
             kind="toggle"
-            label="Focus selected entity"
+            label="선택 객체에 초점"
             pressed={cameraMode === "focus"}
             onClick={() => onCameraModeChange("focus")}
           >
@@ -319,7 +348,7 @@ export function LdsFocusedViewerPage({
           </ViewerToolbarButton>
           {isNarrow ? (
             <ViewerToolbarButton
-              label="Open selected entity details"
+              label="선택 객체 세부 정보 열기"
               onClick={() => setDrawerOpen(true)}
             >
               <Icon aria-hidden="true" name="circle-info" size={16} />
@@ -334,7 +363,7 @@ export function LdsFocusedViewerPage({
         ? {
             stateAction: (
               <Button type="button" onClick={onRetry}>
-                Retry renderer
+                렌더러 다시 시도
               </Button>
             ),
           }
@@ -353,7 +382,7 @@ export function LdsFocusedViewerPage({
         profile === "diagnostic" ? "diagnostic-technical" : "operational-neutral"
       }
       data-theme={profile === "diagnostic" ? "dark" : "light"}
-      aria-label={`${pageTitle} 3D workspace`}
+      aria-label={`${pageTitle} 3D 작업 영역`}
       style={
         {
           "--lds3d-inspector-width": `${String(activeDockWidth)}px`,
@@ -375,43 +404,48 @@ export function LdsFocusedViewerPage({
         />
 
         {reviewControls === undefined ? null : (
-          <section className="lds3d-review-controls" aria-label="Story fixture controls">
+          <section className="lds3d-review-controls" aria-label="스토리 예제 제어">
             {reviewControls}
           </section>
         )}
 
-        <h2 className="lds3d-visually-hidden">{sceneTitle} workspace</h2>
+        <h2 className="lds3d-visually-hidden">{sceneTitle} 작업 영역</h2>
 
         <div className="lds3d-focused-viewer-layout" data-layout={isNarrow ? "narrow" : "wide"}>
           {isNarrow ? (
             sceneFrame
           ) : (
-            <CanvasEditorShell
-              aria-label={`${sceneTitle} spatial inspection workspace`}
-              panel={inspector}
-              panelLabel="Selected entity details"
-              panelMaxWidth={420}
-              panelMinWidth={280}
-              panelMode="drawer"
-              panelOpen={dockOpen}
-              panelWidth={dockWidth}
-              resizablePanels
-              onPanelOpenChange={setDockOpen}
-              onPanelWidthChange={setDockWidth}
-            >
+            <div className="lds3d-focused-viewer-workspace">
               {sceneFrame}
-            </CanvasEditorShell>
+              <div className="lds3d-focused-viewer-dock">
+                <DockPanel
+                  aria-label="선택한 공간 객체 세부 정보"
+                  bodyPadding={0}
+                  bodyStyle={{ overflow: "hidden" }}
+                  maxWidth={420}
+                  minWidth={280}
+                  open={dockOpen}
+                  resizable
+                  side="right"
+                  width={dockWidth}
+                  onOpenChange={setDockOpen}
+                  onWidthChange={setDockWidth}
+                >
+                  {inspector}
+                </DockPanel>
+              </div>
+            </div>
           )}
         </div>
       </Container>
 
       {isNarrow ? (
         <Drawer
-          ariaLabel="Selected entity details"
-          closeLabel="Close selected entity details"
+          ariaLabel="선택 객체 세부 정보"
+          closeLabel="선택 객체 세부 정보 닫기"
           open={drawerOpen}
           side="right"
-          title="Selected entity details"
+          title="선택 객체 세부 정보"
           width={380}
           onClose={() => setDrawerOpen(false)}
         >

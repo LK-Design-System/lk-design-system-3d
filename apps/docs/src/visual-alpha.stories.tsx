@@ -1,7 +1,15 @@
 import { Html } from "@react-three/drei";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import {
+  Card,
+  ContentBadge,
+  FormField,
+  Legend,
+  Stack,
+  StatusBadge,
+} from "@lk-robotics/design-system-core";
 import { SegmentedControl } from "@lk-robotics/design-system-core/components/selection/SegmentedControl";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import {
   GoalMarker,
   PathRibbon,
@@ -43,8 +51,9 @@ import {
 } from "./visual-alpha-ui.js";
 
 const meta = {
-  title: "LDS 3D/Scenes/Visual Alpha",
+  title: "LDS 3D/Scenes/AMR Operations",
   id: "visual-alpha",
+  excludeStories: /.*Experience$/,
   parameters: {
     canvasShell: "flush",
     controls: { disable: true },
@@ -126,16 +135,16 @@ type RouteVariant = keyof typeof ROUTES;
 type GoalVariant = "valid" | "preview" | "invalid";
 
 const ROUTE_OPTIONS = [
-  { value: "actual", label: "Actual" },
-  { value: "executing", label: "Executing" },
-  { value: "planned", label: "Planned" },
-  { value: "blocked", label: "Blocked" },
+  { value: "actual", label: "실제" },
+  { value: "executing", label: "실행 중" },
+  { value: "planned", label: "계획" },
+  { value: "blocked", label: "차단됨" },
 ];
 
 const GOAL_OPTIONS = [
-  { value: "valid", label: "Valid" },
-  { value: "preview", label: "Preview" },
-  { value: "invalid", label: "Invalid" },
+  { value: "valid", label: "유효" },
+  { value: "preview", label: "미리보기" },
+  { value: "invalid", label: "유효하지 않음" },
 ];
 
 const ACTIVE_GOAL: GoalEntity = Object.freeze({
@@ -188,8 +197,6 @@ interface StatusPalette {
   readonly error: string;
   readonly idle: string;
   readonly selected: string;
-  readonly labelBackground: string;
-  readonly labelText: string;
 }
 
 function statusPalette(profile: SceneVisualProfile): StatusPalette {
@@ -201,8 +208,6 @@ function statusPalette(profile: SceneVisualProfile): StatusPalette {
         error: "#FF6B78",
         idle: "#526B78",
         selected: "#43D9FF",
-        labelBackground: "rgba(7, 16, 24, 0.92)",
-        labelText: "#E9F5FF",
       }
     : {
         live: "#007A66",
@@ -211,34 +216,75 @@ function statusPalette(profile: SceneVisualProfile): StatusPalette {
         error: "#B42318",
         idle: "#60717E",
         selected: "#005FCC",
-        labelBackground: "rgba(255, 255, 255, 0.94)",
-        labelText: "#16202A",
       };
+}
+
+function visualEntityStatusLabel(status: VisualEntityStatus): string {
+  switch (status) {
+    case "live":
+      return "실시간";
+    case "stale":
+      return "오래됨";
+    case "warning":
+      return "주의";
+    case "error":
+      return "오류";
+    case "idle":
+      return "대기";
+  }
 }
 
 interface WorldLabelProps {
   readonly title: string;
   readonly meta: string;
   readonly position: Vec3;
-  readonly tone: string;
-  readonly profile: SceneVisualProfile;
+  readonly status: VisualEntityStatus;
+  readonly statusLabel?: string;
+  readonly statusTone?: NonNullable<ComponentProps<typeof StatusBadge>["tone"]>;
 }
 
-function WorldLabel({ title, meta: detail, position, tone, profile }: WorldLabelProps): ReactNode {
-  const palette = statusPalette(profile);
+function worldLabelTone(
+  status: VisualEntityStatus,
+): NonNullable<ComponentProps<typeof StatusBadge>["tone"]> {
+  switch (status) {
+    case "live":
+      return "online";
+    case "stale":
+      return "cautionary";
+    case "warning":
+      return "warning";
+    case "error":
+      return "negative";
+    case "idle":
+      return "offline";
+  }
+}
+
+function WorldLabel({
+  title,
+  meta: detail,
+  position,
+  status,
+  statusLabel,
+  statusTone,
+}: WorldLabelProps): ReactNode {
   return (
     <Html center position={position} style={{ pointerEvents: "none" }} zIndexRange={[5, 0]}>
-      <div
-        className={`visual-world-label${profile === "diagnostic-technical" ? " is-diagnostic" : ""}`}
-        style={{
-          borderColor: tone,
-          color: palette.labelText,
-          background: palette.labelBackground,
-        }}
+      <Stack
+        align="center"
+        aria-hidden="true"
+        as="span"
+        direction="row"
+        gap="var(--space-1)"
+        style={{ minWidth: "max-content", transform: "translateY(-50%)", whiteSpace: "nowrap" }}
       >
-        <span style={{ background: tone }} aria-hidden="true" />
-        <div><strong>{title}</strong><small>{detail}</small></div>
-      </div>
+        <ContentBadge color="neutral" size="xsmall">
+          {title}
+        </ContentBadge>
+        <StatusBadge tone={statusTone ?? worldLabelTone(status)}>
+          {statusLabel ?? `${visualEntityStatusLabel(status)} · ${detail}`}
+        </StatusBadge>
+      </Stack>
     </Html>
   );
 }
@@ -299,26 +345,51 @@ function EntityMarker({
       {showLabel ? (
         <WorldLabel
           title={name}
-          meta={`${status.toUpperCase()} · ${entityId}`}
+          meta={entityId}
           position={[0, 0, labelHeight]}
-          profile={profile}
-          tone={tone}
+          status={status}
         />
       ) : null}
     </group>
   );
 }
 
-function RouteLabels({ profile }: { readonly profile: SceneVisualProfile }): ReactNode {
-  const palette = statusPalette(profile);
-  return (
-    <>
-      <WorldLabel title="ACTUAL" meta="completed" position={[-5.9, -1.2, 0.42]} profile={profile} tone={palette.idle} />
-      <WorldLabel title="EXECUTING" meta="AMR 01" position={[-0.7, -0.45, 0.5]} profile={profile} tone={palette.live} />
-      <WorldLabel title="PLANNED" meta="to Dock 03" position={[4.4, 1.05, 0.48]} profile={profile} tone={palette.selected} />
-      <WorldLabel title="BLOCKED" meta="obstacle" position={[4.55, -2.78, 0.52]} profile={profile} tone={palette.error} />
-    </>
-  );
+const ROUTE_LABELS = Object.freeze([
+  {
+    id: ROUTES.actual.id,
+    title: "실제",
+    meta: "완료됨",
+    position: [-5.9, -1.2, 0.42] as Vec3,
+    status: "idle" as const,
+    statusLabel: "완료됨",
+    statusTone: "positive" as const,
+  },
+  {
+    id: ROUTES.executing.id,
+    title: "실행 중",
+    meta: "AMR 01",
+    position: [-0.7, -0.45, 0.5] as Vec3,
+    status: "live" as const,
+  },
+  {
+    id: ROUTES.planned.id,
+    title: "계획",
+    meta: "도크 03까지",
+    position: [4.4, 1.05, 0.48] as Vec3,
+    status: "warning" as const,
+  },
+  {
+    id: ROUTES.blocked.id,
+    title: "차단됨",
+    meta: "장애물",
+    position: [4.55, -2.78, 0.52] as Vec3,
+    status: "error" as const,
+  },
+]);
+
+function RouteLabels({ selected }: { readonly selected: EntityId | null }): ReactNode {
+  const label = ROUTE_LABELS.find((candidate) => candidate.id === selected);
+  return label === undefined ? null : <WorldLabel {...label} />;
 }
 
 interface WarehouseContentsProps {
@@ -381,19 +452,51 @@ function WarehouseContents({
           status={entity.status}
         />
       ))}
-      {persistentRouteLabels ? <RouteLabels profile={profile} /> : null}
+      {persistentRouteLabels ? <RouteLabels selected={selected} /> : null}
     </>
   );
 }
 
 function SceneLegend({ profile }: { readonly profile: SceneVisualProfile }): ReactNode {
   return (
-    <div className={`visual-scene-legend is-${profile}`}>
-      <strong>AMR WAREHOUSE</strong>
-      <div><span className="is-live" />Executing</div>
-      <div><span className="is-goal" />Goal / intent</div>
-      <div><span className="is-error" />Blocked / error</div>
-      <small>18 × 12 m · LK core +Z up</small>
+    <div className="visual-scene-legend">
+      <Card
+        aria-label="AMR 창고 장면 범례"
+        dark={profile === "diagnostic-technical"}
+        description="18 × 12 m · LK 코어 +Z 위쪽"
+        elevation="sm"
+        padding="var(--space-3)"
+        title="AMR 창고"
+      >
+        <Stack as="section" gap="var(--space-2)">
+          <Legend
+            aria-label="장면 상태 범례"
+            direction="vertical"
+            items={[
+              {
+                id: "executing",
+                label: "실행 중",
+                color: "var(--color-semantic-status-positive)",
+                shape: "line",
+              },
+              {
+                id: "goal",
+                label: "목표 / 의도",
+                color: "var(--color-semantic-primary-normal)",
+                shape: "dot",
+              },
+              {
+                id: "blocked",
+                label: "차단 / 오류",
+                color: "var(--color-semantic-status-negative)",
+                dashed: true,
+                shape: "line",
+              },
+            ]}
+            size="sm"
+          />
+        </Stack>
+      </Card>
     </div>
   );
 }
@@ -407,7 +510,7 @@ interface VisualDirectionExperienceProps {
   readonly initialCameraMode?: VisualCameraMode;
 }
 
-function VisualDirectionExperience({
+export function VisualDirectionExperience({
   profile,
   initialCameraMode = "home",
 }: VisualDirectionExperienceProps): ReactNode {
@@ -423,14 +526,14 @@ function VisualDirectionExperience({
       cameraMode={cameraMode}
       onCameraModeChange={setCameraMode}
       onClearSelection={() => setSelected(null)}
-      pageTitle="AMR Operations"
+      pageTitle="AMR 운영"
       profile={profile}
       runtimeState="ready"
-      sceneTitle="Warehouse / LK-MAP"
+      sceneTitle="창고 / LK-MAP"
       {...(details === undefined ? {} : { selected: details })}
     >
       <SceneCanvas
-        ariaLabel="AMR warehouse interactive WebGL scene"
+        ariaLabel="AMR 창고 인터랙티브 WebGL 장면"
         cameraMode={cameraMode}
         devicePixelRatio={STORY_DEVICE_PIXEL_RATIO}
         frame={MAP_FRAME}
@@ -473,11 +576,11 @@ interface CatalogPlacement {
 
 const CATALOG_PLACEMENTS: readonly CatalogPlacement[] = Object.freeze([
   { assetKey: "amr", id: entityId("catalog/amr"), label: "AMR", position: [-3.5, 2.2, 0] },
-  { assetKey: "rack", id: entityId("catalog/rack"), label: "Rack", position: [0, 2.2, 0] },
-  { assetKey: "chargingStation", id: entityId("catalog/charging-station"), label: "Charging station", position: [3.5, 2.2, 0] },
-  { assetKey: "pallet", id: entityId("catalog/pallet"), label: "Pallet", position: [-3.5, -2.0, 0] },
-  { assetKey: "cargoBin", id: entityId("catalog/cargo-bin"), label: "Cargo bin", position: [0, -2.0, 0] },
-  { assetKey: "safetyCone", id: entityId("catalog/safety-cone"), label: "Safety cone", position: [3.5, -2.0, 0] },
+  { assetKey: "rack", id: entityId("catalog/rack"), label: "랙", position: [0, 2.2, 0] },
+  { assetKey: "chargingStation", id: entityId("catalog/charging-station"), label: "충전 스테이션", position: [3.5, 2.2, 0] },
+  { assetKey: "pallet", id: entityId("catalog/pallet"), label: "팔레트", position: [-3.5, -2.0, 0] },
+  { assetKey: "cargoBin", id: entityId("catalog/cargo-bin"), label: "화물 상자", position: [0, -2.0, 0] },
+  { assetKey: "safetyCone", id: entityId("catalog/safety-cone"), label: "안전 콘", position: [3.5, -2.0, 0] },
 ]);
 
 function catalogDetails(id: EntityId | null): SelectedAssetDetails | undefined {
@@ -487,16 +590,16 @@ function catalogDetails(id: EntityId | null): SelectedAssetDetails | undefined {
     : {
         id: item.id,
         name: item.label,
-        kind: "Visual Alpha GLB",
+        kind: "LDS3D GLB",
         status: "live",
         pose: item.position,
         source: `/visual-alpha/${item.assetKey}`,
         frame: "lk-map",
-        timestamp: "deterministic build",
+        timestamp: "결정론적 빌드",
       };
 }
 
-function AssetCatalogExperience(): ReactNode {
+export function AssetCatalogExperience(): ReactNode {
   const [cameraMode, setCameraMode] = useState<VisualCameraMode>("home");
   const [selected, setSelected] = useState<EntityId | null>(CATALOG_PLACEMENTS[0]?.id ?? null);
   const [hovered, setHovered] = useState<EntityId | null>(null);
@@ -506,21 +609,20 @@ function AssetCatalogExperience(): ReactNode {
     focusedModel === undefined
       ? modelFocusBounds("amr", [0, 0, 0])
       : modelFocusBounds(focusedModel.assetKey, focusedModel.position);
-  const palette = statusPalette("operational-neutral");
   return (
     <LdsFocusedViewerPage
       cameraMode={cameraMode}
-      description="Review the six deterministic Visual Alpha assets in one spatial catalog."
+      description="결정론적으로 구성한 LDS3D 자산 6종을 하나의 공간 카탈로그에서 검토합니다."
       onCameraModeChange={setCameraMode}
       onClearSelection={() => setSelected(null)}
-      pageTitle="Industrial Asset Catalog"
+      pageTitle="산업 자산 카탈로그"
       profile="operational"
       runtimeState="ready"
-      sceneTitle="Asset review grid / LK-MAP"
+      sceneTitle="자산 검토 그리드 / LK-MAP"
       {...(details === undefined ? {} : { selected: details })}
     >
       <SceneCanvas
-        ariaLabel="Six interactive Visual Alpha GLB assets"
+        ariaLabel="LDS3D GLB 자산 6종 인터랙티브 장면"
         cameraMode={cameraMode}
         devicePixelRatio={STORY_DEVICE_PIXEL_RATIO}
         frame={MAP_FRAME}
@@ -550,13 +652,14 @@ function AssetCatalogExperience(): ReactNode {
               position={item.position}
               sourceConvention="core"
             />
-            <WorldLabel
-              meta={`actual ${item.assetKey} GLB`}
-              position={[item.position[0], item.position[1], item.assetKey === "rack" ? 2.85 : 1.35]}
-              profile="operational-neutral"
-              title={item.label}
-              tone={selected === item.id ? palette.selected : hovered === item.id ? palette.live : palette.idle}
-            />
+            {selected === item.id || hovered === item.id ? (
+              <WorldLabel
+                meta={`실제 ${item.assetKey} GLB`}
+                position={[item.position[0], item.position[1], item.assetKey === "rack" ? 2.85 : 1.35]}
+                status="live"
+                title={item.label}
+              />
+            ) : null}
           </group>
         ))}
       </SceneCanvas>
@@ -569,39 +672,39 @@ function renderStateFor(state: VisualRuntimeState): SceneRenderState {
     case "ready":
       return { kind: "ready" };
     case "loading":
-      return { kind: "loading", label: "Loading GLB catalog", progress: 0.58 };
+      return { kind: "loading", label: "GLB 카탈로그 로딩 중", progress: 0.58 };
     case "empty":
-      return { kind: "empty", title: "No spatial entities", description: "Renderer ready" };
+      return { kind: "empty", title: "공간 객체 없음", description: "렌더러 준비됨" };
     case "error":
       return {
         kind: "error",
-        title: "Asset load failed",
-        message: "Deliberate Visual Alpha recovery state",
+        title: "자산 로딩 실패",
+        message: "렌더러 복구 동작을 확인하기 위한 오류 상태입니다.",
         recoverable: true,
       };
   }
 }
 
-function RendererStateExperience(): ReactNode {
+export function RendererStateExperience(): ReactNode {
   const [runtimeState, setRuntimeState] = useState<VisualRuntimeState>("loading");
   const [cameraMode, setCameraMode] = useState<VisualCameraMode>("home");
   const details = selectedDetails(PRIMARY_AMR_ID);
   return (
     <LdsFocusedViewerPage
       cameraMode={cameraMode}
-      description="Exercise renderer loading, empty, error, retry, and recovered states without replacing the page shell."
+      description="페이지 셸을 유지한 채 렌더러의 로딩·빈 상태·오류·재시도·복구 상태를 확인합니다."
       onCameraModeChange={setCameraMode}
       onRetry={() => setRuntimeState("ready")}
-      pageTitle="Renderer Lifecycle & Recovery"
+      pageTitle="렌더러 수명주기와 복구"
       profile="operational"
       reviewControls={(
         <SegmentedControl
-          aria-label="Renderer state"
+          aria-label="렌더러 상태"
           options={[
-            { value: "ready", label: "Ready" },
-            { value: "loading", label: "Loading" },
-            { value: "empty", label: "Empty" },
-            { value: "error", label: "Error" },
+            { value: "ready", label: "준비됨" },
+            { value: "loading", label: "로딩" },
+            { value: "empty", label: "빈 상태" },
+            { value: "error", label: "오류" },
           ]}
           size="sm"
           value={runtimeState}
@@ -609,11 +712,11 @@ function RendererStateExperience(): ReactNode {
         />
       )}
       runtimeState={runtimeState}
-      sceneTitle="Warehouse / LK-MAP"
+      sceneTitle="창고 / LK-MAP"
       {...(details === undefined ? {} : { selected: details })}
     >
       <SceneCanvas
-        ariaLabel="Interactive renderer lifecycle states"
+        ariaLabel="렌더러 수명주기 상태 인터랙티브 장면"
         cameraMode={cameraMode}
         devicePixelRatio={STORY_DEVICE_PIXEL_RATIO}
         frame={MAP_FRAME}
@@ -638,7 +741,7 @@ function RendererStateExperience(): ReactNode {
   );
 }
 
-function GoalPathStateExperience(): ReactNode {
+export function GoalPathStateExperience(): ReactNode {
   const [cameraMode, setCameraMode] = useState<VisualCameraMode>("top");
   const [pathVariant, setPathVariant] = useState<RouteVariant>("executing");
   const [goalVariant, setGoalVariant] = useState<GoalVariant>("valid");
@@ -650,9 +753,9 @@ function GoalPathStateExperience(): ReactNode {
     selected === ACTIVE_GOAL.id && selectedBase !== undefined && goalVariant === "preview"
       ? {
           ...selectedBase,
-          name: "Dock 03 goal preview",
+          name: "도크 03 목표 미리보기",
           status: "warning" as const,
-          task: "Operator preview · not committed",
+          task: "운영자 미리보기 · 미확정",
         }
       : selectedBase;
 
@@ -666,45 +769,54 @@ function GoalPathStateExperience(): ReactNode {
   return (
     <LdsFocusedViewerPage
       cameraMode={cameraMode}
-      description="Compare goal intent and path execution states in the same selectable warehouse scene."
+      description="하나의 선택 가능한 창고 장면에서 목표 의도와 경로 실행 상태를 비교합니다."
       onCameraModeChange={setCameraMode}
       onClearSelection={() => setSelected(null)}
-      pageTitle="Goal & Path State Language"
+      pageTitle="목표와 경로 상태 체계"
       profile="operational"
       reviewControls={(
-        <div className="visual-state-controls">
-          <span>Path</span>
-          <SegmentedControl
-            aria-label="Path state"
-            options={ROUTE_OPTIONS}
-            size="sm"
-            value={pathVariant}
-            onChange={(value) => {
-              const next = value as RouteVariant;
-              setPathVariant(next);
-              setSelected(ROUTES[next].id);
-            }}
-          />
-          <span>Goal</span>
-          <SegmentedControl
-            aria-label="Goal state"
-            options={GOAL_OPTIONS}
-            size="sm"
-            value={goalVariant}
-            onChange={(value) => {
-              const next = value as GoalVariant;
-              setGoalVariant(next);
-              setSelected(next === "invalid" ? INVALID_GOAL.id : ACTIVE_GOAL.id);
-            }}
-          />
-        </div>
+        <Stack
+          align="end"
+          aria-label="상태 예제 제어"
+          as="section"
+          direction="row"
+          gap="var(--space-3)"
+          wrap
+        >
+          <FormField label="경로">
+            <SegmentedControl
+              aria-label="경로 상태"
+              options={ROUTE_OPTIONS}
+              size="sm"
+              value={pathVariant}
+              onChange={(value) => {
+                const next = value as RouteVariant;
+                setPathVariant(next);
+                setSelected(ROUTES[next].id);
+              }}
+            />
+          </FormField>
+          <FormField label="목표">
+            <SegmentedControl
+              aria-label="목표 상태"
+              options={GOAL_OPTIONS}
+              size="sm"
+              value={goalVariant}
+              onChange={(value) => {
+                const next = value as GoalVariant;
+                setGoalVariant(next);
+                setSelected(next === "invalid" ? INVALID_GOAL.id : ACTIVE_GOAL.id);
+              }}
+            />
+          </FormField>
+        </Stack>
       )}
       runtimeState="ready"
-      sceneTitle="Warehouse / LK-MAP"
+      sceneTitle="창고 / LK-MAP"
       {...(details === undefined ? {} : { selected: details })}
     >
       <SceneCanvas
-        ariaLabel="Interactive goal and path state language"
+        ariaLabel="목표와 경로 상태 인터랙티브 장면"
         cameraMode={cameraMode}
         devicePixelRatio={STORY_DEVICE_PIXEL_RATIO}
         frame={MAP_FRAME}
@@ -740,31 +852,11 @@ function GoalPathStateExperience(): ReactNode {
 }
 
 export const OperationalNeutral: Story = {
-  name: "Direction A · Operational Neutral",
+  name: "개요",
   render: () => <VisualDirectionExperience profile="operational" />,
 };
 
 export const DiagnosticTechnical: Story = {
-  name: "Direction B · Diagnostic Technical",
+  name: "변형·상태 · 진단 중심",
   render: () => <VisualDirectionExperience profile="diagnostic" />,
-};
-
-export const AssetCatalog: Story = {
-  name: "Actual GLB Asset Catalog",
-  render: () => <AssetCatalogExperience />,
-};
-
-export const GoalAndPathStates: Story = {
-  name: "Goal & Path State Language",
-  render: () => <GoalPathStateExperience />,
-};
-
-export const LoadingErrorEmpty: Story = {
-  name: "Loading, Error & Empty",
-  render: () => <RendererStateExperience />,
-};
-
-export const ActualLdsComposition: Story = {
-  name: "Actual LDS Composition",
-  render: () => <VisualDirectionExperience profile="operational" />,
 };

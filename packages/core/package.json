@@ -18,6 +18,10 @@
       "types": "./dist/coordinates.d.ts",
       "import": "./dist/coordinates.js"
     },
+    "./occupancy-grid": {
+      "types": "./dist/occupancy-grid.d.ts",
+      "import": "./dist/occupancy-grid.js"
+    },
     "./entities": {
       "types": "./dist/entities.d.ts",
       "import": "./dist/entities.js"

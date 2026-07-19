@@ -38,7 +38,7 @@ async function createPublishedPackage(packageDirectory) {
   return new Package(files, manifest.name, manifest.version);
 }
 
-for (const name of ["core", "assets", "testing", "pointcloud", "three", "r3f"]) {
+for (const name of ["core", "assets", "testing", "pointcloud", "tf", "markers", "three", "r3f"]) {
   const packageDirectory = path.join(root, "packages", name);
   const pkg = await createPublishedPackage(packageDirectory);
   const analysis = await checkPackage(pkg);

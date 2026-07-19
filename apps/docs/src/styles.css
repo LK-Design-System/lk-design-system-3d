@@ -13,9 +13,9 @@ body {
 }
 
 /*
- * Focused-viewer composition. Wide inspection uses the LDS CanvasEditorShell
- * to own the outer perimeter and contextual panel overlay; the narrow viewer keeps
- * Scene3DFrame primary and moves its secondary task into the LDS Drawer.
+ * Focused-viewer composition. Wide inspection keeps Scene3DFrame as the
+ * primary surface and docks the LDS DockPanel over the same workspace; the
+ * narrow viewer moves its secondary task into the LDS Drawer.
  * This layer owns page rhythm and the 991px transition only.
  */
 .lds3d-focused-viewer-page {
@@ -60,6 +60,22 @@ body {
   height: clamp(30rem, calc(100vh - 13rem), 50rem);
 }
 
+.lds3d-focused-viewer-workspace {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.lds3d-focused-viewer-dock {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+}
+
 .visual-canvas-slot {
   position: relative;
   width: 100%;
@@ -75,146 +91,13 @@ body {
   height: 100%;
 }
 
-.visual-state-controls {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.visual-state-controls > span {
-  color: var(--color-semantic-label-neutral);
-  font-size: var(--caption2-size);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--caption2-spacing);
-  text-transform: uppercase;
-}
-
-/* Scene-owned HTML labels remain tied to actual WebGL entities. */
-.visual-world-label {
-  display: flex;
-  min-width: max-content;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 9px;
-  border: 1px solid;
-  border-radius: 7px;
-  box-shadow: 0 7px 20px rgb(16 31 43 / 18%);
-  pointer-events: none;
-  transform: translateY(-50%);
-  font: 600 10px/1.2 var(--font-sans);
-  white-space: nowrap;
-}
-
-.visual-world-label.is-diagnostic {
-  border-radius: 3px;
-  box-shadow: 0 0 18px rgb(67 217 255 / 10%);
-  font-family: var(--font-mono);
-  letter-spacing: 0.02em;
-}
-
-.visual-world-label > span {
-  width: 5px;
-  height: 22px;
-  flex: 0 0 auto;
-  border-radius: 3px;
-}
-
-.visual-world-label > div {
-  display: grid;
-  gap: 2px;
-}
-
-.visual-world-label strong {
-  font-size: 10px;
-  letter-spacing: 0.04em;
-}
-
-.visual-world-label small {
-  opacity: 0.64;
-  font-size: 8px;
-  font-weight: 600;
-}
-
-/* Passive renderer legend: scene vocabulary, never application chrome. */
+/* Layout-only placement for LDS-owned legend content over the WebGL scene. */
 .visual-scene-legend {
   position: absolute;
   z-index: 5;
-  right: calc(var(--lds3d-inspector-width, 0px) + 16px);
-  bottom: 16px;
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  align-items: center;
-  gap: 7px 12px;
-  padding: 10px 12px;
-  border: 1px solid rgb(22 32 42 / 14%);
-  border-radius: 9px;
-  color: #16202a;
-  /* Keep the legend legible without forcing a backdrop compositing pass over WebGL. */
-  background: rgb(255 255 255 / 94%);
-  box-shadow: 0 8px 24px rgb(22 32 42 / 10%);
-  font: 650 9px/1.2 var(--font-sans);
+  right: calc(var(--lds3d-inspector-width, 0px) + var(--space-4));
+  bottom: var(--space-4);
   pointer-events: none;
-}
-
-.visual-scene-legend.is-diagnostic-technical {
-  border-color: rgb(67 217 255 / 26%);
-  border-radius: 4px;
-  color: #e9f5ff;
-  background: rgb(7 16 24 / 92%);
-  box-shadow: 0 0 24px rgb(67 217 255 / 7%);
-  font-family: var(--font-mono);
-}
-
-.visual-scene-legend > strong,
-.visual-scene-legend > small {
-  grid-column: 1 / -1;
-}
-
-.visual-scene-legend > strong {
-  letter-spacing: 0.08em;
-}
-
-.visual-scene-legend > div {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.visual-scene-legend > div > span {
-  width: 7px;
-  height: 7px;
-  border-radius: 2px;
-}
-
-.visual-scene-legend .is-live {
-  background: #007a66;
-}
-
-.visual-scene-legend .is-goal {
-  background: #6d3ccb;
-}
-
-.visual-scene-legend .is-error {
-  background: #b42318;
-}
-
-.visual-scene-legend.is-diagnostic-technical .is-live {
-  background: #4de3c1;
-}
-
-.visual-scene-legend.is-diagnostic-technical .is-goal {
-  background: #d7a0ff;
-}
-
-.visual-scene-legend.is-diagnostic-technical .is-error {
-  background: #ff6b78;
-}
-
-.visual-scene-legend > small {
-  opacity: 0.62;
-  font-size: 8px;
 }
 
 @media (max-width: 991px) {
@@ -232,11 +115,8 @@ body {
     height: clamp(31rem, calc(100svh - 13rem), 44rem);
   }
 
-  .visual-state-controls {
-    align-items: flex-start;
-  }
-
   .visual-scene-legend {
     bottom: 52px;
   }
+
 }

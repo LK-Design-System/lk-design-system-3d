@@ -5,3 +5,7 @@ export * from "./camera.js";
 export * from "./interaction.js";
 export * from "./renderer.js";
 export * from "./theme.js";
+export * from "./occupancy-grid.js";
+export * from "./spatial-editing.js";
+export * from "./spatial-structure.js";
+export * from "./spatial-authoring.js";

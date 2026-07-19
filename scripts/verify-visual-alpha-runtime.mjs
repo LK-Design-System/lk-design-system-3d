@@ -338,16 +338,16 @@ async function inspectResponsiveLayout(client, width, expectedLayout) {
     const workspace = root?.querySelector(".lk-canvas-editor-shell");
     const frame = root?.querySelector("[data-lds-viewer-frame]");
     const canvas = root?.querySelector("canvas");
-    const inspector = root?.querySelector('[aria-label="Selected entity details"]');
-    const toolbar = root?.querySelector('[role="toolbar"][aria-label="Camera and viewport controls"]');
+    const inspector = root?.querySelector('[aria-label="선택 객체 세부 정보"]');
+    const toolbar = root?.querySelector('[role="toolbar"][aria-label="카메라와 뷰포트 제어"]');
     const hud = root?.querySelector("[data-viewer-hud]");
     const legend = root?.querySelector(".visual-scene-legend");
     const status = root?.querySelector("[data-viewer-status]");
     const dockToggle = [...(root?.querySelectorAll("button[aria-expanded]") ?? [])].find(
-      (button) => button.getAttribute("aria-label")?.startsWith("Selected entity details"),
+      (button) => button.getAttribute("aria-label")?.startsWith("선택 객체 세부 정보"),
     );
     const drawerTrigger = [...(root?.querySelectorAll("button") ?? [])].find(
-      (button) => button.getAttribute("aria-label") === "Open selected entity details",
+      (button) => button.getAttribute("aria-label") === "선택 객체 세부 정보 열기",
     );
     const rect = (element) => {
       if (!(element instanceof Element)) return null;
@@ -378,7 +378,7 @@ async function inspectResponsiveLayout(client, width, expectedLayout) {
     const workspaceStyle = workspace instanceof Element ? getComputedStyle(workspace) : null;
     const frameStyle = frame instanceof Element ? getComputedStyle(frame) : null;
     const selectionLabel = [...(hud?.querySelectorAll("span") ?? [])].find(
-      (candidate) => candidate.textContent?.trim() === "Selected",
+      (candidate) => candidate.textContent?.trim() === "선택",
     );
     const selectionItemRect = rect(selectionLabel?.parentElement);
     const insideFrame = (candidate) =>
@@ -501,7 +501,7 @@ async function verifyResponsiveComposition(client) {
   const wide992 = await inspectResponsiveLayout(client, 992, "wide");
   const dockToggleCollapsed = await client.evaluate(`(() => {
     const button = [...document.querySelectorAll("button[aria-expanded]")].find(
-      (candidate) => candidate.getAttribute("aria-label")?.startsWith("Selected entity details"),
+      (candidate) => candidate.getAttribute("aria-label")?.startsWith("선택 객체 세부 정보"),
     );
     if (!(button instanceof HTMLButtonElement)) return false;
     button.click();
@@ -510,14 +510,14 @@ async function verifyResponsiveComposition(client) {
   if (!dockToggleCollapsed) throw new Error("Wide DockPanel toggle was not found.");
   await waitFor(
     client,
-    `document.querySelector('button[aria-expanded][aria-label^="Selected entity details"]')?.getAttribute("aria-expanded") === "false"`,
+    `document.querySelector('button[aria-expanded][aria-label^="선택 객체 세부 정보"]')?.getAttribute("aria-expanded") === "false"`,
     "wide DockPanel collapsed",
   );
   const collapsedDock = await client.evaluate(`(() => {
     const workspace = document.querySelector(".lk-canvas-editor-shell");
     const frame = document.querySelector("[data-lds-viewer-frame]");
     const handle = document.querySelector(
-      'button[aria-expanded][aria-label^="Selected entity details"]',
+      'button[aria-expanded][aria-label^="선택 객체 세부 정보"]',
     );
     if (!(workspace instanceof Element) || !(frame instanceof Element) || !(handle instanceof Element)) return null;
     const workspaceRect = workspace.getBoundingClientRect();
@@ -535,7 +535,7 @@ async function verifyResponsiveComposition(client) {
   })()`);
   const dockToggleReopened = await client.evaluate(`(() => {
     const button = document.querySelector(
-      'button[aria-expanded][aria-label^="Selected entity details"]',
+      'button[aria-expanded][aria-label^="선택 객체 세부 정보"]',
     );
     if (!(button instanceof HTMLButtonElement)) return false;
     button.click();
@@ -544,7 +544,7 @@ async function verifyResponsiveComposition(client) {
   if (!dockToggleReopened) throw new Error("Wide DockPanel could not be reopened.");
   await waitFor(
     client,
-    `document.querySelector('button[aria-expanded][aria-label^="Selected entity details"]')?.getAttribute("aria-expanded") === "true"`,
+    `document.querySelector('button[aria-expanded][aria-label^="선택 객체 세부 정보"]')?.getAttribute("aria-expanded") === "true"`,
     "wide DockPanel reopened",
   );
   const dockWidthResized = await client.evaluate(`(() => {
@@ -575,7 +575,7 @@ async function verifyResponsiveComposition(client) {
   const narrow800 = await inspectResponsiveLayout(client, 800, "narrow");
   const drawerOpened = await client.evaluate(`(() => {
     const button = [...document.querySelectorAll("button")].find(
-      (candidate) => candidate.getAttribute("aria-label") === "Open selected entity details",
+      (candidate) => candidate.getAttribute("aria-label") === "선택 객체 세부 정보 열기",
     );
     if (!(button instanceof HTMLButtonElement)) return false;
     button.click();
@@ -689,7 +689,7 @@ async function verifyHoverAndSelection(client) {
         .filter(Boolean);
       const target = document.elementFromPoint(${x.toString()}, ${y.toString()});
       return {
-        label: labels.find((candidate) => /^(?:Rack|Pallet|Cargo|Charging|Safety)/u.test(candidate)) ?? null,
+        label: labels.find((candidate) => /^(?:랙|팔레트|화물|충전|안전)/u.test(candidate)) ?? null,
         labels,
         pointerEvents: window.__lds3dPointerProbe,
         target:
@@ -711,7 +711,7 @@ async function verifyHoverAndSelection(client) {
     );
   }
   const selectionExpression = `(() => {
-    const inspector = document.querySelector('[aria-label="Selected entity details"]')?.textContent ?? "";
+    const inspector = document.querySelector('[aria-label="선택 객체 세부 정보"]')?.textContent ?? "";
     return !inspector.includes("robot/amr-01") && /(?:rack|pallet|cargo|dock|safety)\\//u.test(inspector);
   })()`;
   const selectionOffsets = [
@@ -747,7 +747,7 @@ async function verifyHoverAndSelection(client) {
     const selectionDebug = await client.evaluate(`(() => {
       const target = document.elementFromPoint(${hoverPoint[0].toString()}, ${hoverPoint[1].toString()});
       return {
-        inspector: document.querySelector('[aria-label="Selected entity details"]')?.innerText ?? "",
+        inspector: document.querySelector('[aria-label="선택 객체 세부 정보"]')?.innerText ?? "",
         pointerEvents: window.__lds3dPointerProbe,
         target:
           target instanceof Element
@@ -764,7 +764,7 @@ async function verifyHoverAndSelection(client) {
     );
   }
   const inspectorText = await client.evaluate(
-    `document.querySelector('[aria-label="Selected entity details"]')?.innerText ?? ""`,
+    `document.querySelector('[aria-label="선택 객체 세부 정보"]')?.innerText ?? ""`,
   );
   return {
     hoverLabel,
@@ -779,15 +779,15 @@ async function verifyRuntimeStates(client, url) {
   await navigate(client, url, false);
   const result = {};
   result.selectionClearActionHidden = await client.evaluate(
-    `![...document.querySelectorAll("button")].some((button) => button.getAttribute("aria-label") === "Clear selection" || button.textContent?.trim() === "Clear selection")`,
+    `![...document.querySelectorAll("button")].some((button) => button.getAttribute("aria-label") === "선택 해제" || button.textContent?.trim() === "선택 해제")`,
   );
   result.loading = await client.evaluate(
-    `document.body.innerText.includes("Preparing spatial scene") && document.querySelector('[data-viewer-state="loading"]') !== null`,
+    `document.body.innerText.includes("3D 장면 준비 중") && document.querySelector('[data-viewer-state="loading"]') !== null`,
   );
   for (const state of ["empty", "error"]) {
     const changed = await client.evaluate(`(() => {
-      const group = document.querySelector('[aria-label="Renderer state"]');
-      const label = ${JSON.stringify(state)}.replace(/^./u, (character) => character.toUpperCase());
+      const group = document.querySelector('[aria-label="렌더러 상태"]');
+      const label = ${JSON.stringify(state)} === "empty" ? "빈 상태" : "오류";
       const button = [...(group?.querySelectorAll("button") ?? [])]
         .find((candidate) => candidate.textContent?.trim() === label);
       if (!(button instanceof HTMLButtonElement)) return false;
@@ -795,7 +795,7 @@ async function verifyRuntimeStates(client, url) {
       return true;
     })()`);
     if (!changed) throw new Error("Renderer state selector was not found.");
-    const expected = state === "empty" ? "No spatial entities" : "3D scene unavailable";
+    const expected = state === "empty" ? "공간 객체 없음" : "3D 장면을 사용할 수 없음";
     await waitFor(
       client,
       `document.body.innerText.includes(${JSON.stringify(expected)})`,
@@ -805,7 +805,7 @@ async function verifyRuntimeStates(client, url) {
   }
   const retried = await client.evaluate(`(() => {
     const button = [...document.querySelectorAll("button")].find(
-      (candidate) => candidate.textContent?.trim() === "Retry renderer",
+      (candidate) => candidate.textContent?.trim() === "렌더러 다시 시도",
     );
     if (!(button instanceof HTMLButtonElement)) return false;
     button.click();
@@ -814,7 +814,7 @@ async function verifyRuntimeStates(client, url) {
   if (!retried) throw new Error("Retry renderer action was not found.");
   await waitFor(
     client,
-    `!document.body.innerText.includes("3D scene unavailable") && document.querySelector('[data-viewer-state="live"]') !== null`,
+    `!document.body.innerText.includes("3D 장면을 사용할 수 없음") && document.querySelector('[data-viewer-state="live"]') !== null`,
     "renderer recovery",
   );
   result.retry = true;
@@ -837,7 +837,7 @@ async function chooseSegment(client, groupLabel, optionLabel, expectedEntityId) 
       const group = document.querySelector('[aria-label=${JSON.stringify(groupLabel)}]');
       const active = [...(group?.querySelectorAll("button") ?? [])]
         .find((button) => button.textContent?.trim() === ${JSON.stringify(optionLabel)});
-      const inspector = document.querySelector('[aria-label="Selected entity details"]')?.textContent ?? "";
+      const inspector = document.querySelector('[aria-label="선택 객체 세부 정보"]')?.textContent ?? "";
       return active?.getAttribute("aria-checked") === "true" && inspector.includes(${JSON.stringify(expectedEntityId)});
     })()`,
     `${groupLabel} ${optionLabel} inspector sync`,
@@ -846,19 +846,19 @@ async function chooseSegment(client, groupLabel, optionLabel, expectedEntityId) 
 
 async function verifyGoalPathControls(client, url) {
   await navigate(client, url);
-  await chooseSegment(client, "Path state", "Blocked", "path/amr-03/blocked");
+  await chooseSegment(client, "경로 상태", "차단됨", "path/amr-03/blocked");
   const pathInspector = await client.evaluate(
-    `document.querySelector('[aria-label="Selected entity details"]')?.innerText ?? ""`,
+    `document.querySelector('[aria-label="선택 객체 세부 정보"]')?.innerText ?? ""`,
   );
-  await chooseSegment(client, "Goal state", "Invalid", "goal/invalid-preview");
+  await chooseSegment(client, "목표 상태", "유효하지 않음", "goal/invalid-preview");
   const goalInspector = await client.evaluate(
-    `document.querySelector('[aria-label="Selected entity details"]')?.innerText ?? ""`,
+    `document.querySelector('[aria-label="선택 객체 세부 정보"]')?.innerText ?? ""`,
   );
   return {
-    path: pathInspector.includes("Blocked path") && pathInspector.includes("3 waypoints"),
+    path: pathInspector.includes("차단된 경로") && pathInspector.includes("경유점 3개"),
     goal:
-      goalInspector.includes("Invalid goal preview") &&
-      goalInspector.includes("Rejected · obstacle clearance"),
+      goalInspector.includes("유효하지 않은 목표 미리보기") &&
+      goalInspector.includes("거부됨 · 장애물 안전거리"),
     pathInspector,
     goalInspector,
   };
@@ -929,7 +929,7 @@ async function main() {
         ? (canvas.getContext("webgl2") ?? canvas.getContext("webgl"))
         : null;
       const viewerFrame = document.querySelector("[data-lds-viewer-frame]");
-      const inspector = document.querySelector('[aria-label="Selected entity details"]');
+      const inspector = document.querySelector('[aria-label="선택 객체 세부 정보"]');
       const sceneLegend = document.querySelector(".visual-scene-legend");
       const workspace = document.querySelector(".lk-canvas-editor-shell");
       const viewerRect = viewerFrame?.getBoundingClientRect();
@@ -942,13 +942,13 @@ async function main() {
       const rendererHost = canvas?.closest('[role="application"]');
       const compositionRoot = document.querySelector("[data-lds3d-composition]");
       const cameraToolbar = compositionRoot?.querySelector(
-        '[role="toolbar"][aria-label="Camera and viewport controls"]',
+        '[role="toolbar"][aria-label="카메라와 뷰포트 제어"]',
       );
       const lastCameraButton = [...(cameraToolbar?.querySelectorAll("button") ?? [])].at(-1);
       const dockPanelToggle = [...(compositionRoot?.querySelectorAll("button") ?? [])].find(
         (button) =>
           button.hasAttribute("aria-expanded") &&
-          button.getAttribute("aria-label")?.startsWith("Selected entity details"),
+          button.getAttribute("aria-label")?.startsWith("선택 객체 세부 정보"),
       );
       const lastCameraRect = lastCameraButton?.getBoundingClientRect();
       const dockPanelToggleRect = dockPanelToggle?.getBoundingClientRect();
@@ -1079,9 +1079,9 @@ async function main() {
     const home = await capture(client, "camera-home", "operational-neutral.png");
     const interaction = await verifyHoverAndSelection(client);
     trace("hover and GLB selection verified");
-    await clickButton(client, "Top view");
+    await clickButton(client, "상단 시점");
     const top = await capture(client, "camera-top");
-    await clickButton(client, "Focus selected entity");
+    await clickButton(client, "선택 객체에 초점");
     const focus = await capture(client, "camera-focus");
     trace("camera presets verified");
     const responsive = await verifyResponsiveComposition(client);
@@ -1091,8 +1091,8 @@ async function main() {
     await navigate(client, diagnosticUrl);
     const diagnostic = await client.evaluate(`(() => ({
       profile: document.querySelector("[data-lkds3d-profile]")?.getAttribute("data-lkds3d-profile"),
-      inspectorHasDiagnostics: ["Frame", "Source", "Timestamp"].every(
-        (label) => document.querySelector('[aria-label="Selected entity details"]')?.textContent?.includes(label),
+      inspectorHasDiagnostics: ["프레임", "소스", "관측 시각"].every(
+        (label) => document.querySelector('[aria-label="선택 객체 세부 정보"]')?.textContent?.includes(label),
       ),
       glbResourceCount: performance.getEntriesByType("resource").filter(
         (entry) => /\\.glb(?:$|\\?)/u.test(entry.name),
@@ -1105,7 +1105,7 @@ async function main() {
     );
     trace("diagnostic profile loaded");
 
-    const assetCatalogUrl = `${origin}/iframe.html?id=visual-alpha--asset-catalog&viewMode=story`;
+    const assetCatalogUrl = `${origin}/iframe.html?id=lds-3d-scenes-asset-review--overview&viewMode=story`;
     await navigate(client, assetCatalogUrl);
     const assetCatalog = await client.evaluate(`(() => ({
       pageTitle: document.querySelector("[data-lds3d-composition] h1")?.textContent?.trim() ?? null,
@@ -1118,12 +1118,12 @@ async function main() {
     const assetCatalogCapture = await capture(client, "asset-catalog", "asset-catalog.png");
     trace("actual GLB asset catalog loaded");
 
-    const goalPathUrl = `${origin}/iframe.html?id=visual-alpha--goal-and-path-states&viewMode=story`;
+    const goalPathUrl = `${origin}/iframe.html?id=lds-3d-states-goal-and-path--overview&viewMode=story`;
     const goalPath = await verifyGoalPathControls(client, goalPathUrl);
     const goalPathCapture = await capture(client, "goal-path-states");
     trace("goal and path controls verified");
 
-    const stateUrl = `${origin}/iframe.html?id=visual-alpha--loading-error-empty&viewMode=story`;
+    const stateUrl = `${origin}/iframe.html?id=lds-3d-states-renderer-lifecycle--overview&viewMode=story`;
     const states = await verifyRuntimeStates(client, stateUrl);
     const recovered = await capture(client, "renderer-recovered");
     trace("renderer lifecycle states verified");
@@ -1142,8 +1142,8 @@ async function main() {
         operational.cameraToolbar === true &&
         operational.ldsPrimaryToken.length > 0,
       ldsPageComposition:
-        operational.pageTitle === "AMR Operations" &&
-        operational.sceneTitle === "Warehouse / LK-MAP" &&
+        operational.pageTitle === "AMR 운영" &&
+        operational.sceneTitle === "창고 / LK-MAP" &&
         operational.headingLevels[0] === "H1" &&
         operational.headingLevels.includes("H2") &&
         operational.viewportDominates === true &&
@@ -1226,8 +1226,8 @@ async function main() {
       diagnosticProfile: diagnostic.profile === "diagnostic-technical",
       diagnosticInspector: diagnostic.inspectorHasDiagnostics === true,
       assetCatalogComposition:
-        assetCatalog.pageTitle === "Industrial Asset Catalog" &&
-        assetCatalog.sceneTitle === "Asset review grid / LK-MAP" &&
+        assetCatalog.pageTitle === "산업 자산 카탈로그" &&
+        assetCatalog.sceneTitle === "자산 검토 그리드 / LK-MAP" &&
         assetCatalog.glbResourceCount >= 6 &&
         assetCatalog.inspectorValueCount >= 2,
       ldsInspectorSelectionSync: interaction.inspectorText.length > 0,

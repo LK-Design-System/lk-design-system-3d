@@ -14,7 +14,17 @@ import { CSSProperties } from 'react';
 import { EntityId } from '@lk-robotics/design-system-3d-core';
 import { FrameId } from '@lk-robotics/design-system-3d-core';
 import { GoalEntity } from '@lk-robotics/design-system-3d-core';
+import { MarkerFreshnessPolicy } from '@lk-robotics/design-system-3d-markers';
+import { MarkerLayerRenderState } from '@lk-robotics/design-system-3d-markers';
+import { MarkerLayerSnapshot } from '@lk-robotics/design-system-3d-markers';
+import { MeshMarkerSnapshot } from '@lk-robotics/design-system-3d-markers';
+import { OccupancyGridCell } from '@lk-robotics/design-system-3d-core';
+import { OccupancyGridCellPick } from '@lk-robotics/design-system-3d-core';
+import { OccupancyGridSnapshot } from '@lk-robotics/design-system-3d-core';
 import { PathEntity } from '@lk-robotics/design-system-3d-core';
+import { PointCloudFreshnessPolicy } from '@lk-robotics/design-system-3d-pointcloud';
+import { PointCloudLayerSetRenderState } from '@lk-robotics/design-system-3d-pointcloud';
+import { PointCloudLayerSnapshot } from '@lk-robotics/design-system-3d-pointcloud';
 import { PointCloudRenderState } from '@lk-robotics/design-system-3d-pointcloud';
 import { PointCloudSnapshot } from '@lk-robotics/design-system-3d-pointcloud';
 import { Quat } from '@lk-robotics/design-system-3d-core';
@@ -24,6 +34,15 @@ import { ReactNode } from 'react';
 import { RobotEntity } from '@lk-robotics/design-system-3d-core';
 import { SceneThemeOverrides } from '@lk-robotics/design-system-3d-core';
 import { SceneThemeValues } from '@lk-robotics/design-system-3d-core';
+import { SpatialAssetNode } from '@lk-robotics/design-system-3d-core';
+import { SpatialEditVolume } from '@lk-robotics/design-system-3d-core';
+import { SpatialNodeTransform } from '@lk-robotics/design-system-3d-core';
+import { SpatialStructure as SpatialStructure_2 } from '@lk-robotics/design-system-3d-core';
+import { SpatialTransformAxis } from '@lk-robotics/design-system-3d-core';
+import { SpatialTransformChangeSet } from '@lk-robotics/design-system-3d-core';
+import { SpatialTransformMode } from '@lk-robotics/design-system-3d-core';
+import { SpatialTransformSnap } from '@lk-robotics/design-system-3d-core';
+import { SpatialTransformSpace } from '@lk-robotics/design-system-3d-core';
 import { ThreeElements } from '@react-three/fiber';
 import { ThreeEvent } from '@react-three/fiber';
 import { threeToCorePosition } from '@lk-robotics/design-system-3d-three/coordinates';
@@ -136,6 +155,17 @@ export const DEFAULT_POINT_CLOUD_POINT_SIZE = 1.5;
 // @public (undocumented)
 export const DIAGNOSTIC_TECHNICAL_THEME: SceneVisualTheme;
 
+// @public
+export function EditVolume({ volume, selectable }: EditVolumeProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+export interface EditVolumeProps {
+    // (undocumented)
+    readonly selectable?: boolean;
+    // (undocumented)
+    readonly volume: SpatialEditVolume;
+}
+
 // @public (undocumented)
 export const EMPTY_INTERACTION_STATE: SceneInteractionState;
 
@@ -216,11 +246,93 @@ export interface GroundPlaneProps {
     readonly sizeMeters?: number;
 }
 
+// @public
+export function MarkerLayer({ snapshot, maxMarkers, freshnessPolicy, renderMesh, onRenderStateChange, }: MarkerLayerProps): react_jsx_runtime.JSX.Element | null;
+
+// @public (undocumented)
+export interface MarkerLayerProps {
+    // (undocumented)
+    readonly freshnessPolicy?: MarkerFreshnessPolicy;
+    readonly maxMarkers: number;
+    // (undocumented)
+    readonly onRenderStateChange?: (state: MarkerLayerRenderState) => void;
+    readonly renderMesh?: MarkerMeshRenderer;
+    // (undocumented)
+    readonly snapshot: MarkerLayerSnapshot;
+}
+
+// @public (undocumented)
+export type MarkerMeshRenderer = (marker: MeshMarkerSnapshot) => ReactNode;
+
 // @public (undocumented)
 export type ModelLoadState = "loading" | "ready" | "error";
 
 // @public (undocumented)
 export type ModelSourceConvention = "core" | "gltf";
+
+// @public (undocumented)
+export interface OccupancyGridCellPointerDetail extends OccupancyGridCellPick {
+    // (undocumented)
+    readonly distanceMeters: number;
+}
+
+// @public (undocumented)
+export interface OccupancyGridPalette {
+    // (undocumented)
+    readonly free: string;
+    // (undocumented)
+    readonly gridLine: string;
+    // (undocumented)
+    readonly occupied: string;
+    // (undocumented)
+    readonly unknown: string;
+}
+
+// @public (undocumented)
+export type OccupancyGridRenderState = {
+    readonly kind: "ready";
+    readonly requestedCellCount: number;
+    readonly acceptedCellCount: number;
+} | {
+    readonly kind: "frame-mismatch";
+    readonly expectedFrame: FrameId;
+    readonly actualFrame: FrameId;
+    readonly requestedCellCount: number;
+    readonly acceptedCellCount: 0;
+} | {
+    readonly kind: "budget-exceeded";
+    readonly maxCells: number;
+    readonly requestedCellCount: number;
+    readonly acceptedCellCount: 0;
+} | {
+    readonly kind: "texture-dimension-exceeded";
+    readonly maxTextureDimension: number;
+    readonly requestedWidth: number;
+    readonly requestedHeight: number;
+    readonly requestedCellCount: number;
+    readonly acceptedCellCount: 0;
+};
+
+// @public
+export function OccupancyGridSurface({ snapshot, maxCells, palette, opacity, elevationOffsetMeters, selectedCell, onCellPick, onCellHoverChange, onRenderStateChange, }: OccupancyGridSurfaceProps): react_jsx_runtime.JSX.Element | null;
+
+// @public (undocumented)
+export interface OccupancyGridSurfaceProps {
+    readonly elevationOffsetMeters?: number;
+    readonly maxCells: number;
+    // (undocumented)
+    readonly onCellHoverChange?: (detail: OccupancyGridCellPointerDetail | null) => void;
+    // (undocumented)
+    readonly onCellPick?: (detail: OccupancyGridCellPointerDetail) => void;
+    readonly onRenderStateChange?: (state: OccupancyGridRenderState) => void;
+    // (undocumented)
+    readonly opacity?: number;
+    // (undocumented)
+    readonly palette?: Partial<OccupancyGridPalette>;
+    readonly selectedCell?: OccupancyGridCell | null;
+    // (undocumented)
+    readonly snapshot: OccupancyGridSnapshot;
+}
 
 // @public (undocumented)
 export const OPERATIONAL_NEUTRAL_THEME: SceneVisualTheme;
@@ -236,8 +348,10 @@ export interface PathRibbonProps {
     // (undocumented)
     readonly entity: PathEntity;
     readonly selectable?: boolean;
+    // Warning: (ae-forgotten-export) The symbol "PathRibbonVariant" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    readonly variant?: "actual" | "planned" | "executing" | "blocked";
+    readonly variant?: PathRibbonVariant;
 }
 
 // @public (undocumented)
@@ -250,13 +364,22 @@ export interface PathSegment {
     readonly start: Vec3;
 }
 
+// @public (undocumented)
+export type PointCloudColorMode = "source" | "uniform" | "height";
+
+// @public (undocumented)
+export type PointCloudHeightRange = readonly [minimum: number, maximum: number];
+
 // @public
-export function PointCloudLayer({ snapshot, maxPoints, pointSize, fallbackColor, opacity, onRenderStateChange, }: PointCloudLayerProps): react_jsx_runtime.JSX.Element | null;
+export function PointCloudLayer({ snapshot, maxPoints, pointSize, colorMode, fallbackColor, heightRange, clipBounds, opacity, onRenderStateChange, }: PointCloudLayerProps): react_jsx_runtime.JSX.Element | null;
 
 // @public (undocumented)
 export interface PointCloudLayerProps {
+    readonly clipBounds?: Bounds3;
+    readonly colorMode?: PointCloudColorMode;
     // (undocumented)
     readonly fallbackColor?: string;
+    readonly heightRange?: PointCloudHeightRange;
     readonly maxPoints: number;
     readonly onRenderStateChange?: (state: PointCloudRenderState) => void;
     // (undocumented)
@@ -264,6 +387,35 @@ export interface PointCloudLayerProps {
     readonly pointSize?: number;
     // (undocumented)
     readonly snapshot: PointCloudSnapshot;
+}
+
+// @public
+export function PointCloudLayers({ layers, maxPoints, freshnessPolicy, clipBounds, onRenderStateChange, }: PointCloudLayersProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+export interface PointCloudLayersProps {
+    readonly clipBounds?: Bounds3;
+    // (undocumented)
+    readonly freshnessPolicy?: PointCloudFreshnessPolicy;
+    // (undocumented)
+    readonly layers: readonly PointCloudSceneLayer[];
+    readonly maxPoints: number;
+    readonly onRenderStateChange?: (state: PointCloudLayerSetRenderState) => void;
+}
+
+// @public (undocumented)
+export interface PointCloudSceneLayer {
+    // (undocumented)
+    readonly colorMode?: PointCloudColorMode;
+    // (undocumented)
+    readonly fallbackColor?: string;
+    // (undocumented)
+    readonly heightRange?: PointCloudHeightRange;
+    // (undocumented)
+    readonly layer: PointCloudLayerSnapshot;
+    // (undocumented)
+    readonly opacity?: number;
+    readonly pointSize?: number;
 }
 
 // @public (undocumented)
@@ -634,6 +786,19 @@ export interface SceneVisualTheme {
 }
 
 // @public
+export function SectionBox({ bounds, fillOpacity, showFill }: SectionBoxProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+export interface SectionBoxProps {
+    // (undocumented)
+    readonly bounds: Bounds3;
+    // (undocumented)
+    readonly fillOpacity?: number;
+    // (undocumented)
+    readonly showFill?: boolean;
+}
+
+// @public
 export function Selectable({ entityId, selectable, position, quaternion, scale, children, ...groupProps }: SelectableProps): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
@@ -660,9 +825,50 @@ export interface SelectableRenderState {
     readonly selected: boolean;
 }
 
+// @public (undocumented)
+export type SpatialAssetRenderer = (node: SpatialAssetNode, state: SelectableRenderState) => ReactNode;
+
+// @public
+export function SpatialStructure({ structure, renderAsset, activeTransform, }: SpatialStructureProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+export interface SpatialStructureProps {
+    // (undocumented)
+    readonly activeTransform?: Omit<TransformGizmoProps, "entityId" | "transform"> & {
+        readonly entityId: EntityId;
+    };
+    // (undocumented)
+    readonly renderAsset?: SpatialAssetRenderer;
+    // (undocumented)
+    readonly structure: SpatialStructure_2;
+}
+
 export { threeToCorePosition }
 
 export { threeToCoreQuaternion }
+
+// @public
+export function TransformGizmo({ entityId, transform, mode, space, axes, snap, sizeMeters, onTransformChange, }: TransformGizmoProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+export interface TransformGizmoProps {
+    // (undocumented)
+    readonly axes?: readonly SpatialTransformAxis[];
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly mode: SpatialTransformMode;
+    // (undocumented)
+    readonly onTransformChange: (changeSet: SpatialTransformChangeSet) => void;
+    // (undocumented)
+    readonly sizeMeters?: number;
+    // (undocumented)
+    readonly snap?: Partial<SpatialTransformSnap>;
+    // (undocumented)
+    readonly space?: SpatialTransformSpace;
+    // (undocumented)
+    readonly transform: SpatialNodeTransform;
+}
 
 // @public (undocumented)
 export function useEntityInteraction(entityId: EntityId, options?: {

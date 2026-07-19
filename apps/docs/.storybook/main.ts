@@ -4,8 +4,16 @@ const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(ts|tsx)"],
   staticDirs: [
     {
+      from: "./public",
+      to: "/",
+    },
+    {
       from: "../../../packages/assets/visual-alpha",
       to: "/visual-alpha",
+    },
+    {
+      from: "../../../packages/assets/robots",
+      to: "/robots",
     },
     {
       from: "../node_modules/@lk-robotics/design-system-core/assets",

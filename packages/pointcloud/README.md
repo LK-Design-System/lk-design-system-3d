@@ -14,6 +14,14 @@ means frame-and-budget eligibility only; it is not a measured GPU upload or
 draw result. Frame-mismatched and over-budget snapshots are rejected rather
 than transformed or silently sampled.
 
+For multiple topics, use `createPointCloudLayerSet` and give each layer a unique
+`LayerId`. A layer may carry a caller-resolved `sourceToScene` rigid transform;
+the package validates its source frame and reports missing or wrong-target
+bindings without inventing TF. `resolvePointCloudLayerSetRenderState` applies
+one atomic budget across every visible, frame-resolved layer and can report
+fresh/stale/future/clock-mismatched timestamp state without hiding stale data.
+
 This package intentionally does not include ROS transport, PointCloud2/PCD
-parsing, TF resolution, streaming backpressure, LOD, point picking, or product
+parsing, TF graph resolution/interpolation, streaming backpressure, LOD, point
+picking, or product
 viewer UI. Those belong to adapters or products.

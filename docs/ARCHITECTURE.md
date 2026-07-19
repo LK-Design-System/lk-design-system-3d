@@ -53,6 +53,8 @@ version으로 확인한다. 현재 LDS에 없거나 계약이 다르면 LDS의 a
   primitive
 - renderer capability와 lifecycle 계약
 - GLB/glTF 등 asset의 metadata, 정규화, 검증 규칙
+- 직접 저작과 외부 장면 import가 공유하는 renderer-neutral 맵 schema,
+  좌표/source binding 정규화, 순수 validation·diff 계약과 conformance fixture
 - Three.js, R3F, Rerun adapter와 공통 테스트 fixture
 - 3D semantic role과 token schema의 정의; 구체 token 이름은 G-D0 전까지
   experimental draft
@@ -72,7 +74,9 @@ CSS variable 이름을 public API로 받거나 Core token 값을 복제해 독�
 - 로봇 명령, 편집 권한, 업무 상태와 오류 정책
 - 어떤 entity와 layer를 언제 보여줄지 결정하는 scene composition
 - 제품별 모델, 지도, 사이트 데이터와 asset 배포
-- 실시간 store, 동기화, 기록, 사용자 workflow
+- 직접 만들기/import/reimport/export 진입 흐름, file I/O, source registry,
+  저장·revision·merge/conflict와 배포
+- 실시간 store, 동기화, 기록, history와 사용자 workflow
 - 제품 환경에 맞춘 최종 성능 예산과 기능 저하 정책
 
 ## 3. 책임 매트릭스
@@ -88,6 +92,7 @@ CSS variable 이름을 public API로 받거나 Core token 값을 복제해 독�
 | robot·path·goal 등 primitive | 해당 없음 | 기본 구현 소유 | 데이터와 규칙 제공 |
 | ROS/실시간 protocol | 해당 없음 | 해당 없음 | 소유 |
 | asset schema·검증 도구 | 해당 없음 | 소유 | 원본·CDN·버전 운영 |
+| authored map 교환 | file picker·진행·오류 DOM 소유 | 공통 schema·normalization·순수 validation/diff 소유 | file workflow·저장·revision·merge·배포 소유 |
 | scene composition·업무 로직 | 해당 없음 | 확장점 제공 | 소유 |
 | 성능 계측 계약 | 해당 없음 | 공통 지표 제공 | 예산과 대응 소유 |
 
@@ -106,7 +111,7 @@ CSS variable 이름을 public API로 받거나 Core token 값을 복제해 독�
 | `@lk-robotics/design-system-3d-tf` | frame graph와 시간축 transform projection; ROS transport는 포함하지 않음 | `3d-core` |
 | `@lk-robotics/design-system-3d-markers` | 범용 ROS Marker 계열, 대량 동적 marker와 projection adapter | `3d-core`, renderer adapter |
 | `@lk-robotics/design-system-3d-rerun` | 공통 entity·transform·time을 Rerun archetype으로 투영 | `3d-core`, Rerun client |
-| `@lk-robotics/design-system-3d-spatial` | Building, Floor, Site 공간 모델과 renderer primitive | `3d-core`, renderer adapter |
+| `@lk-robotics/design-system-3d-spatial` | Site, Building, Level hierarchy와 floor/wall 등 공간 primitive | `3d-core`, renderer adapter |
 | `@lk-robotics/design-system-3d-authoring` | selection, gizmo, snapping과 serializable change 계약 | `3d-core`, `3d-spatial`, renderer adapter |
 | `@lk-robotics/design-system-3d-testing` | 좌표 round-trip, asset, adapter contract fixture | `3d-core`, `3d-assets` |
 
@@ -115,6 +120,12 @@ CSS variable 이름을 public API로 받거나 Core token 값을 복제해 독�
 고정한다. 수요 확인을 기다려 다음 영역의 착수를 결정하지 않으며, 각
 단계에서는 API 형태와 제품 이관 순서만 조정한다. 모든 renderer와 선택
 기능을 끌어오는 단일 거대 entry package는 만들지 않는다.
+
+이 표는 목표 package 경계다. 현재 `spatial`과 `authoring` foundation 일부는
+`3d-core`의 공개 root에 임시로 존재하며 별도 package directory와 map exchange
+public subpath는 아직 없다. `LK Map Document`와 optional engine adapter의 정확한
+package/export는 ADR-0002의 contract 단계와 별도 API review 전에는 구현 완료로
+간주하지 않는다.
 
 ## 5. 의존 방향
 
@@ -271,6 +282,40 @@ geometry·texture를 공유할 수 있지만 picking은 각 instance의 entity i
 
 검증 도구는 최소한 schema version, 필수 좌표 metadata, bounds, 비정상 scale, texture 경로, LOD 순서와 파일 크기 예산을 검사한다. 실제 asset 파일과 CDN 운영은 제품 책임이며 이 레포는 대형 모델 저장소가 아니다.
 
+### Authored map과 외부 장면 교환
+
+GLB/glTF runtime asset 계약과 authored map 교환 계약을 구분한다. GLB는 브라우저
+전달과 preview에 적합하지만, Unity·Unreal·Isaac에서 만든 장면의 저작 layer,
+source provenance와 로봇 의미를 모두 담는 정본으로 사용하지 않는다. ROS
+occupancy PNG/YAML도 level별 navigation 파생물이며 authored scene의 역입력으로
+사용하지 않는다.
+
+[ADR-0002](ADR-0002-DUAL-PATH-MAP-AUTHORING.md)가 채택한 목표는 Native 2.5D
+Builder와 External Scene Import가 같은 제안된 `LK Map Document`로 합류하고,
+논리적 `LK Map Bundle`이 다음을 묶는 구조다.
+
+- 우수계·Z-up·meter·radian coordinate profile과 document/entity identity
+- 공통 editable site/building/level 구조와 로봇 의미
+- source tool/version/document/hash, durable/weak entity binding, 이전 normalized
+  base와 per-field ownership
+- 선택적인 USD authoring scene/override와 보존해야 할 unknown metadata
+- source artifact, generator version과 export profile을 기록한 비정본
+  web-preview GLB와 level별 occupancy cache
+
+USD 또는 engine format importer가 필요한 경우 SDK는 core/assets/three/r3f에
+추가하지 않는다. optional adapter, CLI, 별도 repository 또는 제품 adapter가
+외부 형식을 정규화하고, LDS3D는 공통 schema·coordinate conversion·validator와
+conformance fixture만 소유한다. engine plugin의 repository와 release owner는 구현
+전에 별도 승인한다.
+
+재가져오기는 durable binding, 이전 normalized source base, 새 source와 web edit의
+3-way 비교를 통해 add/change/delete/conflict라는 순수 결과를 만든다. path-only
+binding은 weak이며 rename/reparent 뒤 자동 삭제하지 않고 remap을 요구한다. LDS3D가
+파일을 덮어쓰거나 merge policy를 결정하지 않으며, 제품이 revision, permission,
+적용 선택과 persistence를 소유한다. imported geometry는 기본 잠금이고 web-authored
+의미는 sidecar/override로 보존한다. engine-native shader, Blueprint,
+`MonoBehaviour`, physics/sensor 전체의 왕복은 보장하지 않는다.
+
 ## 9. 공식 구현 및 롤아웃 로드맵
 
 ### P0 — Platform Foundation
@@ -297,13 +342,27 @@ geometry·texture를 공유할 수 있지만 picking은 각 instance의 entity i
 
 ### P2 — Spatial Authoring Foundation
 
-- `3d-spatial`에 Building, Floor, Site의 hierarchy, frame, bounds와 renderer
-  primitive를 구현한다.
+- `3d-spatial`에 Site, Building, Level hierarchy와 floor/wall 등 공통 spatial
+  primitive의 frame, bounds와 renderer projection을 구현한다.
 - `3d-authoring`에 selection, gizmo, snapping과 serializable change
   contract를 구현한다.
-- building, floor, site의 hierarchy, frame, bounds, visibility, selection을 공통 spatial model로 정의한다.
-- 배치, 이동, 회전, 높이·층 관계를 renderer 비종속 authoring command와 undo 가능한 change set으로 표현한다.
+- Native Builder와 External Scene Import가 공유할 versioned map document,
+  source binding, stable ID, extension/migration과 derived provenance 계약을 먼저
+  정의한다.
+- building, level, floor surface의 hierarchy, frame, bounds, visibility,
+  selection을 공통 spatial model로 정의한다.
+- polygon floor, polyline wall, attached door, level transition,
+  waypoint-edge route graph, area, goal, charger/dock와 asset instance의 공통
+  subset을 renderer 비종속 의미로 정의한다. 제품 업무 zone·permission·operation
+  policy는 extension 또는 제품 schema에 둔다.
+- 배치, 이동, 회전, 높이·층 관계와 point-capture gesture를 renderer 비종속
+  authoring intent와 undo 가능한 원자 change set으로 표현한다.
 - transform gizmo와 authoring overlay의 의미 계약을 제공하되 저장, 권한, 승인 workflow는 제품에 유지한다.
+- Isaac/OpenUSD reference importer를 시작으로 좌표·origin·level mapping,
+  imported source lock, unknown preservation과 derived GLB를 검증하고 Unreal,
+  Unity adapter는 같은 conformance fixture를 통과한 뒤 추가한다.
+- durable/weak binding, 이전 normalized base와 source hash 기반 reimport diff를
+  제공하되 remap, merge, conflict UI와 파일 덮어쓰기는 제품에 유지한다.
 - Web Viz의 Building/Floor/Site 화면을 공통 authoring foundation으로 이관한다.
 - CAD/GIS/digital twin 완제품으로 확장하지 않고 제품이 조합할 수 있는 저수준 spatial primitive와 편집 기반까지만 소유한다.
 
@@ -326,6 +385,9 @@ geometry·texture를 공유할 수 있지만 picking은 각 instance의 entity i
 - 제품 업무 workflow와 권한 정책의 표준화
 - 모든 기존 3D 화면의 일괄 재작성
 - 모든 3D 파일 형식 지원 또는 대형 asset 저장·배포
+- engine-native project, plugin lifecycle, shader·Blueprint·`MonoBehaviour`와
+  physics/sensor 전체의 손실 없는 왕복
+- GLB 또는 occupancy 파생 결과에서 authored source를 복원하는 reverse import
 - renderer 간 픽셀 단위 동일성
 - metadata가 없는 asset의 runtime 자동 축 추정
 - LK Design System Core의 UI component와 token 복제

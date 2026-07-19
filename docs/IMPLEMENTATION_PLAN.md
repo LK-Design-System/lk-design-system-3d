@@ -80,7 +80,7 @@ LK Design System 3D를 LK Design System의 형제 저장소이자 공식 범용 
 두 제품에는 이미 foundation, 실시간 공간 데이터, 저작과 renderer 연동 요구가
 존재한다. 따라서 불확실성은 플랫폼 필요성이 아니라 API의 구체적 형태와
 마이그레이션 순서에 있다. 이 계획은 foundation만 만든 뒤 존속을 재검토하지
-않고 PointCloud·TF·Marker·Rerun과 Building·Floor·Site authoring까지 공식
+않고 PointCloud·TF·Marker·Rerun과 Site·Building·Level authoring까지 공식
 roadmap에 포함한다.
 
 ## 3. 실행 체계와 책임
@@ -129,7 +129,7 @@ M0에서 다음 역할을 이름이 있는 담당자로 확정한다.
 | `3d-markers` | 공통 Marker 의미와 Three/R3F/Rerun projection | 제품 업무 marker schema 강제 |
 | `3d-rerun` | core entity, PointCloud, TF와 Marker를 Rerun archetype으로 투영 | Rerun viewer UI 재구현, Three.js 의존 |
 | `3d-authoring` | selection, gizmo, snapping, layer, validation과 serializable change contract | 권한, persistence와 제품 workflow |
-| `3d-spatial` | Building·Floor·Site 공간 모델과 renderer primitive | 제품 backend schema와 배포 pipeline |
+| `3d-spatial` | Site·Building·Level hierarchy와 floor/wall 등 공간 primitive | 제품 backend schema와 배포 pipeline |
 
 모든 패키지는 초기에는 fixed version group으로 함께 배포한다. capability
 package는 core를 확장할 수 있지만 역방향 의존은 금지한다.
@@ -453,49 +453,163 @@ M4는 별도 Go 결정 대상이 아니라 공식 platform capability wave다.
 - Rerun adapter가 core 또는 Three package에 Rerun dependency를 역으로
   유입하지 않는다.
 
-### M5 — Building·Floor·Site authoring foundation
+### M5 — Dual-path map authoring foundation
 
-M5는 Web Viz의 기존 building 화면을 기반으로 LK의 공통 공간 저작 foundation을
-구축한다. 완성된 제품 editor를 복제하지 않고 여러 제품이 재사용할 공간 모델,
-상호작용과 변경 계약을 제공한다.
+M5는 [ADR-0002](ADR-0002-DUAL-PATH-MAP-AUTHORING.md)에 따라 Web Viz의 기존
+building 근거와 현재 map-building fixture를 하나의 완성 제품 editor로 복제하지
+않는다. **Native 2.5D Builder**와 **External Scene Import**가 같은 versioned 맵
+문서, 공간 의미, validation과 export provenance로 합류할 foundation을 구축한다.
 
-`3d-spatial`이 Building·Floor·Site 모델과 renderer primitive를 소유하고,
-`3d-authoring`이 selection, gizmo, snapping과 change contract를 소유한다.
+계획상 `3d-spatial`은 site/building/level과 공통 map semantics를,
+`3d-authoring`은 draft, selection, gizmo, snapping과 immutable change intent를
+소유한다. 두 package directory와 map exchange public API는 아직 구현되지 않았으므로
+M5 contract/API review 전 완료된 package로 취급하지 않는다. Unity·Unreal·Isaac SDK는
+어느 headless 또는 renderer package에도 유입하지 않는다.
 
 대상:
 
-- `BuildingTopology3DView`
-- `FloorScene3D`
-- `SiteStructurePreview3D`
-- 이후 제품에서 사용할 Building·Floor·Site authoring surface
+- `BuildingTopology3DView`, `FloorScene3D`, `SiteStructurePreview3D`의 공통 공간
+  계약
+- 현재 Storybook map-building fixture에서 검증한 draft, snap, ghost placement와
+  one-gesture transaction
+- 빈 맵·2D reference에서 시작하는 Native Builder
+- Isaac/OpenUSD부터 시작하는 external scene normalization과 reimport
+- 이후 제품에서 사용할 Building·Level·Site authoring composition
 
-산출물:
+#### M5-A — Contract와 공통 모델
 
-- Building, Floor, Site, level, transform과 parent/child 공간 모델
-- floor elevation, local frame, asset reference와 bounds 규칙
-- selection, multi-selection, transform gizmo, axis lock, snapping과 validation
-- layer visibility, isolate, focus, fit와 authoring camera preset
-- serializable change set와 product persistence adapter contract
-- preview/editor가 공유하는 asset placement와 scene composition primitive
-- keyboard/DOM 대안을 포함한 authoring accessibility pattern
+- `LK Map Document`와 논리적 `LK Map Bundle`의 schema/versioning을 승인한다.
+  이는 현재 Story-local `MapEditorDocument` V2의 이름 변경이 아니라 새 production
+  contract다.
+- right-handed·Z-up·meter·radian, origin, document/entity identity와 level frame을
+  필수 metadata로 고정한다.
+- native/imported ownership, source tool/version/document/hash, durable/weak entity
+  binding, 이전 normalized base, per-field ownership/fingerprint, tombstone,
+  extension/migration과 unknown-field 보존 정책을 정의한다.
+- site/building/level, polygon floor, polyline wall, attached door, level transition,
+  waypoint-edge route graph, area, goal, charger/dock, native primitive와 asset
+  instance의 공통 subset을 정의한다.
+- 저작용 route graph와 runtime `PathEntity`, 공통 area와 제품 업무 zone을
+  분리한다.
+- GLB preview와 level별 ROS occupancy를 authored source로 되돌릴 수 없는 비정본
+  cache로 기록한다. Source artifact hash, adapter/generator version, export profile과
+  생성 매개변수가 있을 때만 재현 가능하다고 판단한다.
+
+#### M5-B — Native 2.5D Builder
+
+- level/elevation, floor polygon, wall centerline+height/thickness, attached door와
+  level transition을 연속 point-capture 및 명시적 완료 gesture로 저작한다.
+- waypoint-edge graph는 중심선·vertex·방향으로 그리고 width는 속성 및 선택 시
+  반투명 corridor로 표시한다. route와 wall을 block 반복 배치로 만들지 않는다.
+- area, goal, charger/dock와 catalog asset을 grid·vertex·surface snap, rubber-band,
+  ghost와 validity feedback으로 저작한다.
+- pointer, numeric input과 keyboard 대안이 같은 immutable change intent를 만들고
+  한 완료 gesture가 하나의 transaction boundary를 반환하도록 한다. Product가 이를
+  history에 기록하고 Storybook은 bounded local stack으로만 증명한다.
+- imported geometry와 2D reference는 기본 잠금이며, 인식된 공통 primitive로의
+  변환은 명시적 사용자 선택을 요구한다.
+- 2D reference는 source hash, active level, meters-per-pixel, origin, yaw, opacity와
+  lock을 보정·기록하기 전 tracing source가 될 수 없다.
+
+#### M5-C — External import와 제한적 round-trip
+
+1. Engine SDK와 file orchestration이 없는 pure codec/normalizer boundary를 먼저
+   정의하고, Isaac/OpenUSD reference adapter와 golden fixture로 axis, unit, origin,
+   level mapping, durable/weak binding, unknown metadata 보존과 derived GLB를 검증한다.
+2. 같은 conformance fixture를 사용하는 Unreal USD adapter를 추가한다.
+3. Unity는 공통 contract가 고정된 뒤 전용 exporter/adapter를 검토하며
+   experimental USD package에 production contract를 종속하지 않는다.
+4. durable binding, 이전 normalized base, per-field ownership과 새 source를 3-way
+   비교해 add/change/delete/conflict를 만든다. Path-only binding은 remap-required로
+   보내고 web-authored semantics/override와 tombstone을 보존한다.
+5. source reimport, LK bundle read/write와 external source write-back capability를
+   adapter별로 분리하고 read-only adapter를 허용한다.
+6. 지원되는 공통 structure·transform·semantics subset만 external write-back을
+   보장한다. engine
+   shader, Blueprint, `MonoBehaviour`, physics/sensor 전체의 visual round-trip은
+   보장하지 않는다.
+
+#### M5-D — LDS composition과 Storybook 증거
+
+- 제품 spatial editor는 LDS `CanvasEditorShell`을 기준으로 document command,
+  mode, tool rail, dominant embedded `Scene3DFrame`, task-appropriate panel과 passive
+  status를 구성한다. `LayerPanel`은 실제 display layers에만 사용한다.
+- 현재 public `CanvasEditorShell.layers`/`Tree`는 selectable site/level/object
+  structure, source lock, unmapped, diff와 validation row state를 지원하지 않는다.
+  LDS additive structure slot/richer tree 또는 product-owned composition 중 하나를
+  별도 승인하기 전 LDS3D custom hierarchy를 만들지 않는다.
+- `SelectionInspector`는 selected entity만 소유한다. Active draft/tool option,
+  coordinate calibration, level mapping과 document validation은 shell-owned panel 안의
+  product composition이 public LDS form/action으로 구성한다.
+- LDS `FileUpload`/`FileUploadQueue`는 파일 선택과 진행 presentation을,
+  `ValidationSummary`·`ResourceState`는 각 계약에 맞는 결과 presentation을 소유한다.
+  LDS3D의 pure codec/normalizer는 structured result만 만들고 제품은 file I/O,
+  orchestration, merge와 blocking policy를 소유한다.
+- Validation issue는 stable ID/code, severity, scope, optional
+  level/entity/field/bounds와 deterministic order를 가진다. Severity와 product
+  blocking policy를 분리하고 spatial warning/unmapped/diff는 non-colour WebGL cue와
+  DOM summary를 함께 제공한다.
+- Seeded import review는 parsing → axis/unit/origin → level mapping/unmapped →
+  locked-source preview+semantic overlay → ready/invalid 순서를 따른다. Reimport는
+  product가 적용하기 전 review-only diff에서 멈춘다.
+- Wide 읽기·키보드 순서는 document commands → mode → tools/approved layers →
+  viewport → task panel → passive status다. Narrow에서는
+  `CanvasEditorShell.mobileActiveRegion`으로 scene/approved layers/panel 중 하나만
+  주 영역으로 노출한다.
+- 320px/390px에서 command overflow/priority, navigation focus, hidden-region tab stop
+  제거, pointer-capture 종료와 logical draft 보존, canvas-only tool rail, reachable
+  status/navigation과 selection sync를 검증한다.
+- Storybook은 in-memory native gesture, deterministic import normalization과 diff
+  fixture만 보여준다. 실제 file I/O, engine 실행, 저장/revision/conflict 적용
+  workflow와 product application routing을 흉내 내지 않는다.
+
+#### M5-E — 단계별 delivery slice
+
+1. **V1 golden slice:** 한 level의 floor polygon, wall polyline과 waypoint-edge
+   route를 Native Builder와 Isaac/OpenUSD import 양쪽에서 만들어 같은 document,
+   diagnostics와 derived preview를 얻는다.
+2. **V2 authoring expansion:** door/lift, navigation area, goal, charger/dock, asset와
+   2D reference calibration을 추가한다.
+3. **V3 import expansion:** Unreal/Unity adapter capability, import review state와
+   unknown/source-lock evidence를 추가한다.
+4. **V4 reimport/export:** durable binding 기반 3-way diff, weak remap, bundle
+   round-trip, optional source write-back과 profiled GLB/occupancy export를 추가한다.
+
+V1이 native/import 양쪽에서 통과하기 전 V2~V4를 하나의 alpha 완료 범위로
+묶지 않는다.
 
 제품에 남는 것:
 
-- 권한, 승인 workflow, 저장소, revision과 conflict 정책
-- zone·stair 등 제품별 업무 entity와 validation
-- backend geometry 생성, PCD 처리와 배포
-- 제품별 undo/redo UX와 final screen composition
+- 직접 만들기/import/reimport/export 시작 흐름과 final screen composition
+- file I/O, upload/download, source registry, 권한, 승인 workflow와 저장소
+- history, revision, 3-way merge/conflict 적용, export destination과 배포
+- 제품 zone·stair·permission·operation rule과 blocking validation policy
+- backend geometry 생성, PCD 처리, ROS map 배포와 engine project 운영
 
 완료 조건:
 
-- Building→Floor→Site transform round-trip과 serialization fixture가 데이터
-  손실 없이 통과한다.
-- preview, topology와 floor editor가 같은 asset/transform contract를 쓴다.
-- gizmo, numeric input과 keyboard 대안이 같은 change set을 생성한다.
-- 대형 building fixture에서 draw call, memory, selection latency와 load
-  budget을 통과한다.
-- 제품 업무 schema 없이도 capability package의 public API가 설명되고
-  dependency boundary 검사를 통과한다.
+- Native Builder와 Isaac importer가 만든 같은 fixture가 동일한 canonical level,
+  entity, transform, route/area/goal 의미와 deterministic serialization을 낸다.
+- durable binding/normalized base/per-field ownership fixture가 3-way
+  add/change/delete/conflict를 재현하고 weak path binding은 remap-required를 만들며
+  web-authored overlay, tombstone과 unknown source data를 보존한다.
+- LK bundle save/reload, source reimport와 adapter별 external write-back을 별도
+  capability test로 검증한다. GLB/occupancy는 source/toolchain/export profile이 있는
+  비정본 cache로만 기록한다.
+- wall/route가 block으로 직렬화되지 않고 polyline/graph identity, direction과 width를
+  유지한다. 기본 route는 centerline+vertex+direction이며 translucent corridor는
+  selection/validation에서만 나타나고 polyline wall 하나가 mesh를 생성한다.
+- gizmo, point capture, numeric input과 keyboard 대안이 같은 change intent를
+  생성한다.
+- 대형 imported building fixture에서 load, draw call, memory, selection latency와
+  diff budget을 통과한다.
+- LDS-owned chrome에 raw button/custom panel이 없고 wide/narrow, loading, unmapped,
+  invalid와 conflict 상태를 실제 public LDS component로 검토한다.
+- `SelectionInspector`, `ValidationSummary`, `ResourceState`와 `Scene3DFrame`이 서로의
+  상태를 대신하지 않으며 selectable structure hierarchy gap은 승인된 LDS/product
+  owner 결정 전 production-ready로 주장하지 않는다.
+- 제품 workflow 없이도 공통 schema·normalizer·validator·diff API가 설명되고
+  engine SDK가 package boundary를 넘지 않는다.
 
 ### M6 — beta, stack 완전 수렴과 `1.0.0` rollout
 
@@ -532,6 +646,96 @@ M6의 목적은 플랫폼 존속 판단이 아니라 공식 지원 release의 �
 `1.0.0` 전 breaking change에도 migration note를 요구한다. `1.0.0` 이후 제거
 예정 API는 최소 한 minor release 동안 deprecation warning, 대체 API와
 migration 예제를 제공한다.
+
+### Post-1.0 후보 — live simulator·native runtime 연계
+
+상태: **차후 검토 후보(2026-07-19)**. 이 절은 M5의 파일 기반 map authoring
+exchange와 다르다. Unity, Unreal Engine과 NVIDIA Isaac Sim의 live session,
+ROS bridge, remote rendering, simulation command와 runtime 운영은 현재
+구현·지원 범위가 아니며 M0~M6 또는 `1.0.0`을 지연시키지 않는다. 구체적인 제품
+소비자, 운영 owner와 비용·보안 예산이 승인되기 전에는 runtime package,
+placeholder command API 또는 장기 지원 약속을 만들지 않는다.
+
+목적은 LDS3D를 시뮬레이터로 확장하는 것이 아니라, 실제 로봇·시뮬레이션·웹
+관제가 같은 entity, frame, unit, timestamp와 selection 의미를 사용하도록 하는
+것이다. renderer 간 픽셀 동일성보다 같은 fixture의 공간·상호작용 결과가
+일치하는지를 검증한다.
+
+#### 후보 트랙
+
+| 후보 | 우선 사용 사례 | 최초 연계 형태 | LDS3D에 포함하지 않는 것 |
+| --- | --- | --- | --- |
+| NVIDIA Isaac Sim | AMR 경로·충돌·센서 검증, software-in-the-loop, 합성데이터 검수 | 제품 소유 ROS 2 bridge가 TF, pose, PointCloud, Occupancy Grid와 Marker를 canonical snapshot으로 정규화하는 read-only PoC | Isaac Sim 실행·물리·센서 설정, ROS transport, simulation control, 학습 pipeline |
+| Unity | 작업자 교육, VR/AR, 로봇 상호작용 prototype | 승인된 serialized core contract를 소비하는 제품 C# adapter; ROS 연결이 필요하면 제품이 Unity ROS connector를 소유 | Unity runtime·SDK dependency, 제품 workflow, device/session 운영 |
+| Unreal Engine | 고품질 digital twin, 원격 데모와 교육 | Unreal Pixel Streaming viewport를 LDS DOM composition 안에 배치하고 selection·camera·status만 별도 event bridge로 교환 | 영상 인코딩·WebRTC 인프라, GPU session 배정, Unreal 프로젝트와 Blueprint/C++ 업무 로직 |
+
+Pixel Streaming은 renderer adapter가 아니라 원격 렌더링 영상과 입력을 전달하는
+transport다. 브라우저의 LDS `PageHeader`, toolbar, inspector, status와 접근성
+DOM은 유지하고 Unreal 장면은 viewport region만 소유한다. Unreal object와 LDS
+entity의 선택 동기화가 필요하면 opaque engine object를 노출하지 않고 안정된
+`EntityId` 기반 event schema를 사용한다.
+
+#### 책임 경계
+
+| 소유자 | 책임 |
+| --- | --- |
+| LDS | brand, DOM action, inspector, status, focus, keyboard와 오류 presentation |
+| LDS3D | coordinate/unit/frame/time/entity 계약, renderer capability, projection adapter, golden fixture와 round-trip 검사 |
+| 제품 | ROS/WebSocket/WebRTC transport, 인증·권한, 명령·simulation lifecycle, session/GPU 운영, 최종 화면 composition |
+| 시뮬레이터·엔진 | 물리, 센서, scene authoring, rendering, synthetic data와 engine-native resource lifecycle |
+
+Unity, Unreal 또는 Isaac Sim SDK는 `core`, `assets`, `testing`, `three`, `r3f`에
+의존성으로 들어갈 수 없다. native projection이 실제 두 제품 이상에서 반복되고
+지원 owner가 확보된 경우에만 optional adapter 또는 별도 저장소를 ADR로
+검토한다. 단일 제품 bridge는 해당 제품 저장소에 유지한다.
+
+#### 단계와 승격 조건
+
+1. **F0 — discovery:** 실제 제품 시나리오, target engine/version, 데이터 흐름,
+   latency·GPU 비용, 배포 방식, 보안 경계와 owner를 기록한다. 승인된 소비자 없이
+   구현 단계로 승격하지 않는다.
+2. **F1 — Isaac Sim read-only PoC:** 대표 AMR fixture 하나로 TF, pose,
+   PointCloud, Occupancy Grid와 Marker를 같은 timestamp에 투영하고 WebGL 장면과
+   record/replay 결과를 비교한다. 명령과 simulation control은 제외한다.
+3. **F2 — 제한된 양방향 검증:** 제품 권한·감사·kill switch를 통과한 camera 또는
+   simulation action만 별도 command channel로 추가한다. 일반 hover/selection은
+   로봇 명령이나 simulation side effect를 만들지 않는다.
+4. **F3 — Unity/Unreal 수요 기반 adapter:** VR/AR 또는 Pixel Streaming이 실제
+   제품 요구로 승인된 경우에만 frozen fixture와 capability matrix를 사용해
+   C#/C++/Blueprint 또는 event bridge를 구현한다.
+
+각 단계는 다음 증거가 있어야 다음 단계로 승격한다.
+
+- LK core의 right-handed, Z-up, meter, radian과 `[x, y, z, w]` quaternion이
+  engine 경계에서 한 번만 변환되고 round-trip fixture를 통과한다.
+- timestamp, out-of-order, stale, missing transform과 reconnect 상태가
+  결정적이며 record/replay에서 재현된다.
+- read-only selection과 command channel이 분리되고 권한, audit, timeout,
+  cancellation과 safe failure가 제품에서 검증된다.
+- latency, bandwidth, browser/GPU 자원, 동시 session 비용을 target 환경에서
+  측정한다. Pixel Streaming 영상 품질만으로 WebGL/GLB runtime parity를
+  주장하지 않는다.
+- LDS DOM 대안, keyboard order, focus return과 renderer unavailable/error
+  presentation이 유지된다.
+- engine/SDK version support, license, asset provenance와 운영 owner가 문서화된다.
+
+#### 공식 근거와 설계에 미친 영향
+
+- [Isaac Sim ROS 2](https://docs.isaacsim.omniverse.nvidia.com/latest/ros2_tutorials/ros2_landing_page.html)는
+  ROS 2 bridge를 제품 transport 후보로 선택하게 했지만, ROS subscription을
+  LDS3D package에 넣는 근거로 사용하지 않는다.
+- [Isaac Sim Replicator](https://docs.isaacsim.omniverse.nvidia.com/latest/replicator_tutorials/tutorial_replicator_overview.html)는
+  synthetic data 생성은 simulator가 소유하고 LDS3D는 공간 결과와 검수
+  composition만 공유한다는 경계를 정했다.
+- [Unity ROS TCP Connector](https://github.com/Unity-Technologies/ROS-TCP-Connector)는
+  ROS message와 geometry 변환이 가능한 후보임을 보여주지만, target Unity/ROS
+  version 검증 전 공식 dependency 또는 지원 약속으로 채택하지 않는다.
+- [Unreal Pixel Streaming](https://dev.epicgames.com/documentation/unreal-engine/pixel-streaming-in-unreal-engine)은
+  Unreal을 브라우저 renderer로 포장하지 않고 원격 viewport transport로
+  분류하게 했다.
+- [Unreal Remote Control](https://dev.epicgames.com/documentation/unreal-engine/remote-control-for-unreal-engine)은
+  HTTP/WebSocket 제어 가능성을 보여주지만 Beta 표기와 명령 위험 때문에 최초
+  단계는 read-only event bridge로 제한한다.
 
 ## 7. 품질 및 릴리스 게이트
 
@@ -621,7 +825,7 @@ smoke와 API report를 통과해야 한다. beta와 stable release는 golden vis
 | G-D0R·G-L0·G2 renderer alpha | 실제 renderer fidelity, LDS integration, target stack, camera/picking/lifecycle, visual·접근성·duplicate dependency와 context recovery 통과 | visual direction, LDS mapping, renderer adapter 또는 resource ownership 교정, 해당 alpha release 보류 |
 | M3 product rollout | 두 제품이 같은 release를 사용하고 command/save payload, immutable-input/no-side-effect와 성능 gate 통과 | 공통 API와 제품 adapter 책임을 재분류하고 해당 capability를 legacy mode로 rollback |
 | M4 spatial-data alpha | PointCloud·TF·Marker가 Three/R3F/Rerun에서 같은 의미와 성능 예산 유지 | 문제 capability를 다음 alpha로 이동하거나 renderer별 adapter를 분리 |
-| M5 authoring alpha | Building·Floor·Site serialization, gizmo와 accessibility workflow 통과 | authoring primitive 또는 change contract 범위를 교정하고 제품 workflow 유입 제거 |
+| M5 authoring alpha | Site·Building·Level serialization, dual-path V1, gizmo와 accessibility workflow 통과 | authoring primitive 또는 change contract 범위를 교정하고 제품 workflow 유입 제거 |
 | M6 beta | 두 production canary, target stack 수렴, 문서·보안·접근성·운영 gate 통과 | named foundation contract는 수정 후 beta에 유지하고 비핵심 capability 확장만 `1.1`로 이동 |
 | M6 `1.0.0` | 두 제품 기본 경로, 동일 release, no fork, no R3F 8 compatibility, support/rollback 확정 | release candidate를 유지하며 실패 gate 수정 후 `1.0.0` 재심사 |
 

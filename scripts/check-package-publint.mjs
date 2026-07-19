@@ -9,7 +9,7 @@ if (pnpmCli === undefined) {
   throw new Error("Run this check through the `pnpm publint` workspace script.");
 }
 
-for (const name of ["core", "assets", "testing", "pointcloud", "three", "r3f"]) {
+for (const name of ["core", "assets", "testing", "pointcloud", "tf", "markers", "three", "r3f"]) {
   const result = spawnSync(process.execPath, [pnpmCli, "exec", "publint"], {
     cwd: path.join(root, "packages", name),
     encoding: "utf8",

@@ -12,23 +12,35 @@ wave입니다.
 ## Foundation Alpha.1 + Visual Alpha V0
 
 현재 로컬 후보에는 renderer-neutral `core`, manifest·ownership을 담당하는
-`assets`, golden fixture·contract check를 제공하는 `testing`, 실제 Three.js·R3F
-WebGL 구현을 제공하는 `r3f` package가 포함됩니다.
+`assets`, golden fixture·contract check를 제공하는 `testing`, PointCloud·TF·Marker
+계약을 담당하는 `pointcloud`·`tf`·`markers`, 실제 Three.js·R3F WebGL 구현을
+제공하는 `r3f` package가 포함됩니다.
 
-Storybook은 foundation contract와 7개의 독립 실제 WebGL primitive story를 먼저
-제공하고, `Visual Alpha` 6개 story를 그 원자들의 통합 scenario로 둡니다.
+Storybook은 `Foundations → Assets → Primitives → States → Scenes → LDS Integration`
+순서로 소유권을 드러냅니다. 각 public API 또는 명시적 API 묶음은 독립 owner
+page에서 실제 WebGL로 검토하고, 상태·장면·LDS 조합은 별도 scenario page에 둡니다.
 Primitive catalog는 `SceneCanvas`, `Selectable`, `AmrRobot`, `GoalMarker`,
-`PathRibbon`, `SceneStateMarker`, `GltfModel`의 사용·상태·상호작용을 각각
-검토합니다. Visual Alpha에는 동일한 AMR 창고 장면의 `Operational Neutral`과
-`Diagnostic Technical`, 실제 GLB 6종 catalog, goal·path 상태, renderer
-loading·empty·error·retry, 실제 LDS composition이 포함됩니다. 기본 시각 방향은
+`PathRibbon`, `PointCloudLayer(s)`, `MarkerLayer`, `SectionBox`, `EditVolume`,
+`SpatialStructure`, `TransformGizmo`, `SceneStateMarker`, `GltfModel`의
+사용·상태·상호작용을 각각 검토합니다. AMR operations, 실제 GLB 6종 asset review,
+goal·path 상태, renderer loading·empty·error·retry, 실제 LDS composition도 각 소유
+group 아래에서 검토합니다. 기본 시각 방향은
 운영 상태 식별성과 LDS chrome 조합성이 더 높은 `Operational Neutral`입니다.
 문서 앱은 형제 checkout `../LK Design System`의
 `@lk-robotics/design-system-core@0.1.0`을 `link:`로 소비하며, 기준 commit은
-`2894b7b7d0a572ca32d67e1ff4fbe98638114052`입니다. `Scene3DFrame`,
+`b5f910c20c87358700c85707b789dcfe489b99b6`입니다. `Scene3DFrame`,
 `SelectionInspector`, `SegmentedControl`, `ViewportStatusBar`, `StatusBadge`와 공식
 `styles.css`를 실제 public API로 사용합니다. renderer package에는 LDS 의존성을
 넣지 않았고, LDS·제품 repository 변경이나 registry publish도 수행하지 않았습니다.
+
+재현 가능한 지원 기준은 위 clean `b5f910c…` pin으로 유지합니다. 최종 로컬 검증
+시점에는 공유 sibling checkout이 다른 작업으로 `0aa7f8d2856546d9193dac190f4777f0ca9caa64`
+및 dirty 상태로 이동해 있었습니다. 두 commit 사이와 dirty source를 다시 비교했으며,
+이번 조합이 사용하는 `CanvasEditorShell`, `Scene3DFrame`, `LayerPanel`,
+`SelectionInspector`, `ViewportStatusBar`, `ViewerToolbar`, `Button`,
+`SegmentedControl`, `styles.css`에는 source delta가 없었습니다. 따라서 로컬 재검증은
+유효하지만, dirty sibling이나 `0aa7f8d…`를 새 지원 pin 또는 portable CI 근거로
+승격하지 않습니다.
 
 2026-07-17 LDS baseline audit에서 `Scene3DFrame`의 public
 `variant="embedded"` 계약을 확인했습니다. `CanvasEditorShell`처럼 부모 surface에
@@ -63,8 +75,11 @@ LK Design System 3D를 별도 저장소와 독립 release cadence를 가진 공�
 - `LK Design System`은 viewport chrome, 상태, toolbar, 접근성 표현을 소유합니다.
 - 이 저장소는 좌표 변환, camera rig, 3D asset 계약, scene primitive와
   renderer lifecycle을 소유합니다.
-- 제품은 ROS/MQTT transport, 명령, 작업 생성, 맵 저장, 변환 파이프라인과
-  완성 화면을 계속 소유합니다.
+- 맵 저작은 Native 2.5D Builder와 Unity·Unreal·Isaac 등 외부 장면 import를 모두
+  지원하고, 두 경로가 같은 제안된 renderer-neutral 맵 계약으로 합류합니다.
+- 이 저장소는 공통 map schema, 좌표/source binding 정규화와 순수
+  validation·diff 계약을 소유합니다. 제품은 file I/O, 명령, 권한, history,
+  저장·revision·merge, 변환 실행·배포와 완성 화면을 계속 소유합니다.
 - 두 제품의 신규 공통 3D foundation은 이 플랫폼을 우선 사용합니다.
 - 기존 제품의 중복 좌표·카메라·자산·picking 구현도 단계적으로 이관합니다.
 - 제품별 fork 대신 같은 package release와 명시적 adapter를 사용합니다.
@@ -79,6 +94,7 @@ Control Full의 R3F 8 조합용 compatibility binding은 아직 구현·검증�
 
 - [문서 안내](docs/README.md)
 - [형제 저장소 의사결정](docs/ADR-0001-SIBLING-REPOSITORY.md)
+- [Dual-path 맵 저작 의사결정](docs/ADR-0002-DUAL-PATH-MAP-AUTHORING.md)
 - [제품 근거](docs/PRODUCT_EVIDENCE.md)
 - [디자인 방향·LDS 통합 상위 계획](docs/DESIGN_AND_LDS_INTEGRATION_PLAN.md)
 - [Visual Alpha 레퍼런스 조사·시각 방향 결정](docs/VISUAL_ALPHA_REFERENCE_RESEARCH.md)
@@ -115,16 +131,23 @@ Control Full의 R3F 8 조합용 compatibility binding은 아직 구현·검증�
 
 ### P2 — Spatial Authoring
 
-- Building, Floor, Site spatial primitive
-- transform gizmo와 authoring interaction foundation
-- 공통 selection, hierarchy와 scene metadata 계약
+- Native 2.5D Builder와 External Scene Import가 공유하는 versioned map document
+  및 source/derived provenance 계약
+- Building, Level, Site hierarchy와 polygon floor, polyline wall, door/transition,
+  waypoint-edge route graph, area/goal/charger/dock spatial contract
+- transform gizmo, point capture, snapping, ghost placement와 authoring interaction
+  foundation
+- Isaac/OpenUSD reference import → Unreal USD → Unity adapter 순의 conformance 검증
+- durable/weak source binding, 이전 normalized base와 hash 기반 reimport diff;
+  persistence·remap·merge/conflict UI는 제품 소유
 
 ## 명시적 비범위
 
-- 제품 route와 완성 화면
+- 제품 application routing과 완성 화면
 - 로봇 명령, 권한, 안전 정책
 - ROS/MQTT/WebSocket transport
 - PCD 정리, mesh 생성 같은 서버 알고리즘
 - 특정 제품의 task, building, facility schema
 - 대용량 로봇·시설 모델 원본 저장소
 - Three.js, R3F 또는 Rerun을 대체하는 자체 렌더링 엔진
+- 범용 CAD/mesh/material editor 또는 engine-native component의 완전한 왕복

@@ -5,7 +5,10 @@
 ```ts
 
 import { Bounds3 } from '@lk-robotics/design-system-3d-core';
+import { ClockId } from '@lk-robotics/design-system-3d-core';
 import { FrameId } from '@lk-robotics/design-system-3d-core';
+import { LayerId } from '@lk-robotics/design-system-3d-core';
+import { RigidTransform3 } from '@lk-robotics/design-system-3d-core';
 import { Timestamp } from '@lk-robotics/design-system-3d-core';
 
 // @public (undocumented)
@@ -15,10 +18,139 @@ export function assertPointCloudFrame(snapshot: PointCloudSnapshot, sceneFrame: 
 export function assertPointCloudSnapshot(value: unknown): asserts value is PointCloudSnapshot;
 
 // @public (undocumented)
+export function createPointCloudLayerSet(input: PointCloudLayerSetInput): PointCloudLayerSet;
+
+// @public (undocumented)
+export function createPointCloudLayerSnapshot(input: PointCloudLayerSnapshotInput): PointCloudLayerSnapshot;
+
+// @public (undocumented)
 export function createPointCloudSnapshot(input: PointCloudSnapshotInput): PointCloudSnapshot;
 
 // @public (undocumented)
 export type PointCloudBufferOwnership = "caller-retained";
+
+// @public (undocumented)
+export interface PointCloudFreshnessPolicy {
+    // (undocumented)
+    readonly now: Timestamp;
+    // (undocumented)
+    readonly staleAfterSeconds: number;
+}
+
+// @public (undocumented)
+export type PointCloudFreshnessState = {
+    readonly kind: "unknown";
+    readonly reason: "policy-disabled" | "timestamp-missing";
+} | {
+    readonly kind: "clock-mismatch";
+    readonly expectedClock: ClockId;
+    readonly actualClock: ClockId;
+} | {
+    readonly kind: "future";
+    readonly leadSeconds: number;
+} | {
+    readonly kind: "fresh";
+    readonly ageSeconds: number;
+} | {
+    readonly kind: "stale";
+    readonly ageSeconds: number;
+    readonly staleAfterSeconds: number;
+};
+
+// @public (undocumented)
+export type PointCloudLayerRenderState = (PointCloudLayerRenderStateBase & {
+    readonly kind: "ready";
+    readonly acceptedPointCount: number;
+    readonly sourceToScene: RigidTransform3;
+}) | (PointCloudLayerRenderStateBase & {
+    readonly kind: "hidden";
+}) | (PointCloudLayerRenderStateBase & {
+    readonly kind: "empty";
+}) | (PointCloudLayerRenderStateBase & {
+    readonly kind: "frame-unresolved";
+    readonly sourceFrame: FrameId;
+    readonly sceneFrame: FrameId;
+}) | (PointCloudLayerRenderStateBase & {
+    readonly kind: "frame-mismatch";
+    readonly sourceFrame: FrameId;
+    readonly expectedSceneFrame: FrameId;
+    readonly actualSceneFrame: FrameId;
+}) | (PointCloudLayerRenderStateBase & {
+    readonly kind: "budget-exceeded";
+    readonly maxPoints: number;
+});
+
+// @public
+export interface PointCloudLayerRenderStateBase {
+    // (undocumented)
+    readonly acceptedPointCount: number;
+    // (undocumented)
+    readonly freshness: PointCloudFreshnessState;
+    // (undocumented)
+    readonly layerId: LayerId;
+    // (undocumented)
+    readonly requestedPointCount: number;
+}
+
+// @public
+export interface PointCloudLayerSet {
+    // (undocumented)
+    readonly layers: readonly PointCloudLayerSnapshot[];
+}
+
+// @public (undocumented)
+export interface PointCloudLayerSetInput {
+    // (undocumented)
+    readonly layers: readonly PointCloudLayerSnapshotInput[];
+}
+
+// @public (undocumented)
+export interface PointCloudLayerSetRenderState {
+    // (undocumented)
+    readonly acceptedPointCount: number;
+    // (undocumented)
+    readonly kind: PointCloudLayerSetRenderStateKind;
+    // (undocumented)
+    readonly layers: readonly PointCloudLayerRenderState[];
+    // (undocumented)
+    readonly maxPoints: number;
+    // (undocumented)
+    readonly requestedPointCount: number;
+    // (undocumented)
+    readonly sceneFrame: FrameId;
+}
+
+// @public (undocumented)
+export type PointCloudLayerSetRenderStateKind = "ready" | "empty" | "degraded" | "budget-exceeded";
+
+// @public
+export interface PointCloudLayerSnapshot {
+    // (undocumented)
+    readonly id: LayerId;
+    // (undocumented)
+    readonly snapshot: PointCloudSnapshot;
+    // (undocumented)
+    readonly sourceToScene?: RigidTransform3;
+    // (undocumented)
+    readonly visible: boolean;
+}
+
+// @public (undocumented)
+export interface PointCloudLayerSnapshotInput {
+    // (undocumented)
+    readonly id: LayerId;
+    // (undocumented)
+    readonly snapshot: PointCloudSnapshot;
+    readonly sourceToScene?: RigidTransform3;
+    // (undocumented)
+    readonly visible?: boolean;
+}
+
+// @public (undocumented)
+export class PointCloudLayerValidationError extends RangeError {
+    // (undocumented)
+    readonly name: string;
+}
 
 // @public (undocumented)
 export type PointCloudRenderState = {
@@ -81,6 +213,9 @@ export class PointCloudValidationError extends RangeError {
     // (undocumented)
     readonly name: string;
 }
+
+// @public
+export function resolvePointCloudLayerSetRenderState(layerSet: PointCloudLayerSet, sceneFrame: FrameId, maxPoints: number, freshnessPolicy?: PointCloudFreshnessPolicy): PointCloudLayerSetRenderState;
 
 // @public (undocumented)
 export function resolvePointCloudRenderState(snapshot: PointCloudSnapshot, sceneFrame: FrameId, maxPoints: number): PointCloudRenderState;

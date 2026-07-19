@@ -2,12 +2,17 @@ import {
   assetId,
   entityId,
   frameId,
+  occupancyGridGeometry,
   quaternionFromYaw,
+  rigidTransform3,
   type Axis,
   type Bounds3,
   type FrameId,
   type FramedPoint3,
   type Mat4,
+  type OccupancyGridCell,
+  type OccupancyGridGeometry,
+  type OccupancyGridImagePixel,
   type PathEntity,
   type Quat,
   type RigidTransform3,
@@ -22,6 +27,7 @@ export const FIXTURE_FRAMES = Object.freeze({
   sourceMap: frameId("fixture-source-map"),
   render: frameId("fixture-render"),
   productMap: frameId("fixture-product-map"),
+  occupancyGrid: frameId("fixture-occupancy-grid"),
   assetFile: frameId("fixture-y-up-glb-file"),
   legacyAssetFile: frameId("fixture-legacy-z-up-glb-file"),
 });
@@ -168,6 +174,75 @@ export const SHIFTED_ORIGIN_FIXTURE: ShiftedOriginFixture = {
     value: [12.5, 12.75, 1.5],
   },
 };
+
+export type OccupancyGridFixtureCellState = "unknown" | "free" | "occupied";
+
+export interface OccupancyGridProbeFixture {
+  readonly imagePixel: OccupancyGridImagePixel;
+  readonly expectedCell: OccupancyGridCell;
+  readonly expectedCenter: FramedPoint3;
+}
+
+export interface OccupancyGridFixture {
+  readonly id: "rotated-occupancy-grid";
+  readonly geometry: OccupancyGridGeometry;
+  /** Semantic cell values in ROS row-major order, starting at cell (0, 0). */
+  readonly cellStates: readonly OccupancyGridFixtureCellState[];
+  readonly probes: readonly OccupancyGridProbeFixture[];
+}
+
+const ROTATED_OCCUPANCY_CELL_STATES = Object.freeze([
+  "occupied",
+  "occupied",
+  "occupied",
+  "occupied",
+  "occupied",
+  "free",
+  "unknown",
+  "occupied",
+  "occupied",
+  "free",
+  "free",
+  "occupied",
+] as const satisfies readonly OccupancyGridFixtureCellState[]);
+
+/**
+ * A deliberately asymmetric raster with a shifted +90-degree origin. It makes
+ * an accidental second Y flip or ignored yaw visible in tests and WebGL review.
+ */
+export const ROTATED_OCCUPANCY_GRID_FIXTURE: OccupancyGridFixture = Object.freeze({
+  id: "rotated-occupancy-grid",
+  geometry: occupancyGridGeometry({
+    widthCells: 4,
+    heightCells: 3,
+    resolutionMeters: 0.5,
+    gridToFrame: rigidTransform3(
+      FIXTURE_FRAMES.occupancyGrid,
+      FIXTURE_FRAMES.core,
+      [10, 20, 0],
+      quaternionFromYaw(Math.PI / 2),
+    ),
+  }),
+  cellStates: ROTATED_OCCUPANCY_CELL_STATES,
+  probes: Object.freeze([
+    Object.freeze({
+      imagePixel: Object.freeze({ column: 0, rowFromTop: 0 }),
+      expectedCell: Object.freeze({ column: 0, row: 2 }),
+      expectedCenter: Object.freeze({
+        frame: FIXTURE_FRAMES.core,
+        value: Object.freeze([8.75, 20.25, 0]) as Vec3,
+      }),
+    }),
+    Object.freeze({
+      imagePixel: Object.freeze({ column: 0, rowFromTop: 2 }),
+      expectedCell: Object.freeze({ column: 0, row: 0 }),
+      expectedCenter: Object.freeze({
+        frame: FIXTURE_FRAMES.core,
+        value: Object.freeze([9.75, 20.25, 0]) as Vec3,
+      }),
+    }),
+  ]),
+});
 
 /** A renderer-neutral robot pose facing +Y in the LK core frame. */
 export const ROBOT_POSE_FIXTURE: RobotEntity = {
@@ -523,6 +598,7 @@ export const FOUNDATION_FIXTURE_CONTENT: Readonly<Record<string, unknown>> = {
   [UNIT_CUBE_FIXTURE.id]: UNIT_CUBE_FIXTURE,
   [COORDINATE_AXES_FIXTURE.id]: COORDINATE_AXES_FIXTURE,
   [SHIFTED_ORIGIN_FIXTURE.id]: SHIFTED_ORIGIN_FIXTURE,
+  [ROTATED_OCCUPANCY_GRID_FIXTURE.id]: ROTATED_OCCUPANCY_GRID_FIXTURE,
   "robot-pose": ROBOT_POSE_FIXTURE,
   path: PATH_FIXTURE,
   "y-up-glb-manifest": Y_UP_GLB_MANIFEST_FIXTURE,

@@ -5,10 +5,21 @@ import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
 const packages = {
-  core: ["coordinates", "entities", "camera", "interaction", "renderer", "time", "theme"],
+  core: [
+    "coordinates",
+    "occupancy-grid",
+    "entities",
+    "camera",
+    "interaction",
+    "renderer",
+    "time",
+    "theme",
+  ],
   assets: ["schema", "legacy"],
   testing: ["fixtures", "contracts", "provenance"],
   pointcloud: [],
+  tf: [],
+  markers: [],
   three: ["coordinates", "r3f-bridge"],
   r3f: ["coordinates", "themes", "state", "models", "scene"],
 };

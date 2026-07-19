@@ -12,6 +12,8 @@ const packageSpecs = [
   ["assets", "@lk-robotics/design-system-3d-assets"],
   ["testing", "@lk-robotics/design-system-3d-testing"],
   ["pointcloud", "@lk-robotics/design-system-3d-pointcloud"],
+  ["tf", "@lk-robotics/design-system-3d-tf"],
+  ["markers", "@lk-robotics/design-system-3d-markers"],
   ["three", "@lk-robotics/design-system-3d-three"],
   ["r3f", "@lk-robotics/design-system-3d-r3f"],
 ].map(([directoryName, packageName]) => ({
@@ -165,10 +167,12 @@ try {
   );
   await writeFile(
     path.join(consumerDirectory, "smoke.ts"),
-    `import { frameId, identityTransform } from "@lk-robotics/design-system-3d-core";
+    `import { clockId, entityId, frameId, identityTransform, layerId, pose3, rigidTransform3, timestamp } from "@lk-robotics/design-system-3d-core";
 import { createAssetReport } from "@lk-robotics/design-system-3d-assets";
 import { Y_UP_GLB_MANIFEST_FIXTURE, checkTransformRoundTrip } from "@lk-robotics/design-system-3d-testing";
 import { createPointCloudSnapshot } from "@lk-robotics/design-system-3d-pointcloud";
+import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/design-system-3d-tf";
+import { createMarkerLayerSnapshot, resolveMarkerLayerRenderState } from "@lk-robotics/design-system-3d-markers";
 import { createGltfAssetLoader, type ThreeSceneHostOptions } from "@lk-robotics/design-system-3d-three";
 import { coreToThreePosition as coreToImperativeThreePosition } from "@lk-robotics/design-system-3d-three/coordinates";
 import { cloneThreeSceneInstance } from "@lk-robotics/design-system-3d-three/r3f-bridge";
@@ -187,8 +191,15 @@ const rawThreeLoader = createGltfAssetLoader();
 const rawThreeBridge: typeof cloneThreeSceneInstance = cloneThreeSceneInstance;
 const rawThreeResolvedAsset: ThreeResolvedAsset | undefined = undefined;
 const pointCloud = createPointCloudSnapshot({ frame: frameId("consumer-map"), positions: new Float32Array([0, 0, 0]), revision: 1 });
+const markerTime = timestamp(clockId("consumer-time"), 1, 0);
+const sensorFrame = frameId("consumer-sensor");
+const markerGraph = createFrameGraph([{ transform: rigidTransform3(sensorFrame, transform.targetFrame, [0, 0, 1], [0, 0, 0, 1]), timestamp: markerTime }]);
+const markerTransform = lookupFrameTransform(markerGraph, sensorFrame, transform.targetFrame, markerTime, { staleAfterSeconds: 0 });
+if (markerTransform.kind !== "ready") throw new Error("TF smoke lookup failed");
+const markerLayer = createMarkerLayerSnapshot({ id: layerId("consumer-markers"), frame: sensorFrame, timestamp: markerTime, sourceToScene: markerTransform.transform, markers: [{ kind: "arrow", id: entityId("consumer-heading"), pose: pose3(sensorFrame, [0, 0, 0], [0, 0, 0, 1]), scale: [1, 0.1, 0.2] }] });
+const markerState = resolveMarkerLayerRenderState(markerLayer, transform.targetFrame, 10);
 const canvasContract: Pick<SceneCanvasProps, "frame" | "profile" | "cameraMode"> = { frame: frameId("consumer-map"), profile: "operational-neutral", cameraMode: "home" };
-if (transform.sourceFrame !== transform.targetFrame || !validation.valid || violations.length !== 0 || renderPosition.join(",") !== "-2,3,-1" || imperativePosition.join(",") !== "-2,3,-1" || rawThreeContract.renderMode !== "demand" || typeof rawThreeLoader.load !== "function" || typeof rawThreeBridge !== "function" || rawThreeResolvedAsset !== undefined || OPERATIONAL_NEUTRAL_THEME.id !== "operational-neutral" || pointCloud.pointCount !== 1 || canvasContract.cameraMode !== "home") {
+if (transform.sourceFrame !== transform.targetFrame || !validation.valid || violations.length !== 0 || renderPosition.join(",") !== "-2,3,-1" || imperativePosition.join(",") !== "-2,3,-1" || rawThreeContract.renderMode !== "demand" || typeof rawThreeLoader.load !== "function" || typeof rawThreeBridge !== "function" || rawThreeResolvedAsset !== undefined || OPERATIONAL_NEUTRAL_THEME.id !== "operational-neutral" || pointCloud.pointCount !== 1 || markerState.kind !== "ready" || canvasContract.cameraMode !== "home") {
   throw new Error("Visual Alpha public contract smoke failed");
 }
 console.log(JSON.stringify({ validation: validation.valid, roundTrip: violations.length === 0, rawThree: true, renderer: true }));
@@ -196,10 +207,12 @@ console.log(JSON.stringify({ validation: validation.valid, roundTrip: violations
   );
   await writeFile(
     path.join(consumerDirectory, "runtime.mjs"),
-    `import { frameId, identityTransform } from "@lk-robotics/design-system-3d-core";
+    `import { clockId, entityId, frameId, identityTransform, layerId, pose3, rigidTransform3, timestamp } from "@lk-robotics/design-system-3d-core";
 import { createAssetReport } from "@lk-robotics/design-system-3d-assets";
 import { Y_UP_GLB_MANIFEST_FIXTURE, checkTransformRoundTrip } from "@lk-robotics/design-system-3d-testing";
 import { createPointCloudSnapshot } from "@lk-robotics/design-system-3d-pointcloud";
+import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/design-system-3d-tf";
+import { createMarkerLayerSnapshot, resolveMarkerLayerRenderState } from "@lk-robotics/design-system-3d-markers";
 import { createGltfAssetLoader } from "@lk-robotics/design-system-3d-three";
 import { coreToThreePosition as coreToImperativeThreePosition } from "@lk-robotics/design-system-3d-three/coordinates";
 import { cloneThreeSceneInstance } from "@lk-robotics/design-system-3d-three/r3f-bridge";
@@ -207,7 +220,14 @@ import { coreToThreePosition } from "@lk-robotics/design-system-3d-r3f/coordinat
 import { OPERATIONAL_NEUTRAL_THEME } from "@lk-robotics/design-system-3d-r3f/themes";
 const transform = identityTransform(frameId("runtime-map"));
 const pointCloud = createPointCloudSnapshot({ frame: frameId("runtime-map"), positions: new Float32Array([0, 0, 0]), revision: 1 });
-const result = { esm: transform.sourceFrame === transform.targetFrame, asset: createAssetReport(Y_UP_GLB_MANIFEST_FIXTURE).valid, roundTrip: checkTransformRoundTrip(transform).length === 0, pointCloud: pointCloud.pointCount === 1, rawThree: coreToImperativeThreePosition([1, 2, 3]).join(",") === "-2,3,-1" && typeof createGltfAssetLoader().load === "function" && typeof cloneThreeSceneInstance === "function", renderer: coreToThreePosition([1, 2, 3]).join(",") === "-2,3,-1", theme: OPERATIONAL_NEUTRAL_THEME.id === "operational-neutral" };
+const markerTime = timestamp(clockId("runtime-time"), 1, 0);
+const sensorFrame = frameId("runtime-sensor");
+const markerGraph = createFrameGraph([{ transform: rigidTransform3(sensorFrame, transform.targetFrame, [0, 0, 1], [0, 0, 0, 1]), timestamp: markerTime }]);
+const markerTransform = lookupFrameTransform(markerGraph, sensorFrame, transform.targetFrame, markerTime, { staleAfterSeconds: 0 });
+if (markerTransform.kind !== "ready") throw new Error("TF runtime smoke lookup failed");
+const markerLayer = createMarkerLayerSnapshot({ id: layerId("runtime-markers"), frame: sensorFrame, timestamp: markerTime, sourceToScene: markerTransform.transform, markers: [{ kind: "pose", id: entityId("runtime-pose"), pose: pose3(sensorFrame, [0, 0, 0], [0, 0, 0, 1]), axisLength: 0.5 }] });
+const markerState = resolveMarkerLayerRenderState(markerLayer, transform.targetFrame, 10);
+const result = { esm: transform.sourceFrame === transform.targetFrame, asset: createAssetReport(Y_UP_GLB_MANIFEST_FIXTURE).valid, roundTrip: checkTransformRoundTrip(transform).length === 0, pointCloud: pointCloud.pointCount === 1, tf: markerTransform.kind === "ready", markers: markerState.kind === "ready", rawThree: coreToImperativeThreePosition([1, 2, 3]).join(",") === "-2,3,-1" && typeof createGltfAssetLoader().load === "function" && typeof cloneThreeSceneInstance === "function", renderer: coreToThreePosition([1, 2, 3]).join(",") === "-2,3,-1", theme: OPERATIONAL_NEUTRAL_THEME.id === "operational-neutral" };
 if (!Object.values(result).every(Boolean)) throw new Error(JSON.stringify(result));
 console.log(JSON.stringify(result));
 `,

@@ -8,12 +8,18 @@ import {
   LEGACY_Z_UP_GLB_MANIFEST_FIXTURE,
   PATH_FIXTURE,
   ROBOT_POSE_FIXTURE,
+  ROTATED_OCCUPANCY_GRID_FIXTURE,
   UNIT_CUBE_FIXTURE,
   Y_UP_GLB_MANIFEST_FIXTURE,
   Y_UP_TO_Z_UP_ROTATION,
   assetFixtures,
   coordinateFixtures,
 } from "./fixtures.js";
+import {
+  occupancyCellDataIndex,
+  occupancyImagePixelCenter,
+  occupancyImagePixelToCell,
+} from "@lk-robotics/design-system-3d-core";
 
 describe("foundation fixtures", () => {
   it("defines a one-meter cube with eight vertices and twelve triangles", () => {
@@ -36,6 +42,29 @@ describe("foundation fixtures", () => {
     expect(PATH_FIXTURE.kind).toBe("path");
     expect(ROBOT_POSE_FIXTURE.pose.frame).toBe(PATH_FIXTURE.frame);
     expect(PATH_FIXTURE.points.some((point) => point[2] !== 0)).toBe(true);
+  });
+
+  it("fixes image Y direction, row-major values, and rotated occupancy origin", () => {
+    const fixture = ROTATED_OCCUPANCY_GRID_FIXTURE;
+    expect(fixture.cellStates).toHaveLength(
+      fixture.geometry.widthCells * fixture.geometry.heightCells,
+    );
+
+    for (const probe of fixture.probes) {
+      const cell = occupancyImagePixelToCell(fixture.geometry, probe.imagePixel);
+      expect(cell).toEqual(probe.expectedCell);
+      expect(occupancyImagePixelCenter(fixture.geometry, probe.imagePixel).value[0]).toBeCloseTo(
+        probe.expectedCenter.value[0],
+        12,
+      );
+      expect(occupancyImagePixelCenter(fixture.geometry, probe.imagePixel).value[1]).toBeCloseTo(
+        probe.expectedCenter.value[1],
+        12,
+      );
+      expect(occupancyCellDataIndex(fixture.geometry, cell)).toBe(
+        cell.row * fixture.geometry.widthCells + cell.column,
+      );
+    }
   });
 
   it("declares an explicit Y-up to Z-up transform and checksum", () => {

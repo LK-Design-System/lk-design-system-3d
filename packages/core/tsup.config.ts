@@ -4,6 +4,7 @@ export default defineConfig({
   entry: {
     index: "src/index.ts",
     coordinates: "src/coordinates.ts",
+    "occupancy-grid": "src/occupancy-grid.ts",
     entities: "src/entities.ts",
     camera: "src/camera.ts",
     interaction: "src/interaction.ts",

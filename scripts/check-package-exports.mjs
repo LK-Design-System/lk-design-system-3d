@@ -7,6 +7,7 @@ const expectedExports = {
   core: [
     ".",
     "./coordinates",
+    "./occupancy-grid",
     "./entities",
     "./camera",
     "./interaction",
@@ -18,6 +19,8 @@ const expectedExports = {
   assets: [".", "./schema", "./legacy", "./asset-manifest.v1.schema.json", "./package.json"],
   testing: [".", "./fixtures", "./contracts", "./provenance", "./package.json"],
   pointcloud: [".", "./package.json"],
+  tf: [".", "./package.json"],
+  markers: [".", "./package.json"],
   three: [".", "./coordinates", "./r3f-bridge", "./package.json"],
   r3f: [".", "./coordinates", "./themes", "./state", "./models", "./scene", "./package.json"],
 };

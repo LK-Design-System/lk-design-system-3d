@@ -4,6 +4,9 @@
 
 ```ts
 
+// @public
+export function appendSpatialPointDraftPoint(session: SpatialPointDraftSession, point?: Vec3 | undefined): SpatialPointDraftUpdate;
+
 // @public (undocumented)
 export function assertUnitQuaternion(value: unknown, label?: string): asserts value is Quat;
 
@@ -19,6 +22,12 @@ export function assertValidFramedPoint3(value: FramedPoint3): void;
 // @public (undocumented)
 export function assertValidFrameId(value: FrameId): void;
 
+// @public
+export function assertValidOccupancyGridGeometry(value: OccupancyGridGeometry): void;
+
+// @public
+export function assertValidOccupancyGridSnapshot(value: OccupancyGridSnapshot): void;
+
 // @public (undocumented)
 export function assertValidPose3(value: Pose3): void;
 
@@ -27,6 +36,18 @@ export function assertValidQuaternion(value: unknown, label?: string): asserts v
 
 // @public (undocumented)
 export function assertValidRigidTransform(value: RigidTransform3): void;
+
+// @public (undocumented)
+export function assertValidSpatialEditVolume(value: SpatialEditVolume): void;
+
+// @public (undocumented)
+export function assertValidSpatialNodeTransform(transform: SpatialNodeTransform, label?: string): void;
+
+// @public (undocumented)
+export function assertValidSpatialPbrMaterial(material: SpatialPbrMaterial, label?: string): void;
+
+// @public (undocumented)
+export function assertValidSpatialStructure(structure: SpatialStructure): void;
 
 // @public (undocumented)
 export function assertValidVec3(value: unknown, label?: string): asserts value is Vec3;
@@ -56,6 +77,85 @@ export const assetId: (value: string) => AssetId;
 
 // @public (undocumented)
 export type Axis = "+X" | "-X" | "+Y" | "-Y" | "+Z" | "-Z";
+
+// @public
+export function beginSpatialGoalPoseDrag(options: BeginSpatialGoalPoseDragOptions): SpatialGoalPoseDragSession;
+
+// @public (undocumented)
+export interface BeginSpatialGoalPoseDragOptions {
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly minHeadingDistanceMeters: number;
+    // (undocumented)
+    readonly origin: Vec3;
+}
+
+// @public
+export function beginSpatialPointDraft(options: BeginSpatialPointDraftOptions): SpatialPointDraftSession;
+
+// @public (undocumented)
+export interface BeginSpatialPointDraftOptions {
+    // (undocumented)
+    readonly committedPoints?: readonly Vec3[];
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly kind: SpatialPointDraftKind;
+    // (undocumented)
+    readonly minPointDistanceMeters: number;
+}
+
+// @public
+export function beginSpatialRotationDrag(options: BeginSpatialRotationDragOptions): SpatialRotationDragSession;
+
+// @public (undocumented)
+export interface BeginSpatialRotationDragOptions {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly snap?: Partial<SpatialTransformSnap>;
+    // (undocumented)
+    readonly space?: SpatialTransformSpace;
+    // (undocumented)
+    readonly transform: SpatialNodeTransform;
+}
+
+// @public
+export function beginSpatialScaleDrag(options: BeginSpatialScaleDragOptions): SpatialScaleDragSession;
+
+// @public (undocumented)
+export interface BeginSpatialScaleDragOptions {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly snap?: Partial<SpatialTransformSnap>;
+    // (undocumented)
+    readonly space?: SpatialTransformSpace;
+    // (undocumented)
+    readonly transform: SpatialNodeTransform;
+}
+
+// @public
+export function beginSpatialTranslationDrag(options: BeginSpatialTranslationDragOptions): SpatialTranslationDragSession;
+
+// @public (undocumented)
+export interface BeginSpatialTranslationDragOptions {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly snap?: Partial<SpatialTransformSnap>;
+    // (undocumented)
+    readonly space?: SpatialTransformSpace;
+    // (undocumented)
+    readonly transform: SpatialNodeTransform;
+}
 
 // @public (undocumented)
 export interface Bounds3 {
@@ -153,6 +253,9 @@ export interface CameraState {
     readonly up: Vec3;
 }
 
+// @public
+export function cancelSpatialPointDraft(session: SpatialPointDraftSession): SpatialPointDraftCancelResult;
+
 // @public (undocumented)
 export type ClockId = Brand<string, "ClockId">;
 
@@ -199,13 +302,64 @@ export class CoordinateValidationError extends RangeError {
 export function createCameraState(state: CameraState): CameraState;
 
 // @public
+export function createOccupancyGridCellPicker(snapshot: OccupancyGridSnapshot): OccupancyGridCellPicker;
+
+// @public
+export function createOccupancyGridSnapshot(value: OccupancyGridSnapshotInput): OccupancyGridSnapshot;
+
+// @public
 export function createPickRay(camera: CameraState, request: PickRequest): Ray3;
+
+// @public (undocumented)
+export function createSpatialEditBox(input: {
+    readonly id: EntityId;
+    readonly operation: SpatialEditOperation;
+    readonly pose: Pose3;
+    readonly sizeMeters: Vec3;
+}): SpatialEditBox;
+
+// @public (undocumented)
+export function createSpatialEditSphere(input: {
+    readonly id: EntityId;
+    readonly operation: SpatialEditOperation;
+    readonly pose: Pose3;
+    readonly radiusMeters: number;
+}): SpatialEditSphere;
+
+// @public
+export function createSpatialStructure(frame: FrameId, nodes: readonly SpatialStructureNode[]): SpatialStructure;
+
+// @public (undocumented)
+export function createSpatialTransformChangeSet(value: Omit<SpatialTransformChangeSet, "snap"> & {
+    readonly snap?: Partial<SpatialTransformSnap>;
+}): SpatialTransformChangeSet;
+
+// @public
+export const DEFAULT_OCCUPANCY_GRID_PLANE_TOLERANCE_METERS = 0.000001;
+
+// @public (undocumented)
+export const DEFAULT_SPATIAL_TRANSFORM_SNAP: SpatialTransformSnap;
 
 // @public (undocumented)
 export type EntityId = Brand<string, "EntityId">;
 
 // @public (undocumented)
 export const entityId: (value: string) => EntityId;
+
+// @public
+export function finishSpatialGoalPoseDrag(session: SpatialGoalPoseDragSession, preview: SpatialGoalPoseHeadingPreview): SpatialGoalPoseDragFinishResult;
+
+// @public
+export function finishSpatialPointDraft(session: SpatialPointDraftSession): SpatialPointDraftFinishResult;
+
+// @public
+export function finishSpatialRotationDrag(session: SpatialRotationDragSession, lastPreview: SpatialTransformChangeSet, phase: Exclude<SpatialTransformChangePhase, "preview">): SpatialTransformChangeSet;
+
+// @public
+export function finishSpatialScaleDrag(session: SpatialScaleDragSession, lastPreview: SpatialTransformChangeSet, phase: Exclude<SpatialTransformChangePhase, "preview">): SpatialTransformChangeSet;
+
+// @public
+export function finishSpatialTranslationDrag(session: SpatialTranslationDragSession, lastPreview: SpatialTransformChangeSet, phase: Exclude<SpatialTransformChangePhase, "preview">): SpatialTransformChangeSet;
 
 // @public (undocumented)
 export interface FramedDirection3 {
@@ -301,6 +455,9 @@ export type LayerId = Brand<string, "LayerId">;
 export const layerId: (value: string) => LayerId;
 
 // @public (undocumented)
+export type LinearRgba = readonly [number, number, number, number];
+
+// @public (undocumented)
 export const LK_CORE_COORDINATE_SYSTEM: CoordinateSystem;
 
 // @public
@@ -325,6 +482,158 @@ number
 
 // @public (undocumented)
 export function normalizeQuaternion(value: Quat): Quat;
+
+// @public (undocumented)
+export const OCCUPANCY_GRID_CELL_FREE = 1;
+
+// @public (undocumented)
+export const OCCUPANCY_GRID_CELL_OCCUPIED = 2;
+
+// @public (undocumented)
+export const OCCUPANCY_GRID_CELL_UNKNOWN = 0;
+
+// @public
+export function occupancyCellCenter(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): FramedPoint3;
+
+// @public
+export function occupancyCellDataIndex(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): number;
+
+// @public
+export function occupancyCellMinimumCorner(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): FramedPoint3;
+
+// @public
+export function occupancyCellToImagePixel(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): OccupancyGridImagePixel;
+
+// @public
+export function occupancyDataIndexToCell(geometry: OccupancyGridGeometry, dataIndex: number): OccupancyGridCell;
+
+// @public (undocumented)
+export type OccupancyGridBufferOwnership = "caller-retained";
+
+// @public
+export interface OccupancyGridCell {
+    // (undocumented)
+    readonly column: number;
+    // (undocumented)
+    readonly row: number;
+}
+
+// @public
+export interface OccupancyGridCellPick {
+    // (undocumented)
+    readonly cell: OccupancyGridCell;
+    // (undocumented)
+    readonly cellCenter: FramedPoint3;
+    // (undocumented)
+    readonly cellState: OccupancyGridCellState;
+    // (undocumented)
+    readonly dataIndex: number;
+    // (undocumented)
+    readonly hitPoint: FramedPoint3;
+    // (undocumented)
+    readonly imagePixel: OccupancyGridImagePixel;
+    // (undocumented)
+    readonly revision: OccupancyGridRevision;
+}
+
+// @public
+export interface OccupancyGridCellPicker {
+    // (undocumented)
+    pick(hitPoint: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridCellPick | undefined;
+    // (undocumented)
+    readonly revision: OccupancyGridRevision;
+    // (undocumented)
+    readonly snapshot: OccupancyGridSnapshot;
+}
+
+// @public (undocumented)
+export type OccupancyGridCellState = typeof OCCUPANCY_GRID_CELL_UNKNOWN | typeof OCCUPANCY_GRID_CELL_FREE | typeof OCCUPANCY_GRID_CELL_OCCUPIED;
+
+// @public
+export interface OccupancyGridGeometry {
+    // (undocumented)
+    readonly gridToFrame: RigidTransform3;
+    // (undocumented)
+    readonly heightCells: number;
+    // (undocumented)
+    readonly resolutionMeters: number;
+    // (undocumented)
+    readonly widthCells: number;
+}
+
+// @public
+export function occupancyGridGeometry(value: OccupancyGridGeometry): OccupancyGridGeometry;
+
+// @public
+export interface OccupancyGridImagePixel {
+    // (undocumented)
+    readonly column: number;
+    // (undocumented)
+    readonly rowFromTop: number;
+}
+
+// @public
+export interface OccupancyGridProjection {
+    // (undocumented)
+    readonly cell?: OccupancyGridCell;
+    // (undocumented)
+    readonly localPoint: FramedPoint3;
+    // (undocumented)
+    readonly planeDistanceMeters: number;
+    // (undocumented)
+    readonly withinGridBounds: boolean;
+    // (undocumented)
+    readonly withinPlaneTolerance: boolean;
+}
+
+// @public (undocumented)
+export interface OccupancyGridProjectionOptions {
+    // (undocumented)
+    readonly planeToleranceMeters?: number;
+}
+
+// @public (undocumented)
+export type OccupancyGridRevision = string | number;
+
+// @public
+export interface OccupancyGridSnapshot extends OccupancyGridSnapshotInput {
+    // (undocumented)
+    readonly bufferOwnership: OccupancyGridBufferOwnership;
+    // (undocumented)
+    readonly cellCount: number;
+}
+
+// @public (undocumented)
+export interface OccupancyGridSnapshotInput {
+    readonly cellStates: Uint8Array;
+    // (undocumented)
+    readonly geometry: OccupancyGridGeometry;
+    readonly revision: OccupancyGridRevision;
+}
+
+// @public (undocumented)
+export type OccupancyGridValidationCode = "INVALID_DIMENSION" | "INVALID_RESOLUTION" | "INVALID_CELL" | "INVALID_IMAGE_PIXEL" | "INVALID_DATA_INDEX" | "INVALID_PLANE_TOLERANCE" | "INVALID_CELL_STATES" | "INVALID_REVISION";
+
+// @public (undocumented)
+export class OccupancyGridValidationError extends RangeError {
+    constructor(code: OccupancyGridValidationCode, message: string);
+    // (undocumented)
+    readonly code: OccupancyGridValidationCode;
+    // (undocumented)
+    readonly name = "OccupancyGridValidationError";
+}
+
+// @public
+export function occupancyImagePixelCenter(geometry: OccupancyGridGeometry, pixel: OccupancyGridImagePixel): FramedPoint3;
+
+// @public
+export function occupancyImagePixelToCell(geometry: OccupancyGridGeometry, pixel: OccupancyGridImagePixel): OccupancyGridCell;
+
+// @public
+export function occupancyPointToCell(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridCell | undefined;
+
+// @public
+export function occupancyPointToImagePixel(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridImagePixel | undefined;
 
 // @public (undocumented)
 export type P0SpatialEntity = AssetEntity | RobotEntity | GoalEntity | PathEntity | LandmarkEntity;
@@ -360,6 +669,9 @@ export interface PickHit {
     // (undocumented)
     readonly point: FramedPoint3;
 }
+
+// @public
+export function pickOccupancyGridCell(snapshot: OccupancyGridSnapshot, hitPoint: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridCellPick | undefined;
 
 // @public (undocumented)
 export interface PickRequest {
@@ -397,6 +709,24 @@ export interface Pose3 {
 export function pose3(frame: FrameId, position: Vec3, orientation: Quat): Pose3;
 
 // @public
+export function previewSpatialGoalPoseHeading(session: SpatialGoalPoseDragSession, cursor: Vec3): SpatialGoalPoseHeadingPreview;
+
+// @public
+export function previewSpatialPointDraftCursor(session: SpatialPointDraftSession, point: Vec3): SpatialPointDraftUpdate;
+
+// @public
+export function previewSpatialRotationDrag(session: SpatialRotationDragSession, signedAngleRadians: number): SpatialTransformChangeSet;
+
+// @public
+export function previewSpatialScaleDrag(session: SpatialScaleDragSession, signedScaleDelta: number): SpatialTransformChangeSet;
+
+// @public
+export function previewSpatialTranslationDrag(session: SpatialTranslationDragSession, signedDistanceMeters: number): SpatialTransformChangeSet;
+
+// @public
+export function projectPointToOccupancyGrid(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridProjection;
+
+// @public
 export type Quat = readonly [number, number, number, number];
 
 // @public (undocumented)
@@ -414,6 +744,9 @@ export interface Ray3 {
     // (undocumented)
     readonly origin: Vec3;
 }
+
+// @public
+export function removeLastSpatialPointDraftPoint(session: SpatialPointDraftSession): SpatialPointDraftUpdate;
 
 // @public (undocumented)
 export interface RendererCapabilities {
@@ -491,6 +824,93 @@ export interface SelectionState {
     readonly selected: readonly EntityId[];
 }
 
+// @public
+export const SPATIAL_AUTHORING_AREA_EPSILON_SQUARE_METERS = 1e-7;
+
+// @public
+export const SPATIAL_AUTHORING_LINEAR_EPSILON_METERS = 1e-7;
+
+// Warning: (ae-forgotten-export) The symbol "SpatialNodeBase" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export interface SpatialAssetNode extends SpatialNodeBase {
+    // (undocumented)
+    readonly assetId: AssetId;
+    // (undocumented)
+    readonly bounds?: Bounds3;
+    // (undocumented)
+    readonly kind: "asset";
+    // (undocumented)
+    readonly selectable?: boolean;
+}
+
+// @public (undocumented)
+export interface SpatialAuthoringIssue {
+    // (undocumented)
+    readonly code: SpatialAuthoringIssueCode;
+    readonly index?: number;
+    // (undocumented)
+    readonly message: string;
+    // (undocumented)
+    readonly severity: SpatialAuthoringIssueSeverity;
+}
+
+// @public (undocumented)
+export type SpatialAuthoringIssueCode = "NON_FINITE_POINT" | "CONSECUTIVE_DUPLICATE_POINT" | "POINT_TOO_CLOSE" | "TOO_FEW_POINTS" | "NON_PLANAR_POLYGON" | "SELF_INTERSECTING_POLYGON" | "ZERO_XY_AREA" | "MISSING_DRAFT_POINT" | "GOAL_HEADING_TOO_SHORT";
+
+// @public (undocumented)
+export type SpatialAuthoringIssueSeverity = "error";
+
+// @public (undocumented)
+export interface SpatialBoxGeometry {
+    // (undocumented)
+    readonly kind: "box";
+    // (undocumented)
+    readonly sizeMeters: Vec3;
+}
+
+// @public (undocumented)
+export interface SpatialBuildingNode extends SpatialNodeBase {
+    // (undocumented)
+    readonly kind: "building";
+}
+
+// @public (undocumented)
+export interface SpatialCylinderGeometry {
+    // (undocumented)
+    readonly heightMeters: number;
+    // (undocumented)
+    readonly kind: "cylinder";
+    // (undocumented)
+    readonly radialSegments?: number;
+    // (undocumented)
+    readonly radiusMeters: number;
+}
+
+// Warning: (ae-forgotten-export) The symbol "SpatialEditVolumeBase" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export interface SpatialEditBox extends SpatialEditVolumeBase {
+    // (undocumented)
+    readonly kind: "box";
+    // (undocumented)
+    readonly sizeMeters: Vec3;
+}
+
+// @public (undocumented)
+export type SpatialEditOperation = "delete" | "restore";
+
+// @public (undocumented)
+export interface SpatialEditSphere extends SpatialEditVolumeBase {
+    // (undocumented)
+    readonly kind: "sphere";
+    // (undocumented)
+    readonly radiusMeters: number;
+}
+
+// @public
+export type SpatialEditVolume = SpatialEditSphere | SpatialEditBox;
+
 // @public (undocumented)
 export interface SpatialEvent {
     // (undocumented)
@@ -509,6 +929,318 @@ export interface SpatialEvent {
     // (undocumented)
     readonly type: "pointer-enter" | "pointer-leave" | "pointer-move" | "pick" | "pick-miss";
 }
+
+// @public (undocumented)
+export interface SpatialGoalPoseDragCommit {
+    // (undocumented)
+    readonly issues: readonly [];
+    // (undocumented)
+    readonly pose: Pose3;
+    // (undocumented)
+    readonly status: "commit";
+    // (undocumented)
+    readonly yawRadians: number;
+}
+
+// @public (undocumented)
+export type SpatialGoalPoseDragFinishResult = SpatialGoalPoseDragCommit | SpatialGoalPoseDragInvalid;
+
+// @public (undocumented)
+export interface SpatialGoalPoseDragInvalid {
+    // (undocumented)
+    readonly issues: readonly SpatialAuthoringIssue[];
+    // (undocumented)
+    readonly status: "invalid";
+}
+
+// @public (undocumented)
+export interface SpatialGoalPoseDragSession {
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly minHeadingDistanceMeters: number;
+    // (undocumented)
+    readonly origin: Vec3;
+}
+
+// @public (undocumented)
+export interface SpatialGoalPoseHeadingPreview {
+    // (undocumented)
+    readonly cursor: Vec3;
+    readonly distanceMeters?: number;
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly issues: readonly SpatialAuthoringIssue[];
+    // (undocumented)
+    readonly minHeadingDistanceMeters: number;
+    // (undocumented)
+    readonly origin: Vec3;
+    readonly yawRadians?: number;
+}
+
+// @public (undocumented)
+export interface SpatialLevelNode extends SpatialNodeBase {
+    // (undocumented)
+    readonly elevationMeters: number;
+    // (undocumented)
+    readonly kind: "level";
+}
+
+// @public (undocumented)
+export interface SpatialMaterialSlots {
+    // (undocumented)
+    readonly default: SpatialPbrMaterial;
+    // (undocumented)
+    readonly side?: SpatialPbrMaterial;
+    // (undocumented)
+    readonly top?: SpatialPbrMaterial;
+}
+
+// @public (undocumented)
+export interface SpatialNodeTransform {
+    // (undocumented)
+    readonly rotation: Quat;
+    // (undocumented)
+    readonly scale: Vec3;
+    // (undocumented)
+    readonly sourceFrame: FrameId;
+    // (undocumented)
+    readonly targetFrame: FrameId;
+    // (undocumented)
+    readonly translation: Vec3;
+}
+
+// @public (undocumented)
+export function spatialNodeTransform(sourceFrame: FrameId, targetFrame: FrameId, translation?: Vec3, rotation?: Quat, scale?: Vec3): SpatialNodeTransform;
+
+// @public (undocumented)
+export interface SpatialPbrMaterial {
+    // (undocumented)
+    readonly baseColorFactor: LinearRgba;
+    // (undocumented)
+    readonly doubleSided?: boolean;
+    // (undocumented)
+    readonly metallicFactor: number;
+    // (undocumented)
+    readonly roughnessFactor: number;
+}
+
+// @public (undocumented)
+export function spatialPbrMaterial(baseColorFactor: LinearRgba, options?: Readonly<{
+    metallicFactor?: number;
+    roughnessFactor?: number;
+    doubleSided?: boolean;
+}>): SpatialPbrMaterial;
+
+// @public (undocumented)
+export interface SpatialPointDraftCancelResult {
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly kind: SpatialPointDraftKind;
+    // (undocumented)
+    readonly status: "cancel";
+}
+
+// @public (undocumented)
+export interface SpatialPointDraftCommit {
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly issues: readonly [];
+    // (undocumented)
+    readonly kind: SpatialPointDraftKind;
+    // (undocumented)
+    readonly points: readonly Vec3[];
+    // (undocumented)
+    readonly status: "commit";
+}
+
+// @public (undocumented)
+export type SpatialPointDraftFinishResult = SpatialPointDraftCommit | SpatialPointDraftInvalid;
+
+// @public (undocumented)
+export interface SpatialPointDraftInvalid {
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly issues: readonly SpatialAuthoringIssue[];
+    // (undocumented)
+    readonly kind: SpatialPointDraftKind;
+    // (undocumented)
+    readonly points: readonly Vec3[];
+    // (undocumented)
+    readonly status: "invalid";
+}
+
+// @public (undocumented)
+export type SpatialPointDraftKind = "polyline" | "polygon";
+
+// @public (undocumented)
+export interface SpatialPointDraftSession {
+    readonly committedPoints: readonly Vec3[];
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly kind: SpatialPointDraftKind;
+    // (undocumented)
+    readonly minPointDistanceMeters: number;
+    // (undocumented)
+    readonly previewPoint?: Vec3;
+}
+
+// @public (undocumented)
+export interface SpatialPointDraftUpdate {
+    // (undocumented)
+    readonly issues: readonly SpatialAuthoringIssue[];
+    // (undocumented)
+    readonly session: SpatialPointDraftSession;
+}
+
+// @public (undocumented)
+export type SpatialPrimitiveGeometry = SpatialBoxGeometry | SpatialCylinderGeometry;
+
+// @public (undocumented)
+export interface SpatialPrimitiveNode extends SpatialNodeBase {
+    // (undocumented)
+    readonly geometry: SpatialPrimitiveGeometry;
+    // (undocumented)
+    readonly kind: "primitive";
+    // (undocumented)
+    readonly materials: SpatialMaterialSlots;
+    // (undocumented)
+    readonly role: "floor" | "wall" | "object";
+    // (undocumented)
+    readonly selectable?: boolean;
+}
+
+// @public (undocumented)
+export interface SpatialRotationDragSession {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly before: SpatialNodeTransform;
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly snap: SpatialTransformSnap;
+    // (undocumented)
+    readonly space: SpatialTransformSpace;
+}
+
+// @public (undocumented)
+export interface SpatialScaleDragSession {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly before: SpatialNodeTransform;
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly snap: SpatialTransformSnap;
+    // (undocumented)
+    readonly space: "local";
+}
+
+// @public (undocumented)
+export interface SpatialSiteNode extends SpatialNodeBase {
+    // (undocumented)
+    readonly kind: "site";
+}
+
+// @public (undocumented)
+export interface SpatialStructure {
+    // (undocumented)
+    readonly frame: FrameId;
+    // (undocumented)
+    readonly nodes: readonly SpatialStructureNode[];
+}
+
+// @public (undocumented)
+export type SpatialStructureNode = SpatialSiteNode | SpatialBuildingNode | SpatialLevelNode | SpatialPrimitiveNode | SpatialAssetNode;
+
+// @public (undocumented)
+export type SpatialTransformAxis = "x" | "y" | "z";
+
+// @public (undocumented)
+export interface SpatialTransformChange {
+    // (undocumented)
+    readonly after: SpatialNodeTransform;
+    // (undocumented)
+    readonly before: SpatialNodeTransform;
+    // (undocumented)
+    readonly entityId: EntityId;
+}
+
+// @public (undocumented)
+export type SpatialTransformChangePhase = "preview" | "commit" | "cancel";
+
+// @public (undocumented)
+export interface SpatialTransformChangeSet {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly changes: readonly SpatialTransformChange[];
+    // (undocumented)
+    readonly mode: SpatialTransformMode;
+    // (undocumented)
+    readonly phase: SpatialTransformChangePhase;
+    // (undocumented)
+    readonly snap: SpatialTransformSnap;
+    // (undocumented)
+    readonly space: SpatialTransformSpace;
+}
+
+// @public (undocumented)
+export type SpatialTransformMode = "translate" | "rotate" | "scale";
+
+// @public (undocumented)
+export interface SpatialTransformSnap {
+    // (undocumented)
+    readonly rotationRadians: number;
+    // (undocumented)
+    readonly scaleStep: number;
+    // (undocumented)
+    readonly translationMeters: number;
+}
+
+// @public (undocumented)
+export function spatialTransformSnap(value?: Partial<SpatialTransformSnap>): SpatialTransformSnap;
+
+// @public
+export type SpatialTransformSpace = "local" | "target";
+
+// @public (undocumented)
+export interface SpatialTransformStepOptions {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly direction?: -1 | 1;
+    // (undocumented)
+    readonly mode: SpatialTransformMode;
+    // (undocumented)
+    readonly snap?: Partial<SpatialTransformSnap>;
+    // (undocumented)
+    readonly space?: SpatialTransformSpace;
+}
+
+// @public (undocumented)
+export interface SpatialTranslationDragSession {
+    // (undocumented)
+    readonly axis: SpatialTransformAxis;
+    // (undocumented)
+    readonly before: SpatialNodeTransform;
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly snap: SpatialTransformSnap;
+    // (undocumented)
+    readonly space: SpatialTransformSpace;
+}
+
+// @public
+export function stepSpatialNodeTransform(transform: SpatialNodeTransform, options: SpatialTransformStepOptions): SpatialNodeTransform;
 
 // @public (undocumented)
 export interface Timestamp {
@@ -537,6 +1269,9 @@ export function transformPose(transform: RigidTransform3, pose: Pose3): Pose3;
 
 // @public (undocumented)
 export function transformToMatrix4(value: RigidTransform3): Mat4;
+
+// @public
+export function validateSpatialPointDraft(session: SpatialPointDraftSession): readonly SpatialAuthoringIssue[];
 
 // @public (undocumented)
 export type Vec3 = readonly [number, number, number];

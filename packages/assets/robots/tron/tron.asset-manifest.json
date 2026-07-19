@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "assetId": "robots/tron",
+  "version": "1.0.0",
+  "kind": "robot",
+  "format": "glb",
+  "fileFrame": "robots/tron",
+  "fileCoordinate": {
+    "handedness": "right",
+    "upAxis": "+Y",
+    "forwardAxis": "+X",
+    "metersPerUnit": 1
+  },
+  "coreFrame": "lk-world",
+  "fileToCoreTransform": {
+    "sourceFrame": "robots/tron",
+    "targetFrame": "lk-world",
+    "translation": [0, 0, 0.100680016],
+    "rotation": [0.7071067811865475, 0, 0, 0.7071067811865476]
+  },
+  "boundsInCoreMeters": {
+    "frame": "lk-world",
+    "min": [-0.285865992, -0.19572357260980006, 0],
+    "max": [0.21688892255420006, 0.195687026, 0.9978960219459001]
+  },
+  "integrity": {
+    "sha256": "a2ca4479f1fe098c624b6b657ac9e343dc66a800474a45c6d16c49ba75dbf1fa"
+  }
+}

@@ -14,14 +14,17 @@ export {
 } from "./SceneCanvas.js";
 export {
   AmrRobot,
+  EditVolume,
   GoalMarker,
   GroundGrid,
   GroundPlane,
   PathRibbon,
   SceneEnvironment,
   SceneStateMarker,
+  SectionBox,
   Selectable,
   type AmrRobotProps,
+  type EditVolumeProps,
   type GoalMarkerProps,
   type GroundGridProps,
   type GroundPlaneProps,
@@ -29,6 +32,7 @@ export {
   type RobotVisualStatus,
   type SceneEnvironmentProps,
   type SceneStateMarkerProps,
+  type SectionBoxProps,
   type SelectableProps,
   type SelectableRenderState,
 } from "./primitives.js";
@@ -36,8 +40,14 @@ export {
   DEFAULT_POINT_CLOUD_COLOR,
   DEFAULT_POINT_CLOUD_POINT_SIZE,
   PointCloudLayer,
+  PointCloudLayers,
   type PointCloudLayerProps,
+  type PointCloudLayersProps,
+  type PointCloudSceneLayer,
+  type PointCloudColorMode,
+  type PointCloudHeightRange,
 } from "./pointcloud.js";
+export { MarkerLayer, type MarkerLayerProps, type MarkerMeshRenderer } from "./markers.js";
 export {
   SceneRuntimeProvider,
   useEntityInteraction,
@@ -53,3 +63,17 @@ export {
   type AmrOperationalSceneProps,
   type VisualAlphaAssetPlacement,
 } from "./visual-alpha-scene.js";
+export {
+  SpatialStructure,
+  TransformGizmo,
+  type SpatialAssetRenderer,
+  type SpatialStructureProps,
+  type TransformGizmoProps,
+} from "./spatial-structure.js";
+export {
+  OccupancyGridSurface,
+  type OccupancyGridCellPointerDetail,
+  type OccupancyGridPalette,
+  type OccupancyGridRenderState,
+  type OccupancyGridSurfaceProps,
+} from "./occupancy-grid.js";

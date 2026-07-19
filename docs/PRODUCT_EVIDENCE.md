@@ -14,10 +14,10 @@
 
 ## 조사 기준
 
-| 제품 | 조사 커밋 | 커밋 시각 | 커밋 링크 |
-|---|---|---|---|
+| 제품                      | 조사 커밋                                  | 커밋 시각            | 커밋 링크                                                                                                        |
+| ------------------------- | ------------------------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `lkrobotics-control-full` | `de64d3c9b98eb9ce7aeaf7765035153492a57359` | 2026-07-16 13:26 KST | [commit](https://github.com/LK-ROBOTICS/lkrobotics-control-full/commit/de64d3c9b98eb9ce7aeaf7765035153492a57359) |
-| `lk_web_viz` | `a984def117c05acd213f494cbb8a42e990595505` | 2026-06-24 19:51 KST | [commit](https://github.com/LK-ROBOTICS/lk_web_viz/commit/a984def117c05acd213f494cbb8a42e990595505) |
+| `lk_web_viz`              | `a984def117c05acd213f494cbb8a42e990595505` | 2026-06-24 19:51 KST | [commit](https://github.com/LK-ROBOTICS/lk_web_viz/commit/a984def117c05acd213f494cbb8a42e990595505)              |
 
 조사는 위 커밋의 소스, 패키지 매니페스트, 저장소 문서를 대상으로 한 정적 감사다.
 
@@ -29,15 +29,15 @@
 
 핵심 구현은 [InteractiveMap3D](https://github.com/LK-ROBOTICS/lkrobotics-control-full/blob/de64d3c9b98eb9ce7aeaf7765035153492a57359/frontend/src/views/dashboard/RobotDashboard/components/InteractiveMap3D/index.jsx)에 집중되어 있다.
 
-| 기능 | 확인된 구현 |
-|---|---|
-| 공간 지도 | 서버에서 받은 GLB를 `useGLTF`로 로드하고 바운딩 박스에 맞춰 배치 |
-| 좌표 적응 | GLB 바운딩 박스로 `z`, `y-world`, `y-local`을 추정하고 `mapOrigin`, `zSign`으로 맵·씬 좌표를 변환 |
-| 로봇 표현 | 전용 GLB 로봇 모델을 현재 pose와 heading에 맞춰 표시 |
-| 이동·작업 입력 | 투명 바닥 plane의 pointer event로 이동 목표와 작업 위치를 picking하고, 드래그로 방향 입력 |
-| 운행 오버레이 | 로봇 이동 경로, 이동 목표, 작업 마커, 랜드마크 표시 |
-| 카메라 | OrbitControls와 3D/Top View 전환, picking 중 회전 제한 |
-| 명령 연결 | 선택한 좌표를 WebSocket 이동 명령으로 전송 |
+| 기능           | 확인된 구현                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| 공간 지도      | 서버에서 받은 GLB를 `useGLTF`로 로드하고 바운딩 박스에 맞춰 배치                                  |
+| 좌표 적응      | GLB 바운딩 박스로 `z`, `y-world`, `y-local`을 추정하고 `mapOrigin`, `zSign`으로 맵·씬 좌표를 변환 |
+| 로봇 표현      | 전용 GLB 로봇 모델을 현재 pose와 heading에 맞춰 표시                                              |
+| 이동·작업 입력 | 투명 바닥 plane의 pointer event로 이동 목표와 작업 위치를 picking하고, 드래그로 방향 입력         |
+| 운행 오버레이  | 로봇 이동 경로, 이동 목표, 작업 마커, 랜드마크 표시                                               |
+| 카메라         | OrbitControls와 3D/Top View 전환, picking 중 회전 제한                                            |
+| 명령 연결      | 선택한 좌표를 WebSocket 이동 명령으로 전송                                                        |
 
 제품이 직접 보관하는 [로봇 GLB](https://github.com/LK-ROBOTICS/lkrobotics-control-full/blob/de64d3c9b98eb9ce7aeaf7765035153492a57359/frontend/public/tron_model_47494A_full.glb)는 Git blob 기준 `63,609,848` bytes다. 3D 자산의 크기·축·단위·배포 정책도 제품 책임으로 남아 있다는 증거다.
 
@@ -45,17 +45,17 @@
 
 `lk_web_viz`는 단일 뷰어가 아니라 실시간 시각화, 편집, 건물 표현, 자산 생성까지 포함한다.
 
-| 영역 | 핵심 파일 | 확인된 구현 |
-|---|---|---|
-| 실시간 PointCloud | [PointCloudViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/PointCloudViewer.tsx) | 다중 PointCloud, TF 변환·축, Marker, grid, 높이 색상, Z slice |
-| ROS Marker·TF | [MarkerViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/MarkerViewer.tsx), [TFViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/TFViewer.tsx) | ROS Marker 종류와 TF frame을 Three.js object로 표현 |
-| PCD 편집 | [PcdMap3DPanel.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/editor/PcdMap3DPanel.tsx) | zone 선택·polygon 편집, 계단 제어점 drag, OrbitControls |
-| 구조 미리보기 | [StructurePreviewViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/StructurePreviewViewer.tsx) | GLB·primitive 렌더링, WebGPU 우선/WebGL fallback, 단순화, context loss 처리 |
-| 건물 토폴로지 | [BuildingTopology3DView.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/building/BuildingTopology3DView.tsx) | 층 stack, PGM floor, waypoint, lane, robot, path, goal과 편집 interaction |
-| 층 장면 | [FloorScene3D.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/building/FloorScene3D.tsx) | GLB·벽·랜드마크·경로·목표를 직접 Three.js lifecycle로 관리 |
-| Site 저작 | [SiteStructurePreview3D.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/site/SiteStructurePreview3D.tsx) | 벽·object·texture, 다중 선택, marquee, 이동·회전·scale |
-| 대체 렌더러 | [RerunViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/RerunViewer.tsx), [rerun_bridge.py](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/backend/app/services/rerun_bridge.py) | WebGPU/WebGL Rerun viewer와 별도 gRPC bridge, PointCloud·pose·TF·Marker 기록 |
-| 자산 파이프라인 | [pcd_structure.py](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/backend/app/services/pcd_structure.py) | PCD에서 mesh를 생성·평활화·감량하고 GLB로 출력 |
+| 영역              | 핵심 파일                                                                                                                                                                                                                                                                                                | 확인된 구현                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 실시간 PointCloud | [PointCloudViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/PointCloudViewer.tsx)                                                                                                                                          | 다중 PointCloud, TF 변환·축, Marker, grid, 높이 색상, Z slice                |
+| ROS Marker·TF     | [MarkerViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/MarkerViewer.tsx), [TFViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/TFViewer.tsx) | ROS Marker 종류와 TF frame을 Three.js object로 표현                          |
+| PCD 편집          | [PcdMap3DPanel.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/editor/PcdMap3DPanel.tsx)                                                                                                                                            | zone 선택·polygon 편집, 계단 제어점 drag, OrbitControls                      |
+| 구조 미리보기     | [StructurePreviewViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/StructurePreviewViewer.tsx)                                                                                                                              | GLB·primitive 렌더링, WebGPU 우선/WebGL fallback, 단순화, context loss 처리  |
+| 건물 토폴로지     | [BuildingTopology3DView.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/building/BuildingTopology3DView.tsx)                                                                                                                        | 층 stack, PGM floor, waypoint, lane, robot, path, goal과 편집 interaction    |
+| 층 장면           | [FloorScene3D.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/building/FloorScene3D.tsx)                                                                                                                                            | GLB·벽·랜드마크·경로·목표를 직접 Three.js lifecycle로 관리                   |
+| Site 저작         | [SiteStructurePreview3D.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/site/SiteStructurePreview3D.tsx)                                                                                                                            | 벽·object·texture, 다중 선택, marquee, 이동·회전·scale                       |
+| 대체 렌더러       | [RerunViewer.tsx](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/src/components/3d/RerunViewer.tsx), [rerun_bridge.py](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/backend/app/services/rerun_bridge.py)   | WebGPU/WebGL Rerun viewer와 별도 gRPC bridge, PointCloud·pose·TF·Marker 기록 |
+| 자산 파이프라인   | [pcd_structure.py](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/backend/app/services/pcd_structure.py)                                                                                                                                                        | PCD에서 mesh를 생성·평활화·감량하고 GLB로 출력                               |
 
 저장소의 [ARCHITECTURE.md](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/docs/ARCHITECTURE.md)도 Three.js/WebGL, Rerun PoC, WebGPU 우선 fallback, GLB cache를 별도 렌더링 과제로 다룬다.
 
@@ -63,14 +63,14 @@
 
 아래는 코드가 동일하게 복사됐다는 뜻이 아니라, 두 제품이 같은 종류의 문제를 독립적으로 해결하고 있다는 뜻이다.
 
-| 공통 문제 | Control Full | Web Viz | 공통화 가치 |
-|---|---|---|---|
-| 좌표계·축·부호 | GLB 축 추정, origin, `zSign` | ROS Z-up 변환, map Y→scene -Z, native Z-up 편집 | 매우 높음 |
-| 카메라 | orbit, top view | orbit, focus, 층·편집별 camera | 높음 |
-| Picking·선택 | 이동·작업 좌표와 방향 | zone, waypoint, goal, wall, object 편집 | 계약 공통화 가치 높음 |
-| GLB | 맵·로봇 모델 로드와 축 보정 | 구조 로드, cache, 단순화, context 복구 | 높음 |
-| 로봇 운행 표현 | robot, path, target, task, landmark | robot, path, goal, waypoint, lane | 높음 |
-| Scene style | 조명, 경로·마커 색, 바닥 | grid, 축, 재질, 선택·상태 색 | token 공통화 가치 높음 |
+| 공통 문제      | Control Full                        | Web Viz                                         | 공통화 가치            |
+| -------------- | ----------------------------------- | ----------------------------------------------- | ---------------------- |
+| 좌표계·축·부호 | GLB 축 추정, origin, `zSign`        | ROS Z-up 변환, map Y→scene -Z, native Z-up 편집 | 매우 높음              |
+| 카메라         | orbit, top view                     | orbit, focus, 층·편집별 camera                  | 높음                   |
+| Picking·선택   | 이동·작업 좌표와 방향               | zone, waypoint, goal, wall, object 편집         | 계약 공통화 가치 높음  |
+| GLB            | 맵·로봇 모델 로드와 축 보정         | 구조 로드, cache, 단순화, context 복구          | 높음                   |
+| 로봇 운행 표현 | robot, path, target, task, landmark | robot, path, goal, waypoint, lane               | 높음                   |
+| Scene style    | 조명, 경로·마커 색, 바닥            | grid, 축, 재질, 선택·상태 색                    | token 공통화 가치 높음 |
 
 ## 확인된 차이
 
@@ -89,12 +89,12 @@
 
 ### 렌더러
 
-| 제품/영역 | 렌더링 방식 |
-|---|---|
-| Control Full | React Three Fiber + Drei |
-| Web Viz PointCloud·PCD·Topology·Site | React Three Fiber + Drei |
-| Web Viz Structure·Floor | imperative Three.js WebGL/WebGPU |
-| Web Viz Mapping 대안 | Rerun WebViewer + backend gRPC bridge |
+| 제품/영역                            | 렌더링 방식                           |
+| ------------------------------------ | ------------------------------------- |
+| Control Full                         | React Three Fiber + Drei              |
+| Web Viz PointCloud·PCD·Topology·Site | React Three Fiber + Drei              |
+| Web Viz Structure·Floor              | imperative Three.js WebGL/WebGPU      |
+| Web Viz Mapping 대안                 | Rerun WebViewer + backend gRPC bridge |
 
 따라서 모든 기능을 하나의 렌더링 엔진이나 scene API로 강제하지 않는다. 공식 플랫폼은 좌표·상태·primitive 계약을 중심에 두고, R3F·imperative Three.js·Rerun을 각각 adapter로 연결한다. renderer 간 차이는 플랫폼을 보류할 근거가 아니라 adapter 경계와 호환성 시험이 필요하다는 근거다.
 
@@ -107,13 +107,13 @@ D-1/D0에서 실제 화면·LDS version과 동일 과제로 별도 검증한다.
 
 각 [Control package.json](https://github.com/LK-ROBOTICS/lkrobotics-control-full/blob/de64d3c9b98eb9ce7aeaf7765035153492a57359/frontend/package.json), [Web Viz package.json](https://github.com/LK-ROBOTICS/lk_web_viz/blob/a984def117c05acd213f494cbb8a42e990595505/frontend/package.json)의 직접 의존성은 다음과 같이 갈린다.
 
-| 패키지 | Control Full | Web Viz |
-|---|---:|---:|
-| React | `18.3.1` | `^19.0.0` |
-| Three.js | `^0.168.0` | `^0.170.0` |
-| React Three Fiber | `^8.18.0` | `^9.0.0` |
-| Drei | `^9.122.0` | `^10.0.0` |
-| Rerun WebViewer | 없음 | `^0.30.2` |
+| 패키지            | Control Full |    Web Viz |
+| ----------------- | -----------: | ---------: |
+| React             |     `18.3.1` |  `^19.0.0` |
+| Three.js          |   `^0.168.0` | `^0.170.0` |
+| React Three Fiber |    `^8.18.0` |   `^9.0.0` |
+| Drei              |   `^9.122.0` |  `^10.0.0` |
+| Rerun WebViewer   |         없음 |  `^0.30.2` |
 
 두 커밋 모두 frontend manifest와 source에서 `@lk-robotics` 또는 `design-system` 직접 사용이 확인되지 않았다. 새 3D 패키지를 만들더라도 기존 제품에 자동으로 도입된다고 볼 수 없으며, 별도 적용·마이그레이션 검증이 필요하다.
 
@@ -139,12 +139,12 @@ canary**이며, LDS `Scene3DFrame`·toolbar·inspector를 포함한 page-shell �
 
 Pilot 전에 해소해야 하는 계약은 다음과 같다.
 
-| Gate | 현재 근거 | Pilot에서 필요한 결정 |
-| --- | --- | --- |
-| Consumer stack | Web Viz는 `three ^0.170.0`, R3F `^9.0.0`; LDS3D renderer packages는 `three >=0.185.1`, R3F `^9.6.1`을 peer로 요구 | Web Viz target stack을 올려 consumer smoke를 통과시키거나, 별도 compat binding을 명시적으로 승인한다. 지원 범위 밖 `link:` 설치나 duplicate Three runtime은 금지한다. |
-| Renderer capability | 기존 Structure Preview는 WebGPU 우선 후 WebGL fallback이고, LDS3D `ThreeSceneHost`는 현재 WebGLRenderer만 제공 | feature flag가 LDS3D WebGL path를 고를 때만 canary한다. WebGPU 환경은 legacy viewer를 유지하거나 WebGPU adapter를 별도 승인한다. |
-| Asset evidence | product response에는 `glb_file`, vertex/face/z-range만 있으며 asset ID·version·hash·frame·unit·bounds·provenance가 없다 | product-owned resolver가 인증 URL을 해석하고, `WebVizSceneAdapter`가 검증 가능한 asset manifest와 immutable `AssetEntity` snapshot을 만든다. token, transport, job polling은 LDS3D로 넘기지 않는다. |
-| Coordinate evidence | committed `structure_basic.glb`와 map fixture는 Z-up meter geometry로 보이는 수치를 보이지만 GLB metadata가 contract를 선언하지 않는다 | source frame, meters-per-unit, core transform, bounds를 fixture test와 manifest로 한 번만 선언한다. 정적 추정이나 viewer별 회전을 authoritative contract로 승격하지 않는다. |
+| Gate                | 현재 근거                                                                                                                              | Pilot에서 필요한 결정                                                                                                                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Consumer stack      | Web Viz는 `three ^0.170.0`, R3F `^9.0.0`; LDS3D renderer packages는 `three >=0.185.1`, R3F `^9.6.1`을 peer로 요구                      | Web Viz target stack을 올려 consumer smoke를 통과시키거나, 별도 compat binding을 명시적으로 승인한다. 지원 범위 밖 `link:` 설치나 duplicate Three runtime은 금지한다.                               |
+| Renderer capability | 기존 Structure Preview는 WebGPU 우선 후 WebGL fallback이고, LDS3D `ThreeSceneHost`는 현재 WebGLRenderer만 제공                         | feature flag가 LDS3D WebGL path를 고를 때만 canary한다. WebGPU 환경은 legacy viewer를 유지하거나 WebGPU adapter를 별도 승인한다.                                                                    |
+| Asset evidence      | product response에는 `glb_file`, vertex/face/z-range만 있으며 asset ID·version·hash·frame·unit·bounds·provenance가 없다                | product-owned resolver가 인증 URL을 해석하고, `WebVizSceneAdapter`가 검증 가능한 asset manifest와 immutable `AssetEntity` snapshot을 만든다. token, transport, job polling은 LDS3D로 넘기지 않는다. |
+| Coordinate evidence | committed `structure_basic.glb`와 map fixture는 Z-up meter geometry로 보이는 수치를 보이지만 GLB metadata가 contract를 선언하지 않는다 | source frame, meters-per-unit, core transform, bounds를 fixture test와 manifest로 한 번만 선언한다. 정적 추정이나 viewer별 회전을 authoritative contract로 승격하지 않는다.                         |
 
 따라서 최초 Pilot의 완료 정의는 “Web Viz 전체 3D 화면 이관”이 아니라 다음으로
 제한한다.
@@ -162,19 +162,81 @@ Pilot 전에 해소해야 하는 계약은 다음과 같다.
 renderer, authoring, multi-floor/domain topology 또는 별도 transport adapter를
 포함하므로 P1/P2 범위를 앞당기지 않는다.
 
+## 2026-07-18 LDS/LDS3D 커버리지 재평가
+
+이 절은 `lk_web_viz`의 고정 커밋
+`a984def117c05acd213f494cbb8a42e990595505`와 LDS3D 기준 커밋
+`a7b4780f68ba4dbe169ef37500246a5eec166c9a` 위 현재 검토 worktree를 비교한
+정적 재평가다. 제품 checkout은 clean 상태로 유지했고 수정하지 않았다.
+
+여기서 **커버**는 제품 화면을 그대로 교체할 수 있다는 뜻이 아니다. LDS 또는
+LDS3D public API와 실제 WebGL Story로 재사용 가능한 책임이 확인됐다는 뜻이다.
+ROS/MQTT transport, route, permission, job polling, save, history, command와 제품
+도메인 schema는 분모에서 제외하고 제품 책임으로 남긴다.
+
+상태는 다음처럼 해석한다.
+
+- `기반 커버`: 주된 재사용 공간 계약과 renderer가 public API 및 실제 WebGL로
+  검토 가능하다. 제품 adapter와 최종 조합은 여전히 필요하다.
+- `부분 커버`: 핵심 일부는 재사용할 수 있으나 공통 renderer atom 또는 adapter가
+  더 필요하다.
+- `LDS 조합`: 이 화면의 공통 책임이 3D 원자가 아니라 LDS application chrome과
+  page shell에 있다.
+- `어댑터 공백`: 교환 계약 일부만 있고 해당 renderer의 실행 adapter가 없다.
+
+| Web Viz 표면                                     | 현재 재사용 가능한 LDS/LDS3D 책임                                                                                                   | 제품에 남는 책임                                                        | 남은 공통 공백                                                                        | 상태                                                         |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `MappingScreen` / `PointCloudViewer`             | 다중 `PointCloudLayerSet`, timestamped TF frame graph, `MarkerLayer`, frame별 변환, layer freshness·budget, scene-Z 색상, camera·picking | ROS/MQTT store와 구독, Marker action retention, topic 가시성, route와 운영 상태 | product-local WebViz adapter, Rerun adapter                                           | **부분 커버**                                                |
+| `MapConvert3DScreen` / `PcdMap3DPanel`           | 실제 PCD, `SectionBox`, `EditVolume`, 선택, 직렬화 가능한 변환·절단 edit intent, GLB asset/lifecycle                                | 변환 job, zone schema, 저장, undo/redo, 결과 통계                       | polygon vertex·stair control point의 연속 drag, product result→asset manifest adapter | **부분 커버**. 읽기 전용 structure preview는 Pilot 조합 가능 |
+| `MapEditScreen`                                  | `CanvasEditorShell`, command bar, tool rail, layer/properties/status의 LDS page grammar; 선택적인 PCD viewport host                 | Konva/PGM canvas, zone·line·landmark 도메인, save/history               | 3D 보조 편집을 쓸 때만 vertex·stair drag 필요. LDS3D가 별도 2D editor를 만들지는 않음 | **LDS 조합**                                                 |
+| `BuildingTopology3DView`                         | Site/Building/Level hierarchy, floor elevation, primitive material, selection, 기존 Robot/Goal/Path/Landmark                        | topology graph, robot state, route와 command                            | PGM floor texture, lane/waypoint semantics와 product topology adapter                 | **부분 커버**                                                |
+| `FloorScene3D`                                   | GLB/asset contract, structure primitive, camera·selection·lifecycle, 기존 robot/path/goal 표현                                      | floor/wall source schema와 URL 해석, product interaction policy         | imperative Three adapter 또는 R3F 이관, wall/PGM texture adapter                      | **부분 커버**                                                |
+| `SiteAuthoringScreen` / `SiteStructurePreview3D` | Site/Building/Level tree, box/cylinder, top/side PBR material, selection, translate/rotate/scale snap intent, LDS editor-shell 조합 | preset, domain validation, save/history, conflict policy                | 연속 drag, multi-selection·marquee·pivot, curve wall과 texture-image adapter          | **부분 커버**                                                |
+| `StructurePreviewViewer`                         | `GltfModel`, asset manifest/bounds, WebGL scene host, loading/error/context lifecycle와 selection summary                           | 인증 URL, completed job result, provenance를 manifest로 바꾸는 resolver | WebGPU-first 정책과 simplification/capability adapter                                 | **기반 커버**. product-local adapter 필요                    |
+| `RerunViewer`                                    | core frame·entity·selection·status 교환 계약                                                                                        | backend bridge, recording, gRPC transport와 배포                        | Rerun WebViewer lifecycle, theme, selection/status projection adapter                 | **어댑터 공백**                                              |
+
+이 기준에서 **8개 표면 중 7개는 LDS/LDS3D를 재사용할 명시적 경로가 있고,
+1개(`RerunViewer`)는 실행 adapter부터 필요하다. 그러나 8개 모두 product-local
+adapter 또는 product-owned 조합이 필요하므로 drop-in 교체 가능한 화면은 0개다.**
+이는 실패가 아니라 의도한 책임 경계다. LDS3D가 제품 transport와 workflow까지
+흡수하지 않아야 한다.
+
+별도의 소비자 호환 gate도 남아 있다. 이 product commit은 Three.js `^0.170.0`,
+R3F `^9.0.0`이고 현재 LDS3D reference/peer baseline은 Three.js `>=0.185.1 <1`,
+R3F `^9.6.1`이다. 따라서 위 커버리지는 API·책임 커버리지이며, 실제 적용 전에는
+제품 stack upgrade 또는 별도 compatibility binding을 선택하고 pinned consumer
+smoke를 통과해야 한다.
+
+다음 공통 과제의 우선순위는 다음과 같다.
+
+1. 새 TF/Marker 계약을 `MappingScreen`에 연결하는 product-local
+   `WebVizSceneAdapter`와 pinned consumer smoke. 이 adapter는 LDS3D가 아니라
+   `lk_web_viz`가 소유한다.
+2. MapConvert/SiteAuthoring이 공유하는 연속 direct-manipulation 계약과
+   multi-selection change set.
+3. Rerun은 Three/R3F atom과 섞지 않고 별도 projection adapter로 검증한다.
+
+이번 재평가에서 새로 검증한 `PointCloudLayers`, `SectionBox`, `EditVolume`,
+`SpatialStructure`, `TransformGizmo`는 모두 실제 WebGL Story를 사용한다.
+`SpatialStructure`의 LDS integration Story는 public `CanvasEditorShell`,
+`Scene3DFrame`, `LayerPanel`, `SelectionInspector`, `ViewportStatusBar`를 사용하며
+wide에서는 hierarchy–viewport–properties를 동시에, narrow에서는 한 primary
+region씩 전환한다. 이 증거는 재사용 기반의 실행 가능성을 보여 주지만 제품
+migration 또는 시각 parity 완료를 의미하지는 않는다.
+
 ## 필요성 판단
 
-| 판단 대상 | 증거 강도 | 증거 기반 해석 | 조직 결정 |
-|---|---|---|---|
-| 공통 좌표·카메라·scene primitive Foundation | 높음 | 두 제품과 Web Viz 내부에서 같은 문제를 반복 해결 | **P0 즉시 구축** |
-| Core UI와 분리된 패키지/릴리스 | 중간 이상 | 대형 자산, GPU lifecycle, 서로 다른 Three/React 버전과 선택 렌더러가 존재 | **별도 형제 레포와 독립 릴리스 채택** |
-| 반드시 별도 Git 레포여야 함 | 중간 | 기존 레포 내 독립 패키지로도 일부 기술 문제는 해결 가능 | 기술적 필연성과 별개로 **Official Go 확정** |
-| 하나의 범용 renderer로 즉시 통합 | 낮음 | 실시간 PointCloud, 편집기, 건물 저작, Rerun의 실행 모델과 요구가 다름 | **채택하지 않음**. 공통 contract와 renderer adapter 구조 채택 |
-| PointCloud·TF·Marker | Web Viz 직접 증거 높음, 제품 간 공통 증거 제한적 | 성능·데이터 규모별 API 검증 필요 | **P1 공식 로드맵**. Three/R3F adapter와 함께 제품 적용으로 안정화 |
-| Rerun 연동 | Web Viz 직접 증거 높음, 제품 간 공통 증거 제한적 | Three.js와 다른 lifecycle·backend bridge를 사용 | **P1 공식 로드맵**. 독립 adapter로 통합 |
-| Building·Floor·Site spatial primitive와 authoring 기반 | Web Viz 직접 증거 높음, 제품 간 공통 증거 제한적 | 제품 도메인 규칙과 재사용 가능한 공간 primitive의 경계를 검증해야 함 | **P2 공식 로드맵** |
-| 백엔드 PCD mesh 생성·평활화·감량 알고리즘 | 제품 간 공통 증거 부족 | 제품 인프라와 도메인 처리 책임에 가까움 | **제품 소유 유지**. 플랫폼은 입력·출력 자산 및 메타데이터 계약만 소유 |
-| Rerun backend bridge | Web Viz 직접 증거만 존재 | 배포·transport·기록 정책은 제품 인프라와 결합 | bridge 구현은 **제품 소유 유지**, frontend adapter와 교환 계약은 플랫폼 소유 |
+| 판단 대상                                              | 증거 강도                                        | 증거 기반 해석                                                            | 조직 결정                                                                    |
+| ------------------------------------------------------ | ------------------------------------------------ | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 공통 좌표·카메라·scene primitive Foundation            | 높음                                             | 두 제품과 Web Viz 내부에서 같은 문제를 반복 해결                          | **P0 즉시 구축**                                                             |
+| Core UI와 분리된 패키지/릴리스                         | 중간 이상                                        | 대형 자산, GPU lifecycle, 서로 다른 Three/React 버전과 선택 렌더러가 존재 | **별도 형제 레포와 독립 릴리스 채택**                                        |
+| 반드시 별도 Git 레포여야 함                            | 중간                                             | 기존 레포 내 독립 패키지로도 일부 기술 문제는 해결 가능                   | 기술적 필연성과 별개로 **Official Go 확정**                                  |
+| 하나의 범용 renderer로 즉시 통합                       | 낮음                                             | 실시간 PointCloud, 편집기, 건물 저작, Rerun의 실행 모델과 요구가 다름     | **채택하지 않음**. 공통 contract와 renderer adapter 구조 채택                |
+| PointCloud·TF·Marker                                   | Web Viz 직접 증거 높음, 제품 간 공통 증거 제한적 | 성능·데이터 규모별 API 검증 필요                                          | **P1 공식 로드맵**. Three/R3F adapter와 함께 제품 적용으로 안정화            |
+| Rerun 연동                                             | Web Viz 직접 증거 높음, 제품 간 공통 증거 제한적 | Three.js와 다른 lifecycle·backend bridge를 사용                           | **P1 공식 로드맵**. 독립 adapter로 통합                                      |
+| Building·Floor·Site spatial primitive와 authoring 기반 | Web Viz 직접 증거 높음, 제품 간 공통 증거 제한적 | 제품 도메인 규칙과 재사용 가능한 공간 primitive의 경계를 검증해야 함      | **P2 공식 로드맵**                                                           |
+| 백엔드 PCD mesh 생성·평활화·감량 알고리즘              | 제품 간 공통 증거 부족                           | 제품 인프라와 도메인 처리 책임에 가까움                                   | **제품 소유 유지**. 플랫폼은 입력·출력 자산 및 메타데이터 계약만 소유        |
+| Rerun backend bridge                                   | Web Viz 직접 증거만 존재                         | 배포·transport·기록 정책은 제품 인프라와 결합                             | bridge 구현은 **제품 소유 유지**, frontend adapter와 교환 계약은 플랫폼 소유 |
 
 P0의 최초 구현 범위는 `CoordinateSystem`, `MapTransform`, `CameraRig`, scene tokens, GLB asset contract, `Robot/Goal/Path/Landmark` 표현 계약이다. 이후 PointCloud·TF·Marker와 Rerun adapter를 P1, Building·Floor·Site spatial primitive와 authoring 기반을 P2로 확장한다. 이 순서는 플랫폼 필요성을 다시 판단하기 위한 파일럿이 아니라, 증거가 강한 계약부터 API를 안정화하고 제품을 안전하게 이관하기 위한 공식 플랫폼 배포 순서다.
 

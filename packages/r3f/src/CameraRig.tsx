@@ -44,7 +44,7 @@ export function CameraRig({
   onManualControl,
   onSettled,
 }: CameraRigProps) {
-  const { camera, frameloop, gl, invalidate } = useThree();
+  const { camera, frameloop, get, gl, invalidate, set } = useThree();
   const prefersReducedMotion = usePrefersReducedMotion();
   const controlsRef = useRef<OrbitControls | null>(null);
   const transitionActive = useRef(mode !== "free");
@@ -99,14 +99,26 @@ export function CameraRig({
     const handleChange = (): void => requestDemandFrame(true);
     controls.addEventListener("start", handleStart);
     controls.addEventListener("change", handleChange);
+    const previousControls = get().controls;
+    set({ controls });
     controlsRef.current = controls;
     return () => {
       controls.removeEventListener("start", handleStart);
       controls.removeEventListener("change", handleChange);
+      if (get().controls === controls) set({ controls: previousControls });
       controls.dispose();
       controlsRef.current = null;
     };
-  }, [camera, enableOrbit, gl.domElement, homePose.target, onManualControl, requestDemandFrame]);
+  }, [
+    camera,
+    enableOrbit,
+    get,
+    gl.domElement,
+    homePose.target,
+    onManualControl,
+    requestDemandFrame,
+    set,
+  ]);
 
   useEffect(() => {
     if (mode === "free") {
@@ -143,6 +155,10 @@ export function CameraRig({
   useFrame((_state, delta) => {
     const controls = controlsRef.current;
     if (controls === null) return;
+    if (!controls.enabled) {
+      requestDemandFrame(transitionActive.current);
+      return;
+    }
 
     if (transitionActive.current && mode !== "free") {
       const speed = motionPolicy.kind === "animated" ? motionPolicy.speed : transitionSpeed;

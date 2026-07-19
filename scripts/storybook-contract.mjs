@@ -1,31 +1,40 @@
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { STORY_ID_REDIRECTS } from "../apps/docs/.storybook/public/story-id-redirects.mjs";
 
 export const expectedStoryIds = [
   "assets--asset-manifest",
-  "assets--validation-report",
-  "assets--invalid-manifest-cases",
+  "lds-3d-assets-validation--overview",
+  "lds-3d-assets-validation--invalid-manifest",
   "fixtures--robot-pose",
   "fixtures--floor-hit-projection",
   "foundations--coordinate-system",
-  "foundations--raw-three-scene-host",
+  "lds-3d-foundations-three-scene-host--overview",
   "foundations--transform-round-trip",
   "foundations--shifted-origin",
   "lds-3d-primitives--scene-canvas",
-  "lds-3d-primitives--selection",
-  "lds-3d-primitives--amr-robot",
-  "lds-3d-primitives--goal-marker",
-  "lds-3d-primitives--path-ribbon",
-  "lds-3d-primitives--point-cloud-layer",
-  "lds-3d-primitives--runtime-states",
-  "lds-3d-primitives--gltf-model",
+  "lds-3d-primitives-selectable--overview",
+  "lds-3d-primitives-amr-robot--overview",
+  "lds-3d-primitives-goal-marker--overview",
+  "lds-3d-primitives-path-ribbon--overview",
+  "lds-3d-primitives-marker-layer--overview",
+  "lds-3d-primitives-point-cloud-layer--overview",
+  "lds-3d-primitives-occupancy-grid-surface--overview",
+  "lds-3d-primitives-spatial-editing--overview",
+  "lds-3d-primitives-spatial-authoring--overview",
+  "lds-3d-primitives-scene-state-marker--overview",
+  "lds-3d-primitives-gltf-model--overview",
   "lds-3d-scenes-point-cloud-foundation--lds-integration",
+  "lds-3d-scenes-occupancy-grid--overview",
+  "lds-3d-scenes-tf-marker--overview",
+  "lds-3d-scenes-spatial-editing--overview",
+  "lds-3d-scenes-spatial-authoring-foundation--lds-integration",
   "visual-alpha--operational-neutral",
   "visual-alpha--diagnostic-technical",
-  "visual-alpha--asset-catalog",
-  "visual-alpha--goal-and-path-states",
-  "visual-alpha--loading-error-empty",
-  "visual-alpha--actual-lds-composition",
+  "lds-3d-scenes-asset-review--overview",
+  "lds-3d-states-goal-and-path--overview",
+  "lds-3d-states-renderer-lifecycle--overview",
+  "lds-3d-lds-integration-operations-viewer--overview",
 ].sort();
 
 export const requiredPrimitiveReviewStages = Object.freeze([
@@ -50,14 +59,38 @@ export const requiredPrimitiveAtoms = Object.freeze(
     "AmrRobot",
     "GoalMarker",
     "PathRibbon",
+    "MarkerLayer",
     "PointCloudLayer",
+    "PointCloudLayers",
+    "OccupancyGridSurface",
+    "SectionBox",
+    "EditVolume",
+    "SpatialStructure",
+    "TransformGizmo",
     "SceneStateMarker",
     "GltfModel",
   ].sort(),
 );
 
-const PRIMITIVE_STORY_PREFIX = "lds-3d-primitives--";
-const SCENARIO_STORY_PREFIXES = ["visual-alpha--", "lds-3d-scenes-"];
+const PRIMITIVE_STORY_PREFIX = "lds-3d-primitives";
+const SCENARIO_STORY_PREFIXES = [
+  "visual-alpha--",
+  "lds-3d-scenes-",
+  "lds-3d-states-",
+  "lds-3d-lds-integration-",
+];
+const STORYBOOK_GROUPS = Object.freeze([
+  "Foundations",
+  "Assets",
+  "Primitives",
+  "States",
+  "Scenes",
+  "LDS Integration",
+]);
+const STORY_ROLE_PATTERN =
+  /^(개요|참조 · .+|사용법 · .+|변형·상태 · .+|상호작용 · .+|반응형 · .+|시나리오 · .+)$/;
+const BANNED_PUBLIC_PAGE_LABELS =
+  /\b(Visual Alpha|Foundation 0|Actual|Raw|Direction [AB]|MapConvert3D)\b/i;
 const PRIMITIVE_GUIDE_MARKERS = [
   "## Storybook review evidence contract",
   "primitive-review-contract.json",
@@ -66,7 +99,7 @@ const PRIMITIVE_GUIDE_MARKERS = [
 ];
 const PRIMITIVE_STORY_SOURCE_MARKERS = [
   "primitive-review-contract.json",
-  "function reviewParameters",
+  "function primitiveReviewParameters",
   "function PrimitiveReviewEvidence",
   "<SceneCanvasPrimitive",
 ];
@@ -97,13 +130,72 @@ function escapeRegularExpression(value) {
 
 function reviewBindingExists(source, storyId) {
   const escapedStoryId = escapeRegularExpression(storyId);
-  return new RegExp(`reviewParameters\\s*\\(\\s*["']${escapedStoryId}["']\\s*\\)`).test(source);
+  return new RegExp(`primitiveReviewParameters\\s*\\(\\s*["']${escapedStoryId}["']\\s*\\)`).test(
+    source,
+  );
 }
 
 function isScenarioStoryId(value) {
   return (
     isNonEmptyString(value) && SCENARIO_STORY_PREFIXES.some((prefix) => value.startsWith(prefix))
   );
+}
+
+function validateStorybookInformationArchitecture({ actualStoryIds, entries, builtFiles }) {
+  const storyEntries = Object.entries(entries).filter(
+    ([, entry]) => entry && typeof entry === "object" && entry.type === "story",
+  );
+  const invalidGroups = [];
+  const invalidPageTitles = [];
+  const invalidStoryRoles = [];
+  const titlesWithOverview = new Set();
+  const publicTitles = new Set();
+
+  for (const [storyId, entry] of storyEntries) {
+    const title = isNonEmptyString(entry.title) ? entry.title : "";
+    const name = isNonEmptyString(entry.name) ? entry.name : "";
+    const [, group] = title.split("/");
+    publicTitles.add(title);
+    if (!title.startsWith("LDS 3D/") || !STORYBOOK_GROUPS.includes(group)) {
+      invalidGroups.push(storyId);
+    }
+    if (BANNED_PUBLIC_PAGE_LABELS.test(title)) invalidPageTitles.push(storyId);
+    if (!STORY_ROLE_PATTERN.test(name)) invalidStoryRoles.push(storyId);
+    if (name === "개요") titlesWithOverview.add(title);
+  }
+
+  const pagesMissingOverview = [...publicTitles].filter((title) => !titlesWithOverview.has(title));
+  const legacyStoryIds = Object.keys(STORY_ID_REDIRECTS).sort();
+  const redirectTargets = Object.values(STORY_ID_REDIRECTS).sort();
+  const missingRedirectTargets = redirectTargets.filter((id) => !actualStoryIds.includes(id));
+  const activeLegacyStoryIds = legacyStoryIds.filter((id) => actualStoryIds.includes(id));
+  const redirectAssetBuilt = builtFiles.includes("story-id-redirects.mjs");
+  const violations = [
+    ...invalidGroups.map((id) => `story is outside the approved LDS 3D groups: ${id}`),
+    ...invalidPageTitles.map((id) => `public page title contains a process label: ${id}`),
+    ...invalidStoryRoles.map((id) => `story name does not use an approved role label: ${id}`),
+    ...pagesMissingOverview.map((title) => `public page has no 개요 story: ${title}`),
+    ...missingRedirectTargets.map((id) => `legacy redirect target is missing: ${id}`),
+    ...activeLegacyStoryIds.map((id) => `legacy story ID is still canonical: ${id}`),
+    ...(redirectAssetBuilt ? [] : ["legacy story redirect asset was not built"]),
+  ];
+
+  return {
+    passed: violations.length === 0,
+    groups: STORYBOOK_GROUPS,
+    pageCount: publicTitles.size,
+    storyCount: storyEntries.length,
+    legacyStoryIds,
+    redirectTargets,
+    invalidGroups,
+    invalidPageTitles,
+    invalidStoryRoles,
+    pagesMissingOverview,
+    missingRedirectTargets,
+    activeLegacyStoryIds,
+    redirectAssetBuilt,
+    violations,
+  };
 }
 
 function validatePrimitiveReviewContract({
@@ -228,13 +320,18 @@ export async function checkStorybookContract(root) {
   const storybookDirectory = path.join(root, "storybook-static");
   try {
     await access(path.join(storybookDirectory, "index.html"));
-    const [indexSource, primitiveReviewSource, primitiveStorySource, primitiveGuideSource] =
+    const storySourceDirectory = path.join(root, "apps/docs/src");
+    const storySourceFiles = (await readdir(storySourceDirectory, { recursive: true })).filter(
+      (file) => file.endsWith(".stories.tsx"),
+    );
+    const [indexSource, primitiveReviewSource, primitiveGuideSource, ...storySources] =
       await Promise.all([
         readFile(path.join(storybookDirectory, "index.json"), "utf8"),
         readFile(path.join(root, "apps/docs/src/primitive-review-contract.json"), "utf8"),
-        readFile(path.join(root, "apps/docs/src/primitives.stories.tsx"), "utf8"),
         readFile(path.join(root, "docs/SPATIAL_PRIMITIVES_GUIDE.md"), "utf8"),
+        ...storySourceFiles.map((file) => readFile(path.join(storySourceDirectory, file), "utf8")),
       ]);
+    const primitiveStorySource = storySources.join("\n");
     const index = JSON.parse(indexSource);
     const primitiveReviewContract = JSON.parse(primitiveReviewSource);
     const entries = index.entries && typeof index.entries === "object" ? index.entries : {};
@@ -251,10 +348,18 @@ export async function checkStorybookContract(root) {
       guideSource: primitiveGuideSource,
       primitiveStorySource,
     });
+    const informationArchitecture = validateStorybookInformationArchitecture({
+      actualStoryIds,
+      entries,
+      builtFiles: files,
+    });
 
     return {
       passed:
-        missingStoryIds.length === 0 && unexpectedStoryIds.length === 0 && primitiveReview.passed,
+        missingStoryIds.length === 0 &&
+        unexpectedStoryIds.length === 0 &&
+        primitiveReview.passed &&
+        informationArchitecture.passed,
       built: true,
       fileCount: files.length,
       indexHtml: true,
@@ -263,6 +368,7 @@ export async function checkStorybookContract(root) {
       missingStoryIds,
       unexpectedStoryIds,
       primitiveReview,
+      informationArchitecture,
     };
   } catch (error) {
     return {
@@ -275,6 +381,10 @@ export async function checkStorybookContract(root) {
       missingStoryIds: expectedStoryIds,
       unexpectedStoryIds: [],
       primitiveReview: {
+        passed: false,
+        violations: [error instanceof Error ? error.message : String(error)],
+      },
+      informationArchitecture: {
         passed: false,
         violations: [error instanceof Error ? error.message : String(error)],
       },

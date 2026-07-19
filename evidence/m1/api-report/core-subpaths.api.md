@@ -19,6 +19,12 @@ function assertValidFramedPoint3(value: FramedPoint3): void;
 // @public (undocumented)
 function assertValidFrameId(value: FrameId): void;
 
+// @public
+function assertValidOccupancyGridGeometry(value: OccupancyGridGeometry): void;
+
+// @public
+function assertValidOccupancyGridSnapshot(value: OccupancyGridSnapshot): void;
+
 // @public (undocumented)
 function assertValidPose3(value: Pose3): void;
 
@@ -260,7 +266,16 @@ class CoordinateValidationError extends RangeError {
 function createCameraState(state: CameraState): CameraState;
 
 // @public
+function createOccupancyGridCellPicker(snapshot: OccupancyGridSnapshot): OccupancyGridCellPicker;
+
+// @public
+function createOccupancyGridSnapshot(value: OccupancyGridSnapshotInput): OccupancyGridSnapshot;
+
+// @public
 function createPickRay(camera: CameraState, request: PickRequest): Ray3;
+
+// @public
+const DEFAULT_OCCUPANCY_GRID_PLANE_TOLERANCE_METERS = 0.000001;
 
 declare namespace entities {
     export {
@@ -421,6 +436,197 @@ number
 function normalizeQuaternion(value: Quat): Quat;
 
 // @public (undocumented)
+const OCCUPANCY_GRID_CELL_FREE = 1;
+
+// @public (undocumented)
+const OCCUPANCY_GRID_CELL_OCCUPIED = 2;
+
+// @public (undocumented)
+const OCCUPANCY_GRID_CELL_UNKNOWN = 0;
+
+// @public
+function occupancyCellCenter(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): FramedPoint3;
+
+// @public
+function occupancyCellDataIndex(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): number;
+
+// @public
+function occupancyCellMinimumCorner(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): FramedPoint3;
+
+// @public
+function occupancyCellToImagePixel(geometry: OccupancyGridGeometry, cell: OccupancyGridCell): OccupancyGridImagePixel;
+
+// @public
+function occupancyDataIndexToCell(geometry: OccupancyGridGeometry, dataIndex: number): OccupancyGridCell;
+
+declare namespace occupancyGrid {
+    export {
+        DEFAULT_OCCUPANCY_GRID_PLANE_TOLERANCE_METERS,
+        OCCUPANCY_GRID_CELL_FREE,
+        OCCUPANCY_GRID_CELL_OCCUPIED,
+        OCCUPANCY_GRID_CELL_UNKNOWN,
+        OccupancyGridBufferOwnership,
+        OccupancyGridCell,
+        OccupancyGridCellPick,
+        OccupancyGridCellPicker,
+        OccupancyGridCellState,
+        OccupancyGridGeometry,
+        OccupancyGridImagePixel,
+        OccupancyGridProjection,
+        OccupancyGridProjectionOptions,
+        OccupancyGridRevision,
+        OccupancyGridSnapshot,
+        OccupancyGridSnapshotInput,
+        OccupancyGridValidationCode,
+        OccupancyGridValidationError,
+        assertValidOccupancyGridGeometry,
+        assertValidOccupancyGridSnapshot,
+        createOccupancyGridCellPicker,
+        createOccupancyGridSnapshot,
+        occupancyCellCenter,
+        occupancyCellDataIndex,
+        occupancyCellMinimumCorner,
+        occupancyCellToImagePixel,
+        occupancyDataIndexToCell,
+        occupancyGridGeometry,
+        occupancyImagePixelCenter,
+        occupancyImagePixelToCell,
+        occupancyPointToCell,
+        occupancyPointToImagePixel,
+        pickOccupancyGridCell,
+        projectPointToOccupancyGrid
+    }
+}
+
+// @public (undocumented)
+type OccupancyGridBufferOwnership = "caller-retained";
+
+// @public
+interface OccupancyGridCell {
+    // (undocumented)
+    readonly column: number;
+    // (undocumented)
+    readonly row: number;
+}
+
+// @public
+interface OccupancyGridCellPick {
+    // (undocumented)
+    readonly cell: OccupancyGridCell;
+    // (undocumented)
+    readonly cellCenter: FramedPoint3;
+    // (undocumented)
+    readonly cellState: OccupancyGridCellState;
+    // (undocumented)
+    readonly dataIndex: number;
+    // (undocumented)
+    readonly hitPoint: FramedPoint3;
+    // (undocumented)
+    readonly imagePixel: OccupancyGridImagePixel;
+    // (undocumented)
+    readonly revision: OccupancyGridRevision;
+}
+
+// @public
+interface OccupancyGridCellPicker {
+    // (undocumented)
+    pick(hitPoint: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridCellPick | undefined;
+    // (undocumented)
+    readonly revision: OccupancyGridRevision;
+    // (undocumented)
+    readonly snapshot: OccupancyGridSnapshot;
+}
+
+// @public (undocumented)
+type OccupancyGridCellState = typeof OCCUPANCY_GRID_CELL_UNKNOWN | typeof OCCUPANCY_GRID_CELL_FREE | typeof OCCUPANCY_GRID_CELL_OCCUPIED;
+
+// @public
+interface OccupancyGridGeometry {
+    // (undocumented)
+    readonly gridToFrame: RigidTransform3;
+    // (undocumented)
+    readonly heightCells: number;
+    // (undocumented)
+    readonly resolutionMeters: number;
+    // (undocumented)
+    readonly widthCells: number;
+}
+
+// @public
+function occupancyGridGeometry(value: OccupancyGridGeometry): OccupancyGridGeometry;
+
+// @public
+interface OccupancyGridImagePixel {
+    // (undocumented)
+    readonly column: number;
+    // (undocumented)
+    readonly rowFromTop: number;
+}
+
+// @public
+interface OccupancyGridProjection {
+    // (undocumented)
+    readonly cell?: OccupancyGridCell;
+    // (undocumented)
+    readonly localPoint: FramedPoint3;
+    // (undocumented)
+    readonly planeDistanceMeters: number;
+    // (undocumented)
+    readonly withinGridBounds: boolean;
+    // (undocumented)
+    readonly withinPlaneTolerance: boolean;
+}
+
+// @public (undocumented)
+interface OccupancyGridProjectionOptions {
+    // (undocumented)
+    readonly planeToleranceMeters?: number;
+}
+
+// @public (undocumented)
+type OccupancyGridRevision = string | number;
+
+// @public
+interface OccupancyGridSnapshot extends OccupancyGridSnapshotInput {
+    // (undocumented)
+    readonly bufferOwnership: OccupancyGridBufferOwnership;
+    // (undocumented)
+    readonly cellCount: number;
+}
+
+// @public (undocumented)
+interface OccupancyGridSnapshotInput {
+    readonly cellStates: Uint8Array;
+    // (undocumented)
+    readonly geometry: OccupancyGridGeometry;
+    readonly revision: OccupancyGridRevision;
+}
+
+// @public (undocumented)
+type OccupancyGridValidationCode = "INVALID_DIMENSION" | "INVALID_RESOLUTION" | "INVALID_CELL" | "INVALID_IMAGE_PIXEL" | "INVALID_DATA_INDEX" | "INVALID_PLANE_TOLERANCE" | "INVALID_CELL_STATES" | "INVALID_REVISION";
+
+// @public (undocumented)
+class OccupancyGridValidationError extends RangeError {
+    constructor(code: OccupancyGridValidationCode, message: string);
+    // (undocumented)
+    readonly code: OccupancyGridValidationCode;
+    // (undocumented)
+    readonly name = "OccupancyGridValidationError";
+}
+
+// @public
+function occupancyImagePixelCenter(geometry: OccupancyGridGeometry, pixel: OccupancyGridImagePixel): FramedPoint3;
+
+// @public
+function occupancyImagePixelToCell(geometry: OccupancyGridGeometry, pixel: OccupancyGridImagePixel): OccupancyGridCell;
+
+// @public
+function occupancyPointToCell(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridCell | undefined;
+
+// @public
+function occupancyPointToImagePixel(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridImagePixel | undefined;
+
+// @public (undocumented)
 type P0SpatialEntity = AssetEntity | RobotEntity | GoalEntity | PathEntity | LandmarkEntity;
 
 // @public (undocumented)
@@ -454,6 +660,9 @@ interface PickHit {
     // (undocumented)
     readonly point: FramedPoint3;
 }
+
+// @public
+function pickOccupancyGridCell(snapshot: OccupancyGridSnapshot, hitPoint: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridCellPick | undefined;
 
 // @public (undocumented)
 interface PickRequest {
@@ -489,6 +698,9 @@ interface Pose3 {
 
 // @public (undocumented)
 function pose3(frame: FrameId, position: Vec3, orientation: Quat): Pose3;
+
+// @public
+function projectPointToOccupancyGrid(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridProjection;
 
 // @public
 type Quat = readonly [number, number, number, number];

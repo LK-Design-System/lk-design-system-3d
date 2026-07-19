@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "assetId": "robots/tron",
+  "containsCustomerData": false,
+  "source": {
+    "repository": "https://github.com/LK-ROBOTICS/lkrobotics-control-full",
+    "commit": "de64d3c9b98eb9ce7aeaf7765035153492a57359",
+    "path": "frontend/public/tron_model_47494A_full.glb",
+    "bytes": 63609848,
+    "sha256": "48d2c008ce490c610ec3172311257b8878aa03b7dda3dec7e21a7d3e4a18baaa",
+    "generator": "Khronos glTF Blender I/O v5.1.19",
+    "triangles": 1048775
+  },
+  "derivative": {
+    "file": "./tron.glb",
+    "bytes": 6897008,
+    "sha256": "a2ca4479f1fe098c624b6b657ac9e343dc66a800474a45c6d16c49ba75dbf1fa",
+    "triangles": 209495,
+    "tool": "gltfpack 1.2",
+    "command": "gltfpack -i source.glb -o tron.glb -si 0.2 -se 0.002 -sp -kn -km -ke",
+    "extensionsRequired": ["KHR_mesh_quantization"]
+  },
+  "coordinateEvidence": {
+    "basis": "glTF 2.0 right-handed meters",
+    "upAxis": "+Y",
+    "forwardAxis": "+X",
+    "forwardAxisReason": "The source dashboard composes the model so its local +X aligns with robot heading; the manifest records this authored forward axis explicitly.",
+    "floorNormalizationMeters": 0.100680016
+  },
+  "license": {
+    "spdx": "LicenseRef-LK-Robotics-Internal",
+    "holder": "LK Robotics",
+    "attributionRequired": false,
+    "authorization": "The asset creator confirmed use in LK Design System 3D on 2026-07-18."
+  }
+}

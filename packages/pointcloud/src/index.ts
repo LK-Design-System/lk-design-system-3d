@@ -10,3 +10,19 @@ export {
   type PointCloudSnapshot,
   type PointCloudSnapshotInput,
 } from "./snapshot.js";
+export {
+  createPointCloudLayerSet,
+  createPointCloudLayerSnapshot,
+  resolvePointCloudLayerSetRenderState,
+  PointCloudLayerValidationError,
+  type PointCloudFreshnessPolicy,
+  type PointCloudFreshnessState,
+  type PointCloudLayerRenderState,
+  type PointCloudLayerRenderStateBase,
+  type PointCloudLayerSet,
+  type PointCloudLayerSetInput,
+  type PointCloudLayerSetRenderState,
+  type PointCloudLayerSetRenderStateKind,
+  type PointCloudLayerSnapshot,
+  type PointCloudLayerSnapshotInput,
+} from "./layers.js";

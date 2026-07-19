@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T15:32:55.306Z",
+  "generatedAt": "2026-07-18T16:07:13.216Z",
   "passed": true,
   "checks": {
     "actualWebGlCanvas": true,
@@ -24,12 +24,12 @@
   "operational": {
     "canvas": true,
     "canvasCssSize": {
-      "width": 1382,
-      "height": 539
+      "width": 1376,
+      "height": 536
     },
     "canvasBackingSize": {
-      "width": 1382,
-      "height": 539
+      "width": 1376,
+      "height": 536
     },
     "canvasPixelRatio": 1,
     "webgl": true,
@@ -43,8 +43,8 @@
     "ldsCanvasEditorShellCount": 1,
     "cameraToolbar": true,
     "toolbarHandleOverlapPixels": 0,
-    "pageTitle": "AMR Operations",
-    "sceneTitle": "Warehouse / LK-MAP",
+    "pageTitle": "AMR 운영",
+    "sceneTitle": "창고 / LK-MAP",
     "headingLevels": [
       "H1",
       "H2",
@@ -58,7 +58,7 @@
     "frameVariant": "embedded",
     "frameUsesEmbeddedPerimeter": true,
     "frameSharesShellPerimeter": true,
-    "framePanelOverlapArea": 161700,
+    "framePanelOverlapArea": 160800,
     "legendPanelOverlapArea": 0,
     "viewportDominates": true,
     "wideLayout": true,
@@ -66,27 +66,27 @@
     "legacyCustomChromeCount": 0,
     "ldsPrimaryToken": "#3878B3",
     "glbResources": [
-      "http://127.0.0.1:60514/visual-alpha/amr.glb",
-      "http://127.0.0.1:60514/visual-alpha/rack.glb",
-      "http://127.0.0.1:60514/visual-alpha/pallet.glb",
-      "http://127.0.0.1:60514/visual-alpha/cargo-bin.glb",
-      "http://127.0.0.1:60514/visual-alpha/charging-station.glb",
-      "http://127.0.0.1:60514/visual-alpha/safety-cone.glb"
+      "http://127.0.0.1:55345/visual-alpha/amr.glb",
+      "http://127.0.0.1:55345/visual-alpha/rack.glb",
+      "http://127.0.0.1:55345/visual-alpha/pallet.glb",
+      "http://127.0.0.1:55345/visual-alpha/cargo-bin.glb",
+      "http://127.0.0.1:55345/visual-alpha/charging-station.glb",
+      "http://127.0.0.1:55345/visual-alpha/safety-cone.glb"
     ],
     "inspectorMatches": true,
     "foundationSvgSubstituteCount": 0
   },
   "interaction": {
-    "hoverLabel": "Rack R-01",
+    "hoverLabel": "랙 R-01",
     "hoverPoint": [
       737,
-      297
+      299
     ],
-    "inspectorText": "Selected spatial entity\nRack R-01\nRACK\nIDLE\nSpatial identity\nEntity ID\nrack/r-01\nPosition\n-2.50 · 4.25 · 0.00 m",
-    "pointerEventCount": 38,
+    "inspectorText": "선택한 공간 객체\n랙 R-01\n랙\n대기\n공간 식별 정보\n객체 ID\nrack/r-01\n위치\n-2.50 · 4.25 · 0.00 m",
+    "pointerEventCount": 1,
     "selectionPoint": [
       737,
-      297
+      299
     ]
   },
   "diagnostic": {
@@ -95,16 +95,16 @@
     "glbResourceCount": 6
   },
   "assetCatalog": {
-    "pageTitle": "Industrial Asset Catalog",
-    "sceneTitle": "Asset review grid / LK-MAP",
+    "pageTitle": "산업 자산 카탈로그",
+    "sceneTitle": "자산 검토 그리드 / LK-MAP",
     "glbResourceCount": 6,
     "inspectorValueCount": 2
   },
   "goalPath": {
     "path": true,
     "goal": true,
-    "pathInspector": "Selected spatial entity\nBlocked path\nPATH\nERROR\nSpatial identity\nEntity ID\npath/amr-03/blocked\nPosition\n3.90 · -3.25 · 0.06 m\nOperations\nTask\n3 waypoints",
-    "goalInspector": "Selected spatial entity\nInvalid goal preview\nGOAL\nERROR\nSpatial identity\nEntity ID\ngoal/invalid-preview\nPosition\n4.55 · -2.35 · 0.04 m\nOperations\nTask\nRejected · obstacle clearance"
+    "pathInspector": "선택한 공간 객체\n차단된 경로\n경로\n오류\n공간 식별 정보\n객체 ID\npath/amr-03/blocked\n위치\n3.90 · -3.25 · 0.06 m\n운영 정보\n작업\n경유점 3개",
+    "goalInspector": "선택한 공간 객체\n유효하지 않은 목표 미리보기\n목표\n오류\n공간 식별 정보\n객체 ID\ngoal/invalid-preview\n위치\n4.55 · -2.35 · 0.04 m\n운영 정보\n작업\n거부됨 · 장애물 안전거리"
   },
   "states": {
     "selectionClearActionHidden": true,
@@ -306,17 +306,17 @@
       "workspaceRect": null,
       "frameRect": {
         "left": 20,
-        "top": 188.890625,
+        "top": 152.890625,
         "right": 300,
-        "bottom": 880.890625,
+        "bottom": 844.890625,
         "width": 280,
         "height": 692
       },
       "canvasRect": {
         "left": 21,
-        "top": 189.890625,
+        "top": 153.890625,
         "right": 299,
-        "bottom": 879.890625,
+        "bottom": 843.890625,
         "width": 278,
         "height": 690
       },
@@ -349,54 +349,54 @@
     "drawerOpened": true,
     "drawerReopenedAfterRoundTrip": false,
     "capture320": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
-      "bytes": 88948,
-      "sha256": "b903d62517a236166814068ee3950f566c4e506b9871e953e1ccc0098b4d08fa"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
+      "bytes": 84526,
+      "sha256": "2f0d4102960cddab1e65f539ea11082062f7110c2e67531f18b7ddda4f22bcca"
     }
   },
   "captures": {
     "home": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-home.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\operational-neutral.png",
-      "bytes": 236315,
-      "sha256": "682102eb32eff21833a0ca4e13bdb4aa6fc9e57da2558c219f5e6e1d449e31b1"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\camera-home.png",
+      "mirrorFile": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\operational-neutral.png",
+      "bytes": 224344,
+      "sha256": "31025c4fdbe45239b3db319787fb3bd73ccfd74ff66ea21e6b2de23ffc34887e"
     },
     "top": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-top.png",
-      "bytes": 133640,
-      "sha256": "150c213c2cfbc51ee6bd3fc34daef77939ae9055ec26a4d1a4be03ae9400d22e"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\camera-top.png",
+      "bytes": 117635,
+      "sha256": "550c5f38d52aa614ad546c0b1d98f01722da615e8483525ae51fe0f767f74258"
     },
     "focus": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-focus.png",
-      "bytes": 189383,
-      "sha256": "7b858d5bb9ea40e3570f68d4dbf0f397649e681d1fb5db87720623d406fba90f"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\camera-focus.png",
+      "bytes": 125880,
+      "sha256": "5f54ec72fe06b60a21cf57895583a4d82c01472b6cad051760a6063cf05e58bb"
     },
     "diagnostic": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\diagnostic-technical.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\diagnostic-technical.png",
-      "bytes": 314945,
-      "sha256": "2b1157984a2afbfd25ef877e2ab9cc4fd4e8bb3591c552e4fe3b6c6ea82bfe78"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\diagnostic-technical.png",
+      "mirrorFile": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\diagnostic-technical.png",
+      "bytes": 295663,
+      "sha256": "f54e074601574bfe7ad304fd3bc4cffc939640fa3168c7663f111b8c0b8040aa"
     },
     "assetCatalog": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\asset-catalog.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\asset-catalog.png",
-      "bytes": 183489,
-      "sha256": "ef411b9fffd44748427720a798569aa63dd68c433e94405f1c983554b08a5c8f"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\asset-catalog.png",
+      "mirrorFile": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\asset-catalog.png",
+      "bytes": 178229,
+      "sha256": "8a493dce03df2ee8b4c72114eed831f9f4e4cbf96d86686e6375a0d4d25efea4"
     },
     "goalPath": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\goal-path-states.png",
-      "bytes": 146416,
-      "sha256": "c6743b69d2b9f797d71113d02623996a625b936f225e34adbaa34951dd4f1a32"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\goal-path-states.png",
+      "bytes": 132354,
+      "sha256": "2ffabd599d64095fb9d52c04a4aa94e577acc54530713378ad7398061b2f758c"
     },
     "recovered": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\renderer-recovered.png",
-      "bytes": 206713,
-      "sha256": "4b9610bc96495024cdbfaf4e9521cb303e401f9c9efaca2973389fbf8eccde8d"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\renderer-recovered.png",
+      "bytes": 188306,
+      "sha256": "d9fff5b5164fff4efbe8b4285361fbc9197d02bfad29076084ca223f2b1e78b4"
     },
     "responsive320": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
-      "bytes": 88948,
-      "sha256": "b903d62517a236166814068ee3950f566c4e506b9871e953e1ccc0098b4d08fa"
+      "file": "C:\\Users\\MSI\\Documents\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
+      "bytes": 84526,
+      "sha256": "2f0d4102960cddab1e65f539ea11082062f7110c2e67531f18b7ddda4f22bcca"
     }
   }
 }

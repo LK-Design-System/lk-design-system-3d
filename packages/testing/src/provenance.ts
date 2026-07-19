@@ -36,6 +36,8 @@ const GENERATION_RECIPES: Readonly<Record<string, string>> = {
   "unit-cube": "Analytic one-meter cube centered at the core origin.",
   "coordinate-axes": "Analytic LK right-handed +Z-up, +X-forward basis.",
   "shifted-origin": "Synthetic source-map point translated into the LK core frame.",
+  "rotated-occupancy-grid":
+    "Synthetic 4x3 occupancy raster with a half-meter resolution and a shifted +90-degree origin.",
   "robot-pose": "Synthetic robot pose at a fixed core-frame position and yaw.",
   path: "Synthetic four-point path with non-zero elevation samples.",
   "y-up-glb-manifest": "Synthetic metadata for a right-handed +Y-up GLB basis.",

@@ -45,6 +45,7 @@
   "dependencies": {
     "@lk-robotics/design-system-3d-assets": "workspace:*",
     "@lk-robotics/design-system-3d-core": "workspace:*",
+    "@lk-robotics/design-system-3d-markers": "workspace:*",
     "@lk-robotics/design-system-3d-pointcloud": "workspace:*",
     "@lk-robotics/design-system-3d-three": "workspace:*"
   },

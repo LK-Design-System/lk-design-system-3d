@@ -37,11 +37,27 @@ module.exports = {
       },
     },
     {
+      name: "tf-only-depends-on-core",
+      severity: "error",
+      from: { path: "^packages/tf/src" },
+      to: {
+        path: "^packages/(?!core(?:/|$)|tf(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-robotics/design-system-core)",
+      },
+    },
+    {
+      name: "markers-only-depends-on-core",
+      severity: "error",
+      from: { path: "^packages/markers/src" },
+      to: {
+        path: "^packages/(?!core(?:/|$)|markers(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-robotics/design-system-core)",
+      },
+    },
+    {
       name: "r3f-only-depends-on-foundation-three-and-renderer-peers",
       severity: "error",
       from: { path: "^packages/r3f/src" },
       to: {
-        path: "^packages/(?!core(?:/|$)|assets(?:/|$)|pointcloud(?:/|$)|three(?:/|$)|r3f(?:/|$))|^apps/|^node_modules/(?:@rerun-io|@lk-robotics/design-system-core)",
+        path: "^packages/(?!core(?:/|$)|assets(?:/|$)|markers(?:/|$)|pointcloud(?:/|$)|three(?:/|$)|r3f(?:/|$))|^apps/|^node_modules/(?:@rerun-io|@lk-robotics/design-system-core)",
       },
     },
     {

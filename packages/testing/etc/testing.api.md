@@ -12,6 +12,9 @@ import { FramedPoint3 } from '@lk-robotics/design-system-3d-core';
 import { FrameId } from '@lk-robotics/design-system-3d-core';
 import { LK_CORE_COORDINATE_SYSTEM } from '@lk-robotics/design-system-3d-core';
 import { Mat4 } from '@lk-robotics/design-system-3d-core';
+import { OccupancyGridCell } from '@lk-robotics/design-system-3d-core';
+import { OccupancyGridGeometry } from '@lk-robotics/design-system-3d-core';
+import { OccupancyGridImagePixel } from '@lk-robotics/design-system-3d-core';
 import { PathEntity } from '@lk-robotics/design-system-3d-core';
 import { PickHit } from '@lk-robotics/design-system-3d-core';
 import { Quat } from '@lk-robotics/design-system-3d-core';
@@ -287,6 +290,7 @@ export const FIXTURE_FRAMES: Readonly<{
     sourceMap: FrameId;
     render: FrameId;
     productMap: FrameId;
+    occupancyGrid: FrameId;
     assetFile: FrameId;
     legacyAssetFile: FrameId;
 }>;
@@ -420,6 +424,30 @@ export const LEGACY_Z_UP_GLB_MANIFEST_FIXTURE: AssetManifestV1;
 // @public (undocumented)
 export const MINIMAL_GLB_SHA256 = "d52ea15ab28b6a8dbc5a7623dd23c044eaa0f6460322c22030cc6b976e365637";
 
+// @public (undocumented)
+export interface OccupancyGridFixture {
+    readonly cellStates: readonly OccupancyGridFixtureCellState[];
+    // (undocumented)
+    readonly geometry: OccupancyGridGeometry;
+    // (undocumented)
+    readonly id: "rotated-occupancy-grid";
+    // (undocumented)
+    readonly probes: readonly OccupancyGridProbeFixture[];
+}
+
+// @public (undocumented)
+export type OccupancyGridFixtureCellState = "unknown" | "free" | "occupied";
+
+// @public (undocumented)
+export interface OccupancyGridProbeFixture {
+    // (undocumented)
+    readonly expectedCell: OccupancyGridCell;
+    // (undocumented)
+    readonly expectedCenter: FramedPoint3;
+    // (undocumented)
+    readonly imagePixel: OccupancyGridImagePixel;
+}
+
 // @public
 export const PATH_FIXTURE: PathEntity;
 
@@ -440,6 +468,9 @@ export interface RendererCoordinateContext {
 
 // @public
 export const ROBOT_POSE_FIXTURE: RobotEntity;
+
+// @public
+export const ROTATED_OCCUPANCY_GRID_FIXTURE: OccupancyGridFixture;
 
 // @public
 export const SHIFTED_ORIGIN_FIXTURE: ShiftedOriginFixture;
