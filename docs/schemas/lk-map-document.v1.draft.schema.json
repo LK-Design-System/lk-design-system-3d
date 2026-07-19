@@ -1,0 +1,479 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.lk-robotics.com/design-system-3d/lk-map-document.v1.draft.schema.json",
+  "title": "LK Map Document V1 (DRAFT)",
+  "description": "DRAFT renderer-neutral exchange contract for the dual-path map authoring foundation. Pending A0 sign-off; see docs/A0-MAP-CONTRACT-DRAFT.md. Coordinate rules follow docs/SPATIAL_PRIMITIVES_GUIDE.md `Asset and coordinate boundary`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "documentId", "coordinate", "structure"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "documentId": { "$ref": "#/$defs/entityId" },
+    "name": { "type": "string" },
+    "coordinate": { "$ref": "#/$defs/coordinateProfile" },
+    "structure": { "$ref": "#/$defs/structure" },
+    "semantics": { "$ref": "#/$defs/semantics" },
+    "binding": { "$ref": "#/$defs/externalBinding" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "extensions": {
+      "type": "object",
+      "description": "Namespaced product extensions; keys are reverse-DNS or product slugs.",
+      "additionalProperties": true
+    },
+    "x-unknown": {
+      "type": "object",
+      "description": "Losslessly preserved unrecognized source data for round-trip.",
+      "additionalProperties": true
+    }
+  },
+
+  "$defs": {
+    "entityId": { "type": "string", "minLength": 1 },
+    "frameId": { "type": "string", "minLength": 1 },
+    "assetId": { "type": "string", "minLength": 1 },
+    "vec3": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+    "quat": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+    "rgba": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+
+    "pose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "position", "orientation"],
+      "properties": {
+        "frame": { "$ref": "#/$defs/frameId" },
+        "position": { "$ref": "#/$defs/vec3" },
+        "orientation": { "$ref": "#/$defs/quat" }
+      }
+    },
+
+    "bounds3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "min", "max"],
+      "properties": {
+        "frame": { "$ref": "#/$defs/frameId" },
+        "min": { "$ref": "#/$defs/vec3" },
+        "max": { "$ref": "#/$defs/vec3" }
+      }
+    },
+
+    "coordinateProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["handedness", "up", "forward", "unitsLength", "unitsAngle", "origin"],
+      "properties": {
+        "handedness": { "const": "right" },
+        "up": { "const": "+Z" },
+        "forward": { "const": "+X" },
+        "unitsLength": { "const": "meter" },
+        "unitsAngle": { "const": "radian" },
+        "origin": { "$ref": "#/$defs/pose" },
+        "raster": { "$ref": "#/$defs/rasterProfile" }
+      }
+    },
+
+    "rasterProfile": {
+      "type": "object",
+      "description": "2D reference / occupancy raster coordinate contract (Contract 1). Enforced by packages/core/tests/coordinate-profile.test.ts.",
+      "additionalProperties": false,
+      "required": ["imageOrigin", "gridRow0", "rosYamlOrigin"],
+      "properties": {
+        "imageOrigin": { "const": "top-left" },
+        "gridRow0": { "const": "min-Y" },
+        "rowFlip": { "const": "cell.row = heightCells - 1 - pixel.rowFromTop" },
+        "rosYamlOrigin": { "const": "lower-left" },
+        "dataIndex": { "const": "row * width + column" },
+        "originYaw": { "type": "number" },
+        "negate": { "type": "integer", "enum": [0, 1] },
+        "occupiedThresh": { "type": "number" },
+        "freeThresh": { "type": "number" },
+        "anchor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["anchorPixel", "metersPerPixel", "levelPose"],
+          "properties": {
+            "anchorPixel": {
+              "type": "array",
+              "items": { "type": "integer", "minimum": 0 },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "[column, rowFromTop] with pixel (0,0) at the top-left of the image."
+            },
+            "metersPerPixel": { "type": "number", "exclusiveMinimum": 0 },
+            "levelPose": { "$ref": "#/$defs/pose" },
+            "yaw": { "type": "number" }
+          }
+        }
+      }
+    },
+
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceFrame", "targetFrame", "translation", "rotation", "scale"],
+      "properties": {
+        "sourceFrame": { "$ref": "#/$defs/frameId" },
+        "targetFrame": { "$ref": "#/$defs/frameId" },
+        "translation": { "$ref": "#/$defs/vec3" },
+        "rotation": { "$ref": "#/$defs/quat" },
+        "scale": { "$ref": "#/$defs/vec3" }
+      }
+    },
+
+    "nodeBase": {
+      "type": "object",
+      "required": ["id", "transform"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "parentId": { "$ref": "#/$defs/entityId" },
+        "name": { "type": "string" },
+        "transform": { "$ref": "#/$defs/transform" },
+        "visible": { "type": "boolean" }
+      }
+    },
+
+    "siteNode": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "properties": { "kind": { "const": "site" } },
+      "required": ["kind"]
+    },
+    "buildingNode": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "properties": { "kind": { "const": "building" } },
+      "required": ["kind"]
+    },
+    "levelNode": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "properties": {
+        "kind": { "const": "level" },
+        "elevationMeters": { "type": "number" }
+      },
+      "required": ["kind", "elevationMeters"]
+    },
+
+    "vertex": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Per-level shared vertex referenced by floors, walls, areas, and the route graph (decision §10.2).",
+      "required": ["id", "levelId", "position"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "levelId": { "$ref": "#/$defs/entityId" },
+        "position": { "$ref": "#/$defs/vec3" }
+      }
+    },
+
+    "floorPolygon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "levelId", "vertexIds"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "levelId": { "$ref": "#/$defs/entityId" },
+        "vertexIds": { "type": "array", "items": { "$ref": "#/$defs/entityId" }, "minItems": 3 },
+        "materials": { "$ref": "#/$defs/materialSlots" }
+      }
+    },
+
+    "wallPolyline": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One polyline wall identity that derives its mesh; never repeated boxes (ADR Native Builder).",
+      "required": ["id", "levelId", "vertexIds", "thicknessMeters", "heightMeters"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "levelId": { "$ref": "#/$defs/entityId" },
+        "vertexIds": { "type": "array", "items": { "$ref": "#/$defs/entityId" }, "minItems": 2 },
+        "thicknessMeters": { "type": "number", "exclusiveMinimum": 0 },
+        "heightMeters": { "type": "number", "exclusiveMinimum": 0 },
+        "closed": { "type": "boolean" }
+      }
+    },
+
+    "opening": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Parametric door/opening attached to a wall segment.",
+      "required": ["id", "wallId", "kind", "distanceMeters", "widthMeters"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "wallId": { "$ref": "#/$defs/entityId" },
+        "kind": { "enum": ["door", "opening"] },
+        "distanceMeters": { "type": "number", "minimum": 0 },
+        "widthMeters": { "type": "number", "exclusiveMinimum": 0 },
+        "heightMeters": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+
+    "levelTransition": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Vertical connection (lift/stair) between two levels.",
+      "required": ["id", "kind", "fromLevelId", "toLevelId"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "kind": { "enum": ["lift", "stair", "ramp"] },
+        "fromLevelId": { "$ref": "#/$defs/entityId" },
+        "toLevelId": { "$ref": "#/$defs/entityId" },
+        "pose": { "$ref": "#/$defs/pose" }
+      }
+    },
+
+    "materialSlots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default"],
+      "properties": {
+        "default": { "$ref": "#/$defs/pbrMaterial" },
+        "top": { "$ref": "#/$defs/pbrMaterial" },
+        "side": { "$ref": "#/$defs/pbrMaterial" }
+      }
+    },
+    "pbrMaterial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseColorFactor", "metallicFactor", "roughnessFactor"],
+      "properties": {
+        "baseColorFactor": { "$ref": "#/$defs/rgba" },
+        "metallicFactor": { "type": "number" },
+        "roughnessFactor": { "type": "number" },
+        "doubleSided": { "type": "boolean" }
+      }
+    },
+
+    "primitiveNode": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "required": ["kind", "role", "geometry", "materials"],
+      "properties": {
+        "kind": { "const": "primitive" },
+        "role": { "enum": ["floor", "wall", "object"] },
+        "geometry": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "sizeMeters"],
+              "properties": {
+                "kind": { "const": "box" },
+                "sizeMeters": { "$ref": "#/$defs/vec3" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "radiusMeters", "heightMeters"],
+              "properties": {
+                "kind": { "const": "cylinder" },
+                "radiusMeters": { "type": "number", "exclusiveMinimum": 0 },
+                "heightMeters": { "type": "number", "exclusiveMinimum": 0 },
+                "radialSegments": { "type": "integer", "minimum": 3 }
+              }
+            }
+          ]
+        },
+        "materials": { "$ref": "#/$defs/materialSlots" },
+        "selectable": { "type": "boolean" }
+      }
+    },
+
+    "assetNode": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "required": ["kind", "assetId"],
+      "properties": {
+        "kind": { "const": "asset" },
+        "assetId": { "$ref": "#/$defs/assetId" },
+        "bounds": { "$ref": "#/$defs/bounds3" },
+        "selectable": { "type": "boolean" }
+      }
+    },
+
+    "structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sites": { "type": "array", "items": { "$ref": "#/$defs/siteNode" } },
+        "buildings": { "type": "array", "items": { "$ref": "#/$defs/buildingNode" } },
+        "levels": { "type": "array", "items": { "$ref": "#/$defs/levelNode" } },
+        "vertices": { "type": "array", "items": { "$ref": "#/$defs/vertex" } },
+        "floors": { "type": "array", "items": { "$ref": "#/$defs/floorPolygon" } },
+        "walls": { "type": "array", "items": { "$ref": "#/$defs/wallPolyline" } },
+        "openings": { "type": "array", "items": { "$ref": "#/$defs/opening" } },
+        "transitions": { "type": "array", "items": { "$ref": "#/$defs/levelTransition" } },
+        "primitives": { "type": "array", "items": { "$ref": "#/$defs/primitiveNode" } },
+        "assets": { "type": "array", "items": { "$ref": "#/$defs/assetNode" } }
+      }
+    },
+
+    "waypointEdgeGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Directed/undirected route graph over shared vertices (decision §10.2).",
+      "required": ["waypoints", "edges"],
+      "properties": {
+        "waypoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "levelId", "vertexId"],
+            "properties": {
+              "id": { "$ref": "#/$defs/entityId" },
+              "levelId": { "$ref": "#/$defs/entityId" },
+              "vertexId": { "$ref": "#/$defs/entityId" },
+              "orientation": { "$ref": "#/$defs/quat" }
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "fromWaypointId", "toWaypointId", "direction"],
+            "properties": {
+              "id": { "$ref": "#/$defs/entityId" },
+              "fromWaypointId": { "$ref": "#/$defs/entityId" },
+              "toWaypointId": { "$ref": "#/$defs/entityId" },
+              "direction": { "enum": ["forward", "reverse", "bidirectional"] },
+              "widthMeters": { "type": "number", "exclusiveMinimum": 0 },
+              "constraints": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "levelId", "vertexIds", "category"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "levelId": { "$ref": "#/$defs/entityId" },
+        "vertexIds": { "type": "array", "items": { "$ref": "#/$defs/entityId" }, "minItems": 3 },
+        "category": { "enum": ["generic", "keepout", "slow", "work"] }
+      }
+    },
+
+    "goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "levelId", "pose"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "levelId": { "$ref": "#/$defs/entityId" },
+        "pose": { "$ref": "#/$defs/pose" },
+        "radiusMeters": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+
+    "charger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "levelId", "pose"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "levelId": { "$ref": "#/$defs/entityId" },
+        "pose": { "$ref": "#/$defs/pose" },
+        "assetId": { "$ref": "#/$defs/assetId" }
+      }
+    },
+    "dock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "levelId", "pose"],
+      "properties": {
+        "id": { "$ref": "#/$defs/entityId" },
+        "levelId": { "$ref": "#/$defs/entityId" },
+        "pose": { "$ref": "#/$defs/pose" },
+        "assetId": { "$ref": "#/$defs/assetId" }
+      }
+    },
+
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "routeGraph": { "$ref": "#/$defs/waypointEdgeGraph" },
+        "areas": { "type": "array", "items": { "$ref": "#/$defs/area" } },
+        "goals": { "type": "array", "items": { "$ref": "#/$defs/goal" } },
+        "chargers": { "type": "array", "items": { "$ref": "#/$defs/charger" } },
+        "docks": { "type": "array", "items": { "$ref": "#/$defs/dock" } }
+      }
+    },
+
+    "externalBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entities"],
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tool", "version", "documentId", "hash"],
+          "properties": {
+            "tool": { "type": "string" },
+            "version": { "type": "string" },
+            "documentId": { "type": "string" },
+            "hash": { "type": "string" }
+          }
+        },
+        "normalizedBaseRef": { "type": "string" },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["entityId", "kind"],
+            "properties": {
+              "entityId": { "$ref": "#/$defs/entityId" },
+              "kind": { "enum": ["durable", "weak"] },
+              "durableId": { "type": "string" },
+              "path": { "type": "string" },
+              "fingerprint": { "type": "string" },
+              "fieldOwnership": {
+                "type": "object",
+                "additionalProperties": { "enum": ["source", "web"] }
+              },
+              "tombstone": { "type": "boolean" }
+            },
+            "allOf": [
+              {
+                "if": { "properties": { "kind": { "const": "durable" } } },
+                "then": { "required": ["durableId"] }
+              },
+              {
+                "if": { "properties": { "kind": { "const": "weak" } } },
+                "then": { "required": ["path"] }
+              }
+            ]
+          }
+        }
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Derived artifacts are non-authoritative cache; reproducible only with source/toolchain/profile.",
+      "properties": {
+        "derived": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["artifact", "sourceHash", "generator", "generatorVersion"],
+            "properties": {
+              "artifact": { "type": "string" },
+              "sourceHash": { "type": "string" },
+              "generator": { "type": "string" },
+              "generatorVersion": { "type": "string" },
+              "exportProfile": { "type": "string" },
+              "params": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    }
+  }
+}
