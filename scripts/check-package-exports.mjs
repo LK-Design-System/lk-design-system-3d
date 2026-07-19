@@ -16,7 +16,17 @@ const expectedExports = {
     "./theme",
     "./package.json",
   ],
-  assets: [".", "./schema", "./legacy", "./asset-manifest.v1.schema.json", "./package.json"],
+  assets: [
+    ".",
+    "./schema",
+    "./legacy",
+    "./asset-manifest.v1.schema.json",
+    "./robots/catalog.json",
+    "./robots/tron/tron.glb",
+    "./robots/tron/tron.asset-manifest.json",
+    "./robots/tron/provenance.json",
+    "./package.json",
+  ],
   testing: [".", "./fixtures", "./contracts", "./provenance", "./package.json"],
   pointcloud: [".", "./package.json"],
   tf: [".", "./package.json"],
@@ -24,6 +34,10 @@ const expectedExports = {
   three: [".", "./coordinates", "./r3f-bridge", "./package.json"],
   r3f: [".", "./coordinates", "./themes", "./state", "./models", "./scene", "./package.json"],
 };
+
+// Static asset exports ship verbatim (no dist build, no types); .glb is a binary
+// runtime asset consumed by URL (e.g. Vite `?url`), not a code entrypoint.
+const staticAssetExtensions = [".json", ".glb"];
 
 const requiredRendererPeers = ["@react-three/fiber", "react", "three"];
 const requiredThreePeers = ["three"];
@@ -66,13 +80,15 @@ for (const [packageName, requiredExports] of Object.entries(expectedExports)) {
     if (serialized.includes("/src/") || serialized.includes('"./src')) {
       errors.push(`${manifest.name} ${subpath}: exports must not expose source paths`);
     }
-    const isStaticJsonExport =
-      typeof target === "string" && target.startsWith("./") && target.endsWith(".json");
-    if (!isStaticJsonExport && !serialized.includes("dist/")) {
+    const isStaticAssetExport =
+      typeof target === "string" &&
+      target.startsWith("./") &&
+      staticAssetExtensions.some((extension) => target.endsWith(extension));
+    if (!isStaticAssetExport && !serialized.includes("dist/")) {
       errors.push(`${manifest.name} ${subpath}: exports must resolve through dist`);
     }
     if (
-      !isStaticJsonExport &&
+      !isStaticAssetExport &&
       (typeof target !== "object" || target === null || !("import" in target))
     ) {
       errors.push(`${manifest.name} ${subpath}: code exports must define an import condition`);

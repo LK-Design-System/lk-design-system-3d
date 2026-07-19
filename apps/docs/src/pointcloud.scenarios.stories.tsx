@@ -538,12 +538,7 @@ export function SpatialEditingExperience(): ReactNode {
 
   const placeDeleteVolume = useCallback(
     (pointInCore: Vec3): void => {
-      if (
-        !isPlacementTool ||
-        draftVolume !== null ||
-        appliedVolume !== null ||
-        (deleteTool !== "sphere" && deleteTool !== "box")
-      ) {
+      if (!isPlacementTool || draftVolume !== null || appliedVolume !== null) {
         return;
       }
       const [rawX, rawY] = pointInCore;

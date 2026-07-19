@@ -6,6 +6,9 @@ import process from "node:process";
 
 const root = process.cwd();
 const ignoredEsmOnlyResolutions = ["node10", "node16-cjs"];
+// Binary asset exports (e.g. .glb) are URL-consumed static files, not code
+// entrypoints, so they carry no types for ATTW to resolve.
+const excludedAssetEntrypoints = [/\.glb$/u];
 
 async function addPath(files, packageName, packageDirectory, relativePath) {
   const absolutePath = path.join(packageDirectory, relativePath);
@@ -41,7 +44,7 @@ async function createPublishedPackage(packageDirectory) {
 for (const name of ["core", "assets", "testing", "pointcloud", "tf", "markers", "three", "r3f"]) {
   const packageDirectory = path.join(root, "packages", name);
   const pkg = await createPublishedPackage(packageDirectory);
-  const analysis = await checkPackage(pkg);
+  const analysis = await checkPackage(pkg, { excludeEntrypoints: excludedAssetEntrypoints });
   const exitCode = getExitCode(analysis, {
     ignoreResolutions: ignoredEsmOnlyResolutions,
   });
