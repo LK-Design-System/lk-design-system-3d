@@ -335,10 +335,11 @@ async function inspectResponsiveLayout(client, width, expectedLayout) {
   );
   return client.evaluate(`(() => {
     const root = document.querySelector("[data-lds3d-composition]");
-    const workspace = root?.querySelector(".lk-canvas-editor-shell");
+    const workspace = root?.querySelector("[data-visual-workspace]");
     const frame = root?.querySelector("[data-lds-viewer-frame]");
     const canvas = root?.querySelector("canvas");
     const inspector = root?.querySelector('[aria-label="선택 객체 세부 정보"]');
+    const dock = root?.querySelector("[data-visual-inspector-dock]");
     const toolbar = root?.querySelector('[role="toolbar"][aria-label="카메라와 뷰포트 제어"]');
     const hud = root?.querySelector("[data-viewer-hud]");
     const legend = root?.querySelector(".visual-scene-legend");
@@ -377,6 +378,7 @@ async function inspectResponsiveLayout(client, width, expectedLayout) {
     const statusRect = rect(status);
     const workspaceStyle = workspace instanceof Element ? getComputedStyle(workspace) : null;
     const frameStyle = frame instanceof Element ? getComputedStyle(frame) : null;
+    const dockStyle = dock instanceof Element ? getComputedStyle(dock) : null;
     const selectionLabel = [...(hud?.querySelectorAll("span") ?? [])].find(
       (candidate) => candidate.textContent?.trim() === "선택",
     );
@@ -420,28 +422,26 @@ async function inspectResponsiveLayout(client, width, expectedLayout) {
           inspectorRect.top <= frameRect.top + 1 &&
           inspectorRect.bottom >= frameRect.bottom - 1),
       frameInsideWorkspace: insideWorkspace(frameRect),
-      shellOwnsExteriorPerimeter:
-        ${JSON.stringify(expectedLayout)} !== "wide" ||
-        (workspaceStyle !== null &&
-          Number.parseFloat(workspaceStyle.borderTopWidth) >= 1 &&
-          Number.parseFloat(workspaceStyle.borderRightWidth) >= 1 &&
-          Number.parseFloat(workspaceStyle.borderBottomWidth) >= 1 &&
-          Number.parseFloat(workspaceStyle.borderLeftWidth) >= 1),
-      frameVariant: frame instanceof Element ? frame.getAttribute("data-viewer-variant") : null,
-      frameUsesEmbeddedPerimeter:
+      workspaceOwnsOverlayContext:
         ${JSON.stringify(expectedLayout)} === "wide"
-          ? (frameStyle !== null &&
-              frame?.getAttribute("data-viewer-variant") === "embedded" &&
-              Number.parseFloat(frameStyle.borderTopWidth) === 0 &&
-              Number.parseFloat(frameStyle.borderRightWidth) === 0 &&
-              Number.parseFloat(frameStyle.borderBottomWidth) === 0 &&
-              Number.parseFloat(frameStyle.borderLeftWidth) === 0 &&
-              Number.parseFloat(frameStyle.borderTopLeftRadius) === 0 &&
-              Number.parseFloat(frameStyle.borderTopRightRadius) === 0 &&
-              Number.parseFloat(frameStyle.borderBottomRightRadius) === 0 &&
-              Number.parseFloat(frameStyle.borderBottomLeftRadius) === 0)
+          ? (workspaceStyle !== null &&
+              dockStyle !== null &&
+              workspaceStyle.position === "relative" &&
+              dockStyle.position === "absolute")
           : null,
-      frameSharesShellPerimeter:
+      frameVariant: frame instanceof Element ? frame.getAttribute("data-viewer-variant") : null,
+      frameHasStandalonePerimeter:
+        frameStyle !== null &&
+        frame?.getAttribute("data-viewer-variant") === "standalone" &&
+        Number.parseFloat(frameStyle.borderTopWidth) >= 1 &&
+        Number.parseFloat(frameStyle.borderRightWidth) >= 1 &&
+        Number.parseFloat(frameStyle.borderBottomWidth) >= 1 &&
+        Number.parseFloat(frameStyle.borderLeftWidth) >= 1 &&
+        Number.parseFloat(frameStyle.borderTopLeftRadius) > 0 &&
+        Number.parseFloat(frameStyle.borderTopRightRadius) > 0 &&
+        Number.parseFloat(frameStyle.borderBottomRightRadius) > 0 &&
+        Number.parseFloat(frameStyle.borderBottomLeftRadius) > 0,
+      frameSharesWorkspaceBounds:
         ${JSON.stringify(expectedLayout)} === "wide"
           ? (workspaceRect !== null &&
               frameRect !== null &&
@@ -450,22 +450,14 @@ async function inspectResponsiveLayout(client, width, expectedLayout) {
               frameRect.right >= workspaceRect.right - 1 &&
               frameRect.bottom >= workspaceRect.bottom - 1)
           : null,
-      frameHasStandalonePerimeter:
-        ${JSON.stringify(expectedLayout)} === "narrow"
-          ? (frameStyle !== null &&
-              frame?.getAttribute("data-viewer-variant") === "standalone" &&
-              Number.parseFloat(frameStyle.borderTopWidth) >= 1 &&
-              Number.parseFloat(frameStyle.borderRightWidth) >= 1 &&
-              Number.parseFloat(frameStyle.borderBottomWidth) >= 1 &&
-              Number.parseFloat(frameStyle.borderLeftWidth) >= 1 &&
-              Number.parseFloat(frameStyle.borderTopLeftRadius) > 0 &&
-              Number.parseFloat(frameStyle.borderTopRightRadius) > 0 &&
-              Number.parseFloat(frameStyle.borderBottomRightRadius) > 0 &&
-              Number.parseFloat(frameStyle.borderBottomLeftRadius) > 0)
+      panelAlignsWorkspaceEdge:
+        ${JSON.stringify(expectedLayout)} === "wide"
+          ? (workspaceRect !== null &&
+              inspectorRect !== null &&
+              Math.abs(inspectorRect.right - workspaceRect.right) <= 1 &&
+              inspectorRect.top <= workspaceRect.top + 1 &&
+              inspectorRect.bottom >= workspaceRect.bottom - 1)
           : null,
-      panelUsesShellPerimeter:
-        ${JSON.stringify(expectedLayout)} !== "wide" ||
-        (workspaceRect !== null && inspectorRect !== null && inspectorRect.right <= workspaceRect.right - 1),
       canvasInsideFrame: insideFrame(canvasRect),
       canvasPreservesViewport:
         ${JSON.stringify(expectedLayout)} !== "wide" ||
@@ -513,8 +505,20 @@ async function verifyResponsiveComposition(client) {
     `document.querySelector('button[aria-expanded][aria-label^="선택 객체 세부 정보"]')?.getAttribute("aria-expanded") === "false"`,
     "wide DockPanel collapsed",
   );
+  await waitFor(
+    client,
+    `(() => {
+      const workspace = document.querySelector("[data-visual-workspace]");
+      const handle = document.querySelector(
+        'button[aria-expanded][aria-label^="선택 객체 세부 정보"]',
+      );
+      if (!(workspace instanceof Element) || !(handle instanceof Element)) return false;
+      return Math.abs(handle.getBoundingClientRect().right - workspace.getBoundingClientRect().right) <= 1;
+    })()`,
+    "wide DockPanel collapse transition",
+  );
   const collapsedDock = await client.evaluate(`(() => {
-    const workspace = document.querySelector(".lk-canvas-editor-shell");
+    const workspace = document.querySelector("[data-visual-workspace]");
     const frame = document.querySelector("[data-lds-viewer-frame]");
     const handle = document.querySelector(
       'button[aria-expanded][aria-label^="선택 객체 세부 정보"]',
@@ -524,13 +528,30 @@ async function verifyResponsiveComposition(client) {
     const frameRect = frame.getBoundingClientRect();
     const handleRect = handle.getBoundingClientRect();
     return {
+      workspaceRect: {
+        left: workspaceRect.left,
+        right: workspaceRect.right,
+        top: workspaceRect.top,
+        bottom: workspaceRect.bottom,
+      },
+      frameRect: {
+        left: frameRect.left,
+        right: frameRect.right,
+        top: frameRect.top,
+        bottom: frameRect.bottom,
+      },
+      handleRect: {
+        left: handleRect.left,
+        right: handleRect.right,
+        top: handleRect.top,
+        bottom: handleRect.bottom,
+      },
       handleInsideWorkspace:
         handleRect.left >= workspaceRect.left - 1 &&
         handleRect.right <= workspaceRect.right + 1 &&
         handleRect.top >= workspaceRect.top - 1 &&
         handleRect.bottom <= workspaceRect.bottom + 1,
-      handleAtFramePanelBoundary:
-        handleRect.left <= frameRect.right + 1 && handleRect.right >= frameRect.right - 25,
+      handleAtWorkspaceDockEdge: Math.abs(handleRect.right - workspaceRect.right) <= 1,
     };
   })()`);
   const dockToggleReopened = await client.evaluate(`(() => {
@@ -630,6 +651,12 @@ async function verifyHoverAndSelection(client) {
     return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
   })()`);
   if (canvasRect === null) throw new Error("WebGL canvas bounds were not found.");
+  const labelContractPresent = await client.evaluate(
+    `document.querySelector("[data-visual-world-label-title]") !== null`,
+  );
+  if (!labelContractPresent) {
+    throw new Error("Visual world labels are missing their stable QA title contract.");
+  }
   await client.evaluate(`(() => {
     const canvas = document.querySelector("canvas");
     if (!(canvas instanceof HTMLCanvasElement)) return false;
@@ -684,8 +711,8 @@ async function verifyHoverAndSelection(client) {
   for (const [x, y] of candidates) {
     await movePointer(client, x, y);
     const probe = await client.evaluate(`(() => {
-      const labels = [...document.querySelectorAll(".visual-world-label strong")]
-        .map((candidate) => candidate.textContent?.trim())
+      const labels = [...document.querySelectorAll("[data-visual-world-label-title]")]
+        .map((candidate) => candidate.getAttribute("data-visual-world-label-title")?.trim())
         .filter(Boolean);
       const target = document.elementFromPoint(${x.toString()}, ${y.toString()});
       return {
@@ -931,7 +958,8 @@ async function main() {
       const viewerFrame = document.querySelector("[data-lds-viewer-frame]");
       const inspector = document.querySelector('[aria-label="선택 객체 세부 정보"]');
       const sceneLegend = document.querySelector(".visual-scene-legend");
-      const workspace = document.querySelector(".lk-canvas-editor-shell");
+      const workspace = document.querySelector("[data-visual-workspace]");
+      const inspectorDock = document.querySelector("[data-visual-inspector-dock]");
       const viewerRect = viewerFrame?.getBoundingClientRect();
       const canvasRect = canvas?.getBoundingClientRect();
       const inspectorRect = inspector?.getBoundingClientRect();
@@ -939,6 +967,7 @@ async function main() {
       const workspaceRect = workspace?.getBoundingClientRect();
       const viewerStyle = viewerFrame instanceof Element ? getComputedStyle(viewerFrame) : null;
       const workspaceStyle = workspace instanceof Element ? getComputedStyle(workspace) : null;
+      const inspectorDockStyle = inspectorDock instanceof Element ? getComputedStyle(inspectorDock) : null;
       const rendererHost = canvas?.closest('[role="application"]');
       const compositionRoot = document.querySelector("[data-lds3d-composition]");
       const cameraToolbar = compositionRoot?.querySelector(
@@ -968,39 +997,40 @@ async function main() {
         inspectorRect.left < viewerRect.right - 1 &&
         inspectorRect.top <= viewerRect.top + 1 &&
         inspectorRect.bottom >= viewerRect.bottom - 1;
-      const panelUsesShellPerimeter =
+      const panelAlignsWorkspaceEdge =
         workspaceRect !== undefined &&
         inspectorRect !== undefined &&
-        inspectorRect.right <= workspaceRect.right - 1;
+        Math.abs(inspectorRect.right - workspaceRect.right) <= 1 &&
+        inspectorRect.top <= workspaceRect.top + 1 &&
+        inspectorRect.bottom >= workspaceRect.bottom - 1;
       const canvasPreservesViewport =
         canvasRect !== undefined &&
         viewerRect !== undefined &&
         Math.abs(canvasRect.width - viewerRect.width) <= 4;
-      const shellOwnsExteriorPerimeter =
+      const workspaceOwnsOverlayContext =
         workspaceStyle !== null &&
-        Number.parseFloat(workspaceStyle.borderTopWidth) >= 1 &&
-        Number.parseFloat(workspaceStyle.borderRightWidth) >= 1 &&
-        Number.parseFloat(workspaceStyle.borderBottomWidth) >= 1 &&
-        Number.parseFloat(workspaceStyle.borderLeftWidth) >= 1;
+        inspectorDockStyle !== null &&
+        workspaceStyle.position === "relative" &&
+        inspectorDockStyle.position === "absolute";
       const frameVariant = viewerFrame instanceof Element ? viewerFrame.getAttribute("data-viewer-variant") : null;
-      const frameUsesEmbeddedPerimeter =
+      const frameOwnsExteriorPerimeter =
         viewerStyle !== null &&
-        frameVariant === "embedded" &&
-        Number.parseFloat(viewerStyle.borderTopWidth) === 0 &&
-        Number.parseFloat(viewerStyle.borderRightWidth) === 0 &&
-        Number.parseFloat(viewerStyle.borderBottomWidth) === 0 &&
-        Number.parseFloat(viewerStyle.borderLeftWidth) === 0 &&
-        Number.parseFloat(viewerStyle.borderTopLeftRadius) === 0 &&
-        Number.parseFloat(viewerStyle.borderTopRightRadius) === 0 &&
-        Number.parseFloat(viewerStyle.borderBottomRightRadius) === 0 &&
-        Number.parseFloat(viewerStyle.borderBottomLeftRadius) === 0;
-      const frameSharesShellPerimeter =
+        frameVariant === "standalone" &&
+        Number.parseFloat(viewerStyle.borderTopWidth) >= 1 &&
+        Number.parseFloat(viewerStyle.borderRightWidth) >= 1 &&
+        Number.parseFloat(viewerStyle.borderBottomWidth) >= 1 &&
+        Number.parseFloat(viewerStyle.borderLeftWidth) >= 1 &&
+        Number.parseFloat(viewerStyle.borderTopLeftRadius) > 0 &&
+        Number.parseFloat(viewerStyle.borderTopRightRadius) > 0 &&
+        Number.parseFloat(viewerStyle.borderBottomRightRadius) > 0 &&
+        Number.parseFloat(viewerStyle.borderBottomLeftRadius) > 0;
+      const frameFillsWorkspace =
         workspaceRect !== undefined &&
         viewerRect !== undefined &&
-        viewerRect.left <= workspaceRect.left + 1 &&
-        viewerRect.top <= workspaceRect.top + 1 &&
-        viewerRect.right >= workspaceRect.right - 1 &&
-        viewerRect.bottom >= workspaceRect.bottom - 1;
+        Math.abs(viewerRect.left - workspaceRect.left) <= 1 &&
+        Math.abs(viewerRect.top - workspaceRect.top) <= 1 &&
+        Math.abs(viewerRect.right - workspaceRect.right) <= 1 &&
+        Math.abs(viewerRect.bottom - workspaceRect.bottom) <= 1;
       const framePanelOverlapArea =
         viewerRect === undefined || inspectorRect === undefined
           ? null
@@ -1031,7 +1061,9 @@ async function main() {
         ldsViewerFrameCount: document.querySelectorAll("[data-lds-viewer-frame]").length,
         ldsInspectorValueCount: document.querySelectorAll("[data-selection-inspector-value]").length,
         ldsStatusValueCount: document.querySelectorAll("[data-viewport-status-value]").length,
-        ldsCanvasEditorShellCount: document.querySelectorAll(".lk-canvas-editor-shell").length,
+        ldsViewerWorkspaceCount: document.querySelectorAll("[data-visual-workspace]").length,
+        ldsInspectorDockCount: document.querySelectorAll("[data-visual-inspector-dock]").length,
+        legacyCanvasEditorShellCount: document.querySelectorAll(".lk-canvas-editor-shell").length,
         cameraToolbar: cameraToolbar !== null && cameraToolbar !== undefined,
         toolbarHandleOverlapPixels:
           lastCameraRect === undefined || dockPanelToggleRect === undefined
@@ -1046,12 +1078,12 @@ async function main() {
         headingLevels,
         inspectorInsideWorkspace,
         inspectorOverlaysViewport,
-        panelUsesShellPerimeter,
+        panelAlignsWorkspaceEdge,
         canvasPreservesViewport,
-        shellOwnsExteriorPerimeter,
+        workspaceOwnsOverlayContext,
         frameVariant,
-        frameUsesEmbeddedPerimeter,
-        frameSharesShellPerimeter,
+        frameOwnsExteriorPerimeter,
+        frameFillsWorkspace,
         framePanelOverlapArea,
         legendPanelOverlapArea,
         viewportDominates:
@@ -1138,7 +1170,9 @@ async function main() {
         operational.ldsViewerFrameCount === 1 &&
         operational.ldsInspectorValueCount >= 2 &&
         operational.ldsStatusValueCount >= 3 &&
-        operational.ldsCanvasEditorShellCount === 1 &&
+        operational.ldsViewerWorkspaceCount === 1 &&
+        operational.ldsInspectorDockCount === 1 &&
+        operational.legacyCanvasEditorShellCount === 0 &&
         operational.cameraToolbar === true &&
         operational.ldsPrimaryToken.length > 0,
       ldsPageComposition:
@@ -1149,12 +1183,12 @@ async function main() {
         operational.viewportDominates === true &&
         operational.inspectorInsideWorkspace === true &&
         operational.inspectorOverlaysViewport === true &&
-        operational.panelUsesShellPerimeter === true &&
+        operational.panelAlignsWorkspaceEdge === true &&
         operational.canvasPreservesViewport === true &&
-        operational.shellOwnsExteriorPerimeter === true &&
-        operational.frameVariant === "embedded" &&
-        operational.frameUsesEmbeddedPerimeter === true &&
-        operational.frameSharesShellPerimeter === true &&
+        operational.workspaceOwnsOverlayContext === true &&
+        operational.frameVariant === "standalone" &&
+        operational.frameOwnsExteriorPerimeter === true &&
+        operational.frameFillsWorkspace === true &&
         operational.framePanelOverlapArea > 0 &&
         operational.legendPanelOverlapArea === 0 &&
         operational.wideLayout === true &&
@@ -1166,11 +1200,11 @@ async function main() {
         responsive.wide992.inspectorInsideWorkspace === true &&
         responsive.wide992.inspectorOverlaysFrame === true &&
         responsive.wide992.frameInsideWorkspace === true &&
-        responsive.wide992.shellOwnsExteriorPerimeter === true &&
-        responsive.wide992.frameVariant === "embedded" &&
-        responsive.wide992.frameUsesEmbeddedPerimeter === true &&
-        responsive.wide992.frameSharesShellPerimeter === true &&
-        responsive.wide992.panelUsesShellPerimeter === true &&
+        responsive.wide992.workspaceOwnsOverlayContext === true &&
+        responsive.wide992.frameVariant === "standalone" &&
+        responsive.wide992.frameHasStandalonePerimeter === true &&
+        responsive.wide992.frameSharesWorkspaceBounds === true &&
+        responsive.wide992.panelAlignsWorkspaceEdge === true &&
         responsive.wide992.canvasInsideFrame === true &&
         responsive.wide992.canvasPreservesViewport === true &&
         responsive.wide992.panelOverlaysCanvas === true &&
@@ -1182,14 +1216,14 @@ async function main() {
         responsive.wide992.framePanelOverlapArea > 0 &&
         responsive.wide992.legendPanelOverlapArea === 0 &&
         responsive.collapsedDock?.handleInsideWorkspace === true &&
-        responsive.collapsedDock?.handleAtFramePanelBoundary === true &&
+        responsive.collapsedDock?.handleAtWorkspaceDockEdge === true &&
         responsive.wide992Resized.inspectorInsideWorkspace === true &&
         responsive.wide992Resized.inspectorOverlaysFrame === true &&
-        responsive.wide992Resized.shellOwnsExteriorPerimeter === true &&
-        responsive.wide992Resized.frameVariant === "embedded" &&
-        responsive.wide992Resized.frameUsesEmbeddedPerimeter === true &&
-        responsive.wide992Resized.frameSharesShellPerimeter === true &&
-        responsive.wide992Resized.panelUsesShellPerimeter === true &&
+        responsive.wide992Resized.workspaceOwnsOverlayContext === true &&
+        responsive.wide992Resized.frameVariant === "standalone" &&
+        responsive.wide992Resized.frameHasStandalonePerimeter === true &&
+        responsive.wide992Resized.frameSharesWorkspaceBounds === true &&
+        responsive.wide992Resized.panelAlignsWorkspaceEdge === true &&
         responsive.wide992Resized.canvasInsideFrame === true &&
         responsive.wide992Resized.canvasPreservesViewport === true &&
         responsive.wide992Resized.panelOverlaysCanvas === true &&

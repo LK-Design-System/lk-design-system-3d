@@ -274,6 +274,7 @@ function WorldLabel({
         align="center"
         aria-hidden="true"
         as="span"
+        data-visual-world-label-title={title}
         direction="row"
         gap="var(--space-1)"
         style={{ minWidth: "max-content", transform: "translateY(-50%)", whiteSpace: "nowrap" }}

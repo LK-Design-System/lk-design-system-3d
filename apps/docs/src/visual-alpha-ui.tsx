@@ -415,11 +415,11 @@ export function LdsFocusedViewerPage({
           {isNarrow ? (
             sceneFrame
           ) : (
-            <div className="lds3d-focused-viewer-workspace">
+            <div className="lds3d-focused-viewer-workspace" data-visual-workspace="">
               {sceneFrame}
-              <div className="lds3d-focused-viewer-dock">
+              <div className="lds3d-focused-viewer-dock" data-visual-inspector-dock="">
                 <DockPanel
-                  aria-label="선택한 공간 객체 세부 정보"
+                  aria-label="선택 객체 세부 정보"
                   bodyPadding={0}
                   bodyStyle={{ overflow: "hidden" }}
                   maxWidth={420}
