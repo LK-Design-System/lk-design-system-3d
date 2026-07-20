@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import {
   Button,
   ConfirmDialog,
@@ -146,6 +147,11 @@ interface MapTreeNode {
   readonly label: ReactNode;
   readonly icon?: ReactNode;
   readonly children?: MapTreeNode[];
+}
+
+interface TreeFocusRequest {
+  readonly id: string;
+  readonly sequence: number;
 }
 
 interface GoalDraftState {
@@ -417,53 +423,36 @@ function structureNodeIcon(node: SpatialStructureNode): ReactNode {
   return <Icon name="component" size={16} aria-hidden="true" />;
 }
 
-function selectedTreeLabel(label: string, selected: boolean): string {
-  return selected ? `${label} · 선택됨` : label;
-}
-
 function levelChildren(
   document: MapEditorDocument,
   levelId: EntityId,
-  selectedId: EntityId | null,
 ): MapTreeNode[] {
   return [
     ...document.routes
       .filter((route) => route.levelId === levelId)
       .map((route) => ({
         id: route.id,
-        label: selectedTreeLabel(
-          document.labels[route.id] ?? route.id,
-          selectedId === route.id,
-        ),
+        label: document.labels[route.id] ?? route.id,
         icon: <Icon name="route" size={16} aria-hidden="true" />,
       })),
     ...document.areas
       .filter((area) => area.levelId === levelId)
       .map((area) => ({
         id: area.id,
-        label: selectedTreeLabel(
-          document.labels[area.id] ?? area.id,
-          selectedId === area.id,
-        ),
+        label: document.labels[area.id] ?? area.id,
         icon: <Icon name="zone" size={16} aria-hidden="true" />,
       })),
     ...document.goals
       .filter((goal) => goal.levelId === levelId)
       .map((goal) => ({
         id: goal.id,
-        label: selectedTreeLabel(
-          document.labels[goal.id] ?? goal.id,
-          selectedId === goal.id,
-        ),
+        label: document.labels[goal.id] ?? goal.id,
         icon: <Icon name="waypoint" size={16} aria-hidden="true" />,
       })),
   ];
 }
 
-function mapTree(
-  document: MapEditorDocument,
-  selectedId: EntityId | null,
-): MapTreeNode[] {
+function mapTree(document: MapEditorDocument): MapTreeNode[] {
   const childrenByParent = new Map<EntityId, SpatialStructureNode[]>();
   const roots: SpatialStructureNode[] = [];
   document.structure.nodes.forEach((node) => {
@@ -478,22 +467,174 @@ function mapTree(
   const toTreeNode = (node: SpatialStructureNode): MapTreeNode => {
     const structuralChildren = childrenByParent.get(node.id) ?? [];
     const authoredChildren =
-      node.kind === "level" ? levelChildren(document, node.id, selectedId) : [];
+      node.kind === "level" ? levelChildren(document, node.id) : [];
     const children = [
       ...structuralChildren.map(toTreeNode),
       ...authoredChildren,
     ];
     return {
       id: node.id,
-      label: selectedTreeLabel(
-        document.labels[node.id] ?? node.id,
-        selectedId === node.id,
-      ),
+      label: document.labels[node.id] ?? node.id,
       icon: structureNodeIcon(node),
       ...(children.length === 0 ? {} : { children }),
     };
   };
   return roots.map(toTreeNode);
+}
+
+function treePath(
+  nodes: readonly MapTreeNode[],
+  targetId: string,
+  ancestors: readonly string[] = [],
+): readonly string[] | null {
+  for (const node of nodes) {
+    const path = [...ancestors, node.id];
+    if (node.id === targetId) return path;
+    const childPath = treePath(node.children ?? [], targetId, path);
+    if (childPath !== null) return childPath;
+  }
+  return null;
+}
+
+function treeNodesWithStableLabels(
+  nodes: readonly MapTreeNode[],
+): MapTreeNode[] {
+  return nodes.map((node) => ({
+    ...node,
+    label: <span data-map-tree-id={node.id}>{node.label}</span>,
+    ...(node.children === undefined
+      ? {}
+      : { children: treeNodesWithStableLabels(node.children) }),
+  }));
+}
+
+function rowId(row: HTMLElement): string | null {
+  return row.querySelector<HTMLElement>("[data-map-tree-id]")?.dataset
+    .mapTreeId ?? null;
+}
+
+function findTreeRow(root: HTMLElement, id: string): HTMLElement | null {
+  return (
+    Array.from(
+      root.querySelectorAll<HTMLElement>('[role="treeitem"]'),
+    ).find((row) => rowId(row) === id) ?? null
+  );
+}
+
+interface RuntimeCompatibleTreeProps {
+  readonly ariaLabel: string;
+  readonly defaultExpanded: readonly string[];
+  readonly focusRequest?: TreeFocusRequest | null;
+  readonly nodes: readonly MapTreeNode[];
+  readonly onSelect: (id: string) => void;
+  readonly selectedId: string | null;
+}
+
+/**
+ * Selection compatibility for the currently pinned LDS Product RC.
+ *
+ * The RC Tree does not expose controlled selection, expansion, or an imperative
+ * handle. Keep those unsupported props off the component and adapt only its
+ * documented tree semantics. Stable label markers let this continue to work
+ * when a newer Tree changes its private row data attributes.
+ */
+function RuntimeCompatibleTree({
+  ariaLabel,
+  defaultExpanded,
+  focusRequest = null,
+  nodes,
+  onSelect,
+  selectedId,
+}: RuntimeCompatibleTreeProps): ReactNode {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const markedNodes = useMemo(() => treeNodesWithStableLabels(nodes), [nodes]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (root === null) return;
+    const applySelection = (): void => {
+      root.querySelectorAll<HTMLElement>('[role="treeitem"]').forEach((row) => {
+        const nextValue = rowId(row) === selectedId ? "true" : "false";
+        if (row.getAttribute("aria-selected") !== nextValue) {
+          row.setAttribute("aria-selected", nextValue);
+        }
+      });
+    };
+    applySelection();
+    const observer = new MutationObserver(applySelection);
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [markedNodes, selectedId]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (root === null || focusRequest === null) return;
+    const path = treePath(nodes, focusRequest.id);
+    if (path === null) return;
+
+    let frame = 0;
+    let cancelled = false;
+    const reveal = (index: number): void => {
+      if (cancelled) return;
+      if (index < path.length - 1) {
+        const ancestor = findTreeRow(root, path[index] ?? "");
+        if (ancestor === null) {
+          frame = window.requestAnimationFrame(() => reveal(index));
+          return;
+        }
+        if (ancestor.getAttribute("aria-expanded") === "false") {
+          ancestor.dispatchEvent(
+            new KeyboardEvent("keydown", {
+              bubbles: true,
+              cancelable: true,
+              key: "ArrowRight",
+            }),
+          );
+        }
+        frame = window.requestAnimationFrame(() => reveal(index + 1));
+        return;
+      }
+
+      const target = findTreeRow(root, focusRequest.id);
+      if (target === null) {
+        frame = window.requestAnimationFrame(() => reveal(index));
+        return;
+      }
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ block: "nearest" });
+    };
+    reveal(0);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [focusRequest, nodes]);
+
+  return (
+    <div ref={rootRef} className="map-tree-runtime-compat">
+      <style>{`
+        .map-tree-runtime-compat [role="treeitem"][aria-selected="false"] > div:first-child {
+          background: transparent !important;
+          border-color: transparent !important;
+        }
+        .map-tree-runtime-compat [role="treeitem"][aria-selected="false"]:hover > div:first-child {
+          background: var(--color-semantic-background-normal-alternative) !important;
+        }
+        .map-tree-runtime-compat [role="treeitem"][aria-selected="true"] > div:first-child {
+          background: var(--color-semantic-primary-surface-normal) !important;
+          border-color: var(--color-semantic-primary-normal) !important;
+        }
+      `}</style>
+      <Tree
+        ariaLabel={ariaLabel}
+        defaultExpanded={[...defaultExpanded]}
+        nodes={markedNodes}
+        onSelect={(node) => {
+          if (typeof node.id === "string") onSelect(node.id);
+        }}
+      />
+    </div>
+  );
 }
 
 function structureNodeLevelId(
@@ -670,6 +811,8 @@ function SpatialMapEditor(): ReactNode {
     future: [],
   });
   const [selectedId, setSelectedId] = useState<EntityId | null>(null);
+  const [treeFocusRequest, setTreeFocusRequest] =
+    useState<TreeFocusRequest | null>(null);
   const [activeFloorId, setActiveFloorId] =
     useState<EntityId>(GROUND_LEVEL_ID);
   const [domain, setDomain] = useState<AuthoringDomain>("structure");
@@ -788,10 +931,7 @@ function SpatialMapEditor(): ReactNode {
     ],
     [visibleAreas, visibleGoals, visibleRoutes],
   );
-  const treeNodes = useMemo(
-    () => mapTree(document, selectedId),
-    [document, selectedId],
-  );
+  const treeNodes = useMemo(() => mapTree(document), [document]);
   const tools = useMemo(
     () =>
       domain === "structure"
@@ -913,8 +1053,9 @@ function SpatialMapEditor(): ReactNode {
       setDraftIssues([]);
       setAuthoringGestureActive(false);
     } catch (error) {
+      if (!(error instanceof RangeError)) throw error;
       setLastAction(
-        `완료 불가 · ${error instanceof Error ? error.message : "도형 검증 실패"}`,
+        `완료 불가 · ${error.message}`,
       );
     }
   }, [
@@ -1287,7 +1428,8 @@ function SpatialMapEditor(): ReactNode {
             ? updateMapRoutePoints(document, entity.id, points)
             : updateMapAreaPoints(document, entity.id, points);
         commitDocument(next, `${kind === "route" ? "경로" : "구역"} 점 변경됨`);
-      } catch {
+      } catch (error) {
+        if (!(error instanceof RangeError)) throw error;
         setLastAction("도형을 무효로 만드는 좌표는 적용되지 않았습니다.");
       }
     },
@@ -1948,7 +2090,7 @@ function SpatialMapEditor(): ReactNode {
                 onChange={(value) => changeFloor(value as EntityId)}
               />
               <Divider />
-              <Tree
+              <RuntimeCompatibleTree
                 ariaLabel="맵 객체 계층"
                 defaultExpanded={[
                   "site",
@@ -1956,12 +2098,10 @@ function SpatialMapEditor(): ReactNode {
                   GROUND_LEVEL_ID,
                   UPPER_LEVEL_ID,
                 ]}
+                focusRequest={treeFocusRequest}
                 nodes={treeNodes}
-                onSelect={(node) => {
-                  if (typeof node.id === "string") {
-                    selectEntity(node.id as EntityId);
-                  }
-                }}
+                selectedId={selectedId}
+                onSelect={(id) => selectEntity(id as EntityId)}
               />
             </Stack>
           }
@@ -1990,6 +2130,21 @@ function SpatialMapEditor(): ReactNode {
                 },
                 { label: "층", value: floorLabel(activeFloorId) },
                 { label: "스냅", value: `${snap.translationMeters.toFixed(2)} m` },
+                {
+                  label: "변환 공간",
+                  value: mode === "scale" ? "Local" : "Target",
+                },
+                {
+                  label: "카메라",
+                  value:
+                    cameraMode === "home"
+                      ? "Home"
+                      : cameraMode === "top"
+                        ? "Top"
+                        : cameraMode === "focus"
+                          ? "Focus"
+                          : "Free",
+                },
               ]}
               message={placementMessage}
               messageTone={
@@ -2008,29 +2163,39 @@ function SpatialMapEditor(): ReactNode {
             appearance="dark"
             label="운영동 3D 맵 저작 뷰포트"
             title={`${floorLabel(activeFloorId)} · map 프레임`}
-            badges={<StatusBadge tone="positive">WebGL 준비됨</StatusBadge>}
+            badges={
+              <StatusBadge className="lds3d-viewer-status-badge" tone="positive">
+                WebGL 준비됨
+              </StatusBadge>
+            }
             hud={`${visibleObjectCount.toString()} 구조 · ${visibleRoutes.length.toString()} 경로 · ${visibleAreas.length.toString()} 구역 · ${visibleGoals.length.toString()} 목표`}
             status={toolLabel(tool)}
             state="ready"
             variant="embedded"
             style={{ height: "100%" }}
             toolbar={
-              <ViewerToolbar appearance="on-dark" label="맵 카메라 프리셋">
+              <ViewerToolbar appearance="surface" label="맵 카메라 프리셋">
                 <ViewerToolbarButton
+                  kind="toggle"
                   label="기본 시점"
+                  pressed={cameraMode === "home"}
                   onClick={() => setCameraMode("home")}
                 >
                   <Icon name="home" size={16} aria-hidden="true" />
                 </ViewerToolbarButton>
                 <ViewerToolbarButton
+                  kind="toggle"
                   label="상단 시점"
+                  pressed={cameraMode === "top"}
                   onClick={() => setCameraMode("top")}
                 >
                   <Icon name="map" size={16} aria-hidden="true" />
                 </ViewerToolbarButton>
                 <ViewerToolbarButton
                   disabled={focusBounds === undefined}
+                  kind="toggle"
                   label="선택 객체에 초점"
+                  pressed={cameraMode === "focus"}
                   onClick={() => setCameraMode("focus")}
                 >
                   <Icon name="crosshair" size={16} aria-hidden="true" />
@@ -2055,7 +2220,16 @@ function SpatialMapEditor(): ReactNode {
               homePose={AUTHORING_HOME}
               onCameraModeChange={setCameraMode}
               onSelectionChange={(change) => {
-                if (!authoring) selectEntity(change.entityId);
+                if (!authoring) {
+                  selectEntity(change.entityId);
+                  if (change.entityId !== null) {
+                    const focusId = change.entityId;
+                    setTreeFocusRequest((previous) => ({
+                      id: focusId,
+                      sequence: (previous?.sequence ?? 0) + 1,
+                    }));
+                  }
+                }
               }}
               profile="diagnostic-technical"
               renderQuality="balanced"
@@ -2203,4 +2377,85 @@ function SpatialMapEditor(): ReactNode {
 export const LdsIntegration: Story = {
   name: "개요",
   render: () => <SpatialMapEditor />,
+};
+
+const TREE_COMPATIBILITY_FIXTURE: readonly MapTreeNode[] = [
+  {
+    id: "compat-root",
+    label: "Operations site",
+    children: [
+      {
+        id: "compat-branch",
+        label: "Second floor",
+        children: [{ id: "compat-target", label: "Target object" }],
+      },
+    ],
+  },
+];
+
+function TreeCompatibilityContract(): ReactNode {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [focusRequest, setFocusRequest] =
+    useState<TreeFocusRequest | null>(null);
+  const selectFromCanvas = (): void => {
+    setSelectedId("compat-target");
+    setFocusRequest((previous) => ({
+      id: "compat-target",
+      sequence: (previous?.sequence ?? 0) + 1,
+    }));
+  };
+
+  return (
+    <Stack gap="var(--space-3)" style={{ maxWidth: 320, padding: "var(--space-4)" }}>
+      <Button onClick={selectFromCanvas}>Select target from canvas</Button>
+      <RuntimeCompatibleTree
+        ariaLabel="Runtime-compatible scene hierarchy"
+        defaultExpanded={["compat-root"]}
+        focusRequest={focusRequest}
+        nodes={TREE_COMPATIBILITY_FIXTURE}
+        selectedId={selectedId}
+        onSelect={setSelectedId}
+      />
+    </Stack>
+  );
+}
+
+export const TreeRuntimeCompatibility: Story = {
+  name: "상호작용 · Tree RC 호환 계약",
+  render: () => <TreeCompatibilityContract />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const branchLabel = canvasElement.querySelector<HTMLElement>(
+      '[data-map-tree-id="compat-branch"]',
+    );
+    await expect(branchLabel?.closest('[role="treeitem"]')).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    await expect(
+      canvasElement.querySelector('[data-map-tree-id="compat-target"]'),
+    ).toBeNull();
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Select target from canvas" }),
+    );
+
+    await waitFor(
+      async () => {
+        const targetLabel = canvasElement.querySelector<HTMLElement>(
+          '[data-map-tree-id="compat-target"]',
+        );
+        const targetRow =
+          targetLabel?.closest<HTMLElement>('[role="treeitem"]');
+        await expect(targetRow).toHaveAttribute("aria-selected", "true");
+        await expect(targetRow).toHaveFocus();
+        await expect(
+          Array.from(
+            canvasElement.querySelectorAll<HTMLElement>('[role="treeitem"]'),
+          ).every((row) => row.hasAttribute("aria-selected")),
+        ).toBe(true);
+      },
+      { timeout: 3_000 },
+    );
+  },
 };

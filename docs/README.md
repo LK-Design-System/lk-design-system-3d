@@ -5,6 +5,7 @@
 
 | 문서 | 역할 |
 | --- | --- |
+| [../DESIGN.md](../DESIGN.md) | 현재 UI/UX·접근성·반응형·컴포넌트 소유권의 실행 디자인 계약 |
 | [ADR-0001-SIBLING-REPOSITORY.md](ADR-0001-SIBLING-REPOSITORY.md) | 공식 형제 플랫폼 결정과 대안 |
 | [ADR-0002-DUAL-PATH-MAP-AUTHORING.md](ADR-0002-DUAL-PATH-MAP-AUTHORING.md) | Native Builder와 외부 장면 import가 공유할 맵 저작·교환 방향 |
 | [HANDOFF-2026-07-19.md](HANDOFF-2026-07-19.md) | 다른 PC에서 현재 전체 worktree checkpoint를 이어가기 위한 상태·재개 순서·미완료 항목 |

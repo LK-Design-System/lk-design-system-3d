@@ -38,6 +38,18 @@ world surface on top of the host's own `SceneEnvironment`.
   opt-in, non-interactive DOM summary only.
 - Use an accessible `ariaLabel` and expose critical selection in DOM outside the
   canvas.
+- The host is one intentional tab stop. While it owns focus, `Home` restores the
+  home pose, `T` selects Top, `F` selects Focus, arrows orbit,
+  `Shift` + arrows pan, and `+`/`-` or `Page Up`/`Page Down` zoom. The host or
+  its canvas must actually own focus. Interactive descendants, already-handled
+  events, and IME composition are ignored. With `enableOrbit={false}`, only the
+  three preset keys remain advertised and handled. Set `ariaDescribedBy` to
+  caller-owned detailed help; `enableKeyboardCameraControls={false}` is
+  available for a caller that supplies a different complete camera input
+  contract.
+- The camera-fixed labelled XYZ triad is WebGL-only and enabled by default in
+  every visual profile. It uses the LK core `+Z`-up basis. World-origin axes do
+  not replace it.
 - `renderQuality="balanced"` is the default: `frameLoop="demand"`, DPR
   `[1, 1.5]`, browser-default GPU selection, and a 1024px shadow map. A static
   review can retain that default or deliberately choose `performance`.

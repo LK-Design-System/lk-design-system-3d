@@ -26,21 +26,17 @@ Primitive catalog는 `SceneCanvas`, `Selectable`, `AmrRobot`, `GoalMarker`,
 goal·path 상태, renderer loading·empty·error·retry, 실제 LDS composition도 각 소유
 group 아래에서 검토합니다. 기본 시각 방향은
 운영 상태 식별성과 LDS chrome 조합성이 더 높은 `Operational Neutral`입니다.
-문서 앱은 형제 checkout `../LK Design System`의
-`@lk-robotics/design-system-core@0.1.0`을 `link:`로 소비하며, 기준 commit은
-`b5f910c20c87358700c85707b789dcfe489b99b6`입니다. `Scene3DFrame`,
-`SelectionInspector`, `SegmentedControl`, `ViewportStatusBar`, `StatusBadge`와 공식
-`styles.css`를 실제 public API로 사용합니다. renderer package에는 LDS 의존성을
-넣지 않았고, LDS·제품 repository 변경이나 registry publish도 수행하지 않았습니다.
+문서 앱은 공개 배포된 `@lk-robotics/lds-core@0.1.0-rc.0`,
+`@lk-robotics/lds-product@0.1.0-rc.0`,
+`@lk-robotics/lds-robotics-ui@0.1.0-rc.1`과 공식 `styles.css`를 고정해 실제 public
+API로 사용합니다. `Scene3DFrame`, `SelectionInspector`, `Tree`,
+`SegmentedControl`, `ViewportStatusBar`와 `StatusBadge`가 DOM chrome을 소유하며,
+renderer package에는 LDS 의존성을 넣지 않습니다.
 
-재현 가능한 지원 기준은 위 clean `b5f910c…` pin으로 유지합니다. 최종 로컬 검증
-시점에는 공유 sibling checkout이 다른 작업으로 `0aa7f8d2856546d9193dac190f4777f0ca9caa64`
-및 dirty 상태로 이동해 있었습니다. 두 commit 사이와 dirty source를 다시 비교했으며,
-이번 조합이 사용하는 `CanvasEditorShell`, `Scene3DFrame`, `LayerPanel`,
-`SelectionInspector`, `ViewportStatusBar`, `ViewerToolbar`, `Button`,
-`SegmentedControl`, `styles.css`에는 source delta가 없었습니다. 따라서 로컬 재검증은
-유효하지만, dirty sibling이나 `0aa7f8d…`를 새 지원 pin 또는 portable CI 근거로
-승격하지 않습니다.
+2026-07-21 교차 저장소 수정은 [디자인 계약](DESIGN.md)에 기록된 sibling source와
+각 Storybook에서 로컬 검증합니다. 새 controlled `Tree`와 Robotics UI 수정은 해당
+LDS package artifact가 발행·고정되기 전까지 portable release 증거가 아닙니다.
+Registry publish와 제품 repository 적용은 이 로컬 검토 범위에 포함하지 않습니다.
 
 2026-07-17 LDS baseline audit에서 `Scene3DFrame`의 public
 `variant="embedded"` 계약을 확인했습니다. `CanvasEditorShell`처럼 부모 surface에
@@ -93,6 +89,7 @@ Control Full의 R3F 8 조합용 compatibility binding은 아직 구현·검증�
 
 ## 문서
 
+- [디자인 계약](DESIGN.md)
 - [문서 안내](docs/README.md)
 - [형제 저장소 의사결정](docs/ADR-0001-SIBLING-REPOSITORY.md)
 - [Dual-path 맵 저작 의사결정](docs/ADR-0002-DUAL-PATH-MAP-AUTHORING.md)

@@ -1,5 +1,13 @@
 export { CameraRig, type CameraRigProps } from "./CameraRig.js";
 export { CoreSpace, type CoreSpaceProps } from "./CoreSpace.js";
+export { OrientationTriad } from "./OrientationTriad.js";
+export {
+  SCENE_CANVAS_KEYBOARD_INSTRUCTIONS,
+  isEditableKeyboardTarget,
+  resolveSceneCameraKey,
+  type SceneCameraKeyboardCommand,
+  type SceneCameraKeyInput,
+} from "./scene-keyboard.js";
 export { type PathRibbonVariant } from "./path-ribbon.js";
 export {
   SceneCanvas,

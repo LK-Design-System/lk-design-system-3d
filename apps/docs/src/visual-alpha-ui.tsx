@@ -13,6 +13,7 @@ import {
 } from "@lk-robotics/lds-robotics-ui/components/viz/ViewerToolbar";
 import {
   useEffect,
+  useRef,
   useState,
   type ComponentProps,
   type CSSProperties,
@@ -23,7 +24,7 @@ import { StoryGuide } from "./components";
 
 export type VisualProfile = "operational" | "diagnostic";
 export type VisualCameraMode = "home" | "top" | "focus";
-export type VisualRuntimeState = "ready" | "loading" | "error" | "empty";
+export type VisualRuntimeState = "ready" | "loading" | "retrying" | "error" | "empty";
 
 export interface SelectedAssetDetails {
   readonly id: string;
@@ -73,13 +74,19 @@ const RUNTIME_COPY: Readonly<
   ready: { state: "live", label: "실시간" },
   loading: {
     state: "loading",
-    label: "3D 장면 준비 중",
+    label: "3D 장면 준비 중 · 58%",
     description: "자산 manifest를 검증하고 WebGL 렌더러를 준비하고 있습니다.",
+  },
+  retrying: {
+    state: "loading",
+    label: "렌더러 재시도 중 · 32%",
+    description: "렌더러를 다시 초기화하고 자산 manifest를 재검증하고 있습니다.",
   },
   error: {
     state: "error",
-    label: "3D 장면을 사용할 수 없음",
-    description: "현재 장면 맥락을 유지한 채 렌더러를 다시 시도하세요.",
+    label: "자산 로딩 실패",
+    description:
+      "렌더러 복구 동작을 확인하기 위한 오류입니다. 현재 장면 맥락을 유지한 채 다시 시도하세요.",
   },
   empty: {
     state: "no-source",
@@ -249,6 +256,7 @@ export function LdsFocusedViewerPage({
   const [dockOpen, setDockOpen] = useState(true);
   const [dockWidth, setDockWidth] = useState(300);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const retryFrameRef = useRef<HTMLElement | null>(null);
   const activeDockWidth = !isNarrow && dockOpen ? dockWidth : 0;
   const toolbarEndMargin = isNarrow
     ? undefined
@@ -261,6 +269,16 @@ export function LdsFocusedViewerPage({
       setDrawerOpen(false);
     }
   }, [isNarrow]);
+
+  useEffect(() => {
+    if (runtimeState !== "ready" || retryFrameRef.current === null) return;
+    const frame = retryFrameRef.current;
+    retryFrameRef.current = null;
+    const focusTarget = frame.querySelector<HTMLElement>(
+      '[data-viewer-toolbar] [data-lk-viewer-toolbar-item]:not([disabled]):not([aria-disabled="true"])',
+    );
+    focusTarget?.focus({ preventScroll: true });
+  }, [runtimeState]);
 
   const resolvedDescription =
     description ??
@@ -316,7 +334,7 @@ export function LdsFocusedViewerPage({
       title={sceneTitle}
       toolbar={
         <ViewerToolbar
-          appearance={profile === "diagnostic" ? "on-dark" : "surface"}
+          appearance="surface"
           label="카메라와 뷰포트 제어"
           orientation="horizontal"
           style={toolbarEndMargin === undefined ? undefined : { marginInlineEnd: toolbarEndMargin }}
@@ -359,11 +377,25 @@ export function LdsFocusedViewerPage({
       {...(runtime.description === undefined
         ? {}
         : { stateDescription: runtime.description })}
-      {...(runtimeState === "error" && onRetry !== undefined
+      {...((runtimeState === "error" || runtimeState === "retrying") && onRetry !== undefined
         ? {
             stateAction: (
-              <Button type="button" onClick={onRetry}>
-                렌더러 다시 시도
+              <Button
+                aria-disabled={runtimeState === "retrying"}
+                data-testid="renderer-retry-action"
+                type="button"
+                onClick={
+                  runtimeState === "retrying"
+                    ? undefined
+                    : (event) => {
+                        retryFrameRef.current = event.currentTarget.closest<HTMLElement>(
+                          "[data-lds-viewer-frame]",
+                        );
+                        onRetry();
+                      }
+                }
+              >
+                {runtimeState === "retrying" ? "렌더러 재시도 중 · 32%" : "렌더러 다시 시도"}
               </Button>
             ),
           }

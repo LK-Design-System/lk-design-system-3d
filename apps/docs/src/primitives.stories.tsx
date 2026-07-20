@@ -154,7 +154,7 @@ const PRIMARY_GOAL: GoalEntity = {
   radiusMeters: 0.55,
 };
 
-type ReviewCameraMode = Exclude<SceneCameraMode, "free">;
+type ReviewCameraMode = SceneCameraMode;
 
 interface PrimitiveCanvasProps {
   readonly ariaLabel: string;
@@ -345,6 +345,7 @@ export function SceneCanvasExperience(): ReactNode {
               { value: "home", label: "기본" },
               { value: "top", label: "상단" },
               { value: "focus", label: "초점" },
+              { value: "free", label: "자유" },
             ]}
             size="sm"
             value={cameraMode}
@@ -354,6 +355,7 @@ export function SceneCanvasExperience(): ReactNode {
             ariaLabel="SceneCanvas와 CameraRig 프리미티브 데모"
             cameraMode={cameraMode}
             environment={{ showAxes: true }}
+            onCameraModeChange={setCameraMode}
           >
             <AmrRobotPrimitive entity={PRIMARY_ROBOT} status="live" />
             <GoalMarkerPrimitive animated={false} entity={PRIMARY_GOAL} variant="valid" />

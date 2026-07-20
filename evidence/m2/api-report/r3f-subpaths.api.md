@@ -91,7 +91,7 @@ interface AmrRobotProps {
 function calculatePathLength(points: readonly Vec3[]): number;
 
 // @public (undocumented)
-function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, onManualControl, onSettled, }: CameraRigProps): null;
+function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, keyboardCommand, onManualControl, onSettled, }: CameraRigProps): null;
 
 // @public (undocumented)
 interface CameraRigProps {
@@ -104,9 +104,16 @@ interface CameraRigProps {
     // (undocumented)
     readonly homePose?: SceneCameraPose;
     // (undocumented)
+    readonly keyboardCommand?: {
+        readonly sequence: number;
+        readonly command: Exclude<SceneCameraKeyboardCommand, {
+            readonly kind: "preset";
+        }>;
+    };
+    // (undocumented)
     readonly mode: SceneCameraMode;
     // (undocumented)
-    readonly onManualControl?: () => void;
+    readonly onManualControl?: (source: "keyboard" | "user") => void;
     // (undocumented)
     readonly onSettled?: (mode: Exclude<SceneCameraMode, "free">) => void;
     // (undocumented)
@@ -249,6 +256,9 @@ interface GroundPlaneProps {
     readonly sizeMeters?: number;
 }
 
+// @public (undocumented)
+function isEditableKeyboardTarget(target: EventTarget | null): boolean;
+
 // @public
 function MarkerLayer({ snapshot, maxMarkers, freshnessPolicy, renderMesh, onRenderStateChange, }: MarkerLayerProps): react_jsx_runtime.JSX.Element | null;
 
@@ -358,6 +368,9 @@ interface OccupancyGridSurfaceProps {
 
 // @public (undocumented)
 const OPERATIONAL_NEUTRAL_THEME: SceneVisualTheme;
+
+// @public
+function OrientationTriad(): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
 function PathRibbon({ entity, elevationMeters, variant, animated, selectable, }: PathRibbonProps): react_jsx_runtime.JSX.Element | null;
@@ -471,6 +484,9 @@ interface ResolveCameraPoseOptions {
 // @public (undocumented)
 function resolveModelUrl(modelBasePath: string, fileName: string): string;
 
+// @public
+function resolveSceneCameraKey(input: SceneCameraKeyInput): SceneCameraKeyboardCommand | null;
+
 // @public (undocumented)
 function resolveSceneTheme(profile?: SceneVisualProfile | SceneVisualTheme, customization?: SceneThemeCustomization): SceneVisualTheme;
 
@@ -506,6 +522,7 @@ declare namespace scene {
         OccupancyGridRenderState,
         OccupancyGridSurface,
         OccupancyGridSurfaceProps,
+        OrientationTriad,
         PathRibbon,
         PathRibbonProps,
         PathRibbonVariant,
@@ -517,7 +534,10 @@ declare namespace scene {
         PointCloudLayersProps,
         PointCloudSceneLayer,
         RobotVisualStatus,
+        SCENE_CANVAS_KEYBOARD_INSTRUCTIONS,
         SceneCameraChangeSource,
+        SceneCameraKeyInput,
+        SceneCameraKeyboardCommand,
         SceneCanvas,
         SceneCanvasHandle,
         SceneCanvasProps,
@@ -546,6 +566,8 @@ declare namespace scene {
         TransformGizmo,
         TransformGizmoProps,
         VisualAlphaAssetPlacement,
+        isEditableKeyboardTarget,
+        resolveSceneCameraKey,
         useEntityInteraction,
         usePrefersReducedMotion,
         useSceneRuntime
@@ -553,10 +575,46 @@ declare namespace scene {
 }
 
 // @public (undocumented)
+const SCENE_CANVAS_KEYBOARD_INSTRUCTIONS = "Camera keys: Home resets the view, T shows Top, F focuses the target, arrow keys orbit, Shift plus arrow keys pans, and plus, minus, Page Up, or Page Down zooms.";
+
+// @public (undocumented)
 const SCENE_VISUAL_THEMES: Readonly<Record<SceneVisualProfile, SceneVisualTheme>>;
 
 // @public (undocumented)
-type SceneCameraChangeSource = "toolbar" | "user" | "api" | "prop";
+type SceneCameraChangeSource = "toolbar" | "keyboard" | "user" | "api" | "prop";
+
+// @public (undocumented)
+type SceneCameraKeyboardCommand = {
+    readonly kind: "preset";
+    readonly mode: "home" | "top" | "focus";
+} | {
+    readonly kind: "orbit";
+    readonly horizontal: -1 | 0 | 1;
+    readonly vertical: -1 | 0 | 1;
+} | {
+    readonly kind: "pan";
+    readonly horizontal: -1 | 0 | 1;
+    readonly vertical: -1 | 0 | 1;
+} | {
+    readonly kind: "zoom";
+    readonly direction: "in" | "out";
+};
+
+// @public (undocumented)
+interface SceneCameraKeyInput {
+    // (undocumented)
+    readonly altKey?: boolean;
+    // (undocumented)
+    readonly ctrlKey?: boolean;
+    // (undocumented)
+    readonly isComposing?: boolean;
+    // (undocumented)
+    readonly key: string;
+    // (undocumented)
+    readonly metaKey?: boolean;
+    // (undocumented)
+    readonly shiftKey?: boolean;
+}
 
 // @public (undocumented)
 type SceneCameraMode = "home" | "top" | "focus" | "free";
@@ -588,6 +646,7 @@ interface SceneCanvasHandle {
 
 // @public (undocumented)
 interface SceneCanvasProps {
+    readonly ariaDescribedBy?: string;
     // (undocumented)
     readonly ariaLabel?: string;
     // (undocumented)
@@ -602,6 +661,7 @@ interface SceneCanvasProps {
     readonly defaultSelectedEntityId?: EntityId | null;
     // (undocumented)
     readonly devicePixelRatio?: number | readonly [number, number];
+    readonly enableKeyboardCameraControls?: boolean;
     // (undocumented)
     readonly enableOrbit?: boolean;
     // (undocumented)

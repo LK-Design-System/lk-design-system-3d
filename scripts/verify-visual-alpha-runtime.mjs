@@ -809,7 +809,7 @@ async function verifyRuntimeStates(client, url) {
     `![...document.querySelectorAll("button")].some((button) => button.getAttribute("aria-label") === "선택 해제" || button.textContent?.trim() === "선택 해제")`,
   );
   result.loading = await client.evaluate(
-    `document.body.innerText.includes("3D 장면 준비 중") && document.querySelector('[data-viewer-state="loading"]') !== null`,
+    `document.body.innerText.includes("3D 장면 준비 중 · 58%") && document.querySelector('[data-viewer-state="loading"]') !== null`,
   );
   for (const state of ["empty", "error"]) {
     const changed = await client.evaluate(`(() => {
@@ -822,26 +822,65 @@ async function verifyRuntimeStates(client, url) {
       return true;
     })()`);
     if (!changed) throw new Error("Renderer state selector was not found.");
-    const expected = state === "empty" ? "공간 객체 없음" : "3D 장면을 사용할 수 없음";
+    const expected = state === "empty" ? "공간 객체 없음" : "자산 로딩 실패";
     await waitFor(
       client,
       `document.body.innerText.includes(${JSON.stringify(expected)})`,
       `${state} renderer state`,
     );
+    if (state === "empty") {
+      await waitFor(
+        client,
+        `(() => {
+          const inspector = document.querySelector('[aria-label="선택 객체 세부 정보"]')?.textContent ?? "";
+          const status = document.querySelector('[data-testid="lds-viewport-status"]')?.textContent ?? "";
+          return !inspector.includes("AMR 01")
+            && status.includes("선택")
+            && status.includes("0")
+            && document.querySelectorAll('[data-visual-world-label-title]').length === 0
+            && document.querySelector('[data-viewer-state="no-source"]') !== null;
+        })()`,
+        "empty renderer selection, details, and scene state",
+      );
+    }
     result[state] = true;
   }
   const retried = await client.evaluate(`(() => {
-    const button = [...document.querySelectorAll("button")].find(
-      (candidate) => candidate.textContent?.trim() === "렌더러 다시 시도",
-    );
+    const button = document.querySelector('[data-testid="renderer-retry-action"]');
     if (!(button instanceof HTMLButtonElement)) return false;
+    button.dataset.runtimeQaFocusTarget = "";
+    button.focus();
     button.click();
     return true;
   })()`);
   if (!retried) throw new Error("Retry renderer action was not found.");
   await waitFor(
     client,
-    `!document.body.innerText.includes("3D 장면을 사용할 수 없음") && document.querySelector('[data-viewer-state="live"]') !== null`,
+    `(() => {
+      const button = document.querySelector('[data-testid="renderer-retry-action"]');
+      return button instanceof HTMLButtonElement
+        && button.hasAttribute("data-runtime-qa-focus-target")
+        && button.getAttribute("aria-disabled") === "true"
+        && document.activeElement === button
+        && document.body.innerText.includes("렌더러 재시도 중 · 32%")
+        && !document.body.innerText.includes("자산 로딩 실패")
+        && document.querySelector('[data-viewer-state="loading"]') !== null;
+    })()`,
+    "renderer retrying focus and progress",
+  );
+  result.retrying = true;
+  await waitFor(
+    client,
+    `(() => {
+      const frame = document.querySelector('[data-viewer-state="live"]');
+      const active = document.activeElement;
+      return !document.body.innerText.includes("자산 로딩 실패")
+        && frame !== null
+        && document.querySelector('[data-testid="renderer-retry-action"]') === null
+        && active instanceof HTMLElement
+        && active !== document.body
+        && frame.querySelector('[data-viewer-toolbar]')?.contains(active) === true;
+    })()`,
     "renderer recovery",
   );
   result.retry = true;

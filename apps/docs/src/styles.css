@@ -21,14 +21,29 @@ body {
 .lds3d-focused-viewer-page {
   width: 100%;
   min-height: 100vh;
-  padding-block: var(--space-6);
+  padding-block: var(--space-4);
   color: var(--color-semantic-label-normal);
   background: var(--color-semantic-background-normal-normal);
 }
 
 .lds3d-focused-viewer-container {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-3);
+}
+
+@media (min-width: 992px) {
+  .lds3d-focused-viewer-container {
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 24rem);
+    align-items: start;
+  }
+
+  .lds3d-review-controls {
+    align-self: stretch;
+  }
+
+  .lds3d-focused-viewer-layout {
+    grid-column: 1 / -1;
+  }
 }
 
 .lds3d-review-controls {
@@ -56,8 +71,8 @@ body {
   grid-template-columns: minmax(0, 1fr);
   width: 100%;
   min-width: 0;
-  min-height: 30rem;
-  height: clamp(30rem, calc(100vh - 13rem), 50rem);
+  min-height: 32rem;
+  height: clamp(32rem, calc(100vh - 10rem), 50rem);
 }
 
 .lds3d-focused-viewer-workspace {
@@ -74,6 +89,21 @@ body {
   right: 0;
   bottom: 0;
   z-index: 4;
+}
+
+/*
+ * The docs app is pinned to the current Robotics RC, whose viewer topbar is
+ * transparent over WebGL. Mirror the newer package contract here so automated
+ * contrast checks have one deterministic, opaque surface until that RC moves.
+ */
+[data-viewer-topbar] {
+  background: var(--color-semantic-background-normal-normal) !important;
+  border-bottom: 1px solid var(--color-semantic-line-solid-normal);
+}
+
+[data-viewer-topbar] [data-viewer-source],
+[data-viewer-topbar] [data-viewer-hud] {
+  color: var(--color-semantic-label-normal) !important;
 }
 
 .visual-canvas-slot {

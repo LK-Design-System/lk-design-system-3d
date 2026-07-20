@@ -73,13 +73,20 @@ calendar 일정이나 release gate가 충돌하면 이 문서가 우선한다. P
 직접 확인하기 전에는 token 이름이나 `Scene3DFrame` API를 확정하지 않는다.
 이 문서에서 해당 명칭은 책임 경계를 설명하는 가설이며 D-1에서 검증한다.
 
-### 2.1 2026-07-17 D-1 LDS baseline audit (current)
+### 2.1 2026-07-17 D-1 LDS baseline audit (historical baseline)
 
 이 문서의 앞선 `D-1에서 확인` 표현은 당시의 계획 가정이다. 현재 기준은 sibling
 LDS `main`의 clean revision
 `2894b7b7d0a572ca32d67e1ff4fbe98638114052`, public package
 `@lk-robotics/design-system-core@0.1.0`, 그리고 공식 `styles.css`다. `apps/docs`의
 local `link:`는 시각 검토용일 뿐 CI/배포 portability 증거는 아니다.
+
+2026-07-21 현재 실행 디자인 계약과 checkout/package 상태는 루트
+[`DESIGN.md`](../DESIGN.md)가 소유한다. `apps/docs`의 portable baseline은 공개
+`@lk-robotics/lds-core@0.1.0-rc.0`, `@lk-robotics/lds-product@0.1.0-rc.0`,
+`@lk-robotics/lds-robotics-ui@0.1.0-rc.1` pin이다. 이후 controlled `Tree`와 Robotics
+UI 수정의 sibling-source 검증은 다음 package artifact 발행 전까지 로컬 증거로만
+취급한다.
 
 `Scene3DFrame`의 public contract와 `variant="embedded"`를 실제 source와 선언에서
 확인했다. 부모 surface(`CanvasEditorShell`, `Card`)가 border/radius/overflow를
@@ -584,10 +591,10 @@ major 차이는 별도 dependency migration 결정이며 시각 언어를 재구
 사용하지 않는다.
 
 `apps/docs`는 실제 LDS public component와 공식 stylesheet를 LDS3D public package와
-함께 사용하는 local visual-review composition consumer다. 현재 LDS 의존성은 감사된
-commit `2894b7b7d0a572ca32d67e1ff4fbe98638114052`의 sibling `link:`이므로 official
-CI/release portability나 registry integration을 증명하지 않는다. 그 주장은 명시적
-checkout pin 또는 검증된 package artifact를 설치한 뒤에만 가능하다. `core`, `assets`,
+함께 사용하는 composition consumer다. Portable CI는 고정된 RC package artifact를
+사용한다. 새 sibling source를 `link:`로 대체하는 것은 로컬 시각 검토에만 허용되며
+official CI/release portability나 registry integration을 증명하지 않는다. 그 주장은
+명시적 checkout pin 또는 검증된 package artifact를 설치한 뒤에만 가능하다. `core`, `assets`,
 `testing`, `r3f`는 계속 LDS와 무관하게 build하며, technical story의 LDS DOM 구성은
 문서 표현 계층일 뿐 SVG fixture를 finished 3D evidence로 승격하지 않는다. LDS 내부
 source와 `.storybook` 상대경로 import는 금지한다.

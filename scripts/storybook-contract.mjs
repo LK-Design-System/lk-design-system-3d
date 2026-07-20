@@ -29,11 +29,13 @@ export const expectedStoryIds = [
   "lds-3d-scenes-tf-marker--overview",
   "lds-3d-scenes-spatial-editing--overview",
   "lds-3d-scenes-spatial-authoring-foundation--lds-integration",
+  "lds-3d-scenes-spatial-authoring-foundation--tree-runtime-compatibility",
   "visual-alpha--operational-neutral",
   "visual-alpha--diagnostic-technical",
   "lds-3d-scenes-asset-review--overview",
   "lds-3d-states-goal-and-path--overview",
   "lds-3d-states-renderer-lifecycle--overview",
+  "lds-3d-states-renderer-lifecycle--focus-recovery",
 ].sort();
 
 export const requiredPrimitiveReviewStages = Object.freeze([

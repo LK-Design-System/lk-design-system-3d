@@ -527,7 +527,32 @@ export function SpatialEditingExperience(): ReactNode {
     }
     setDeleteTool(nextTool);
     setDeleteMenuOpen(false);
-    if (nextTool === "move" || nextTool === "resize") {
+    if (nextTool === "sphere" || nextTool === "box") {
+      const volume =
+        nextTool === "sphere"
+          ? createSpatialEditSphere({
+              id: DELETE_VOLUME_ID,
+              operation: "delete",
+              pose: {
+                frame: POINT_CLOUD_FRAME,
+                position: [0, 0, DELETE_VOLUME_RADIUS_METERS],
+                orientation: quaternionFromYaw(0),
+              },
+              radiusMeters: DELETE_VOLUME_RADIUS_METERS,
+            })
+          : createSpatialEditBox({
+              id: DELETE_VOLUME_ID,
+              operation: "delete",
+              pose: {
+                frame: POINT_CLOUD_FRAME,
+                position: [0, 0, DELETE_VOLUME_BOX_SIZE_METERS[2] / 2],
+                orientation: quaternionFromYaw(0),
+              },
+              sizeMeters: DELETE_VOLUME_BOX_SIZE_METERS,
+            });
+      setDraftVolume(volume);
+      setSelectedId(volume.id);
+    } else {
       setSelectedId(draftVolume?.id ?? null);
     }
     setMobileRegion("canvas");
@@ -539,33 +564,47 @@ export function SpatialEditingExperience(): ReactNode {
 
   const placeDeleteVolume = useCallback(
     (pointInCore: Vec3): void => {
-      if (!isPlacementTool || draftVolume !== null || appliedVolume !== null) {
+      if (!isPlacementTool || appliedVolume !== null) {
         return;
       }
       const [rawX, rawY] = pointInCore;
       const x = roundMeters(rawX);
       const y = roundMeters(rawY);
       const volume =
-        deleteTool === "sphere"
+        draftVolume?.kind === "sphere" || (draftVolume === null && deleteTool === "sphere")
           ? createSpatialEditSphere({
               id: DELETE_VOLUME_ID,
               operation: "delete",
               pose: {
                 frame: POINT_CLOUD_FRAME,
-                position: [x, y, DELETE_VOLUME_RADIUS_METERS],
-                orientation: quaternionFromYaw(0),
+                position: [
+                  x,
+                  y,
+                  draftVolume?.pose.position[2] ?? DELETE_VOLUME_RADIUS_METERS,
+                ],
+                orientation: draftVolume?.pose.orientation ?? quaternionFromYaw(0),
               },
-              radiusMeters: DELETE_VOLUME_RADIUS_METERS,
+              radiusMeters:
+                draftVolume?.kind === "sphere"
+                  ? draftVolume.radiusMeters
+                  : DELETE_VOLUME_RADIUS_METERS,
             })
           : createSpatialEditBox({
               id: DELETE_VOLUME_ID,
               operation: "delete",
               pose: {
                 frame: POINT_CLOUD_FRAME,
-                position: [x, y, DELETE_VOLUME_BOX_SIZE_METERS[2] / 2],
-                orientation: quaternionFromYaw(0),
+                position: [
+                  x,
+                  y,
+                  draftVolume?.pose.position[2] ?? DELETE_VOLUME_BOX_SIZE_METERS[2] / 2,
+                ],
+                orientation: draftVolume?.pose.orientation ?? quaternionFromYaw(0),
               },
-              sizeMeters: DELETE_VOLUME_BOX_SIZE_METERS,
+              sizeMeters:
+                draftVolume?.kind === "box"
+                  ? draftVolume.sizeMeters
+                  : DELETE_VOLUME_BOX_SIZE_METERS,
             });
       setDraftVolume(volume);
       setSelectedId(volume.id);
@@ -983,6 +1022,7 @@ export function SpatialEditingExperience(): ReactNode {
             title="PCD 삭제 범위 미리보기"
             badges={
               <StatusBadge
+                className="lds3d-viewer-status-badge"
                 tone={
                   appliedVolume !== null
                     ? "positive"
@@ -1010,15 +1050,25 @@ export function SpatialEditingExperience(): ReactNode {
                   : `${renderedSnapshot.pointCount.toLocaleString()}개 점`
             }
             state="ready"
-            status={`${cameraMode === "home" ? "기본" : cameraMode === "top" ? "상단" : cameraMode === "focus" ? "초점" : "자유"} 시점 · 원본 보존`}
+            status={`${cameraMode === "home" ? "기본" : cameraMode === "top" ? "상단" : cameraMode === "focus" ? "초점" : "자유"} 시점 · ${transformMode === "scale" ? "Local" : "Target"} 공간 · 원본 보존`}
             variant="embedded"
             style={{ height: "100%" }}
             toolbar={
-              <ViewerToolbar appearance="on-dark" label="PCD 카메라 프리셋">
-                <ViewerToolbarButton label="기본 시점" onClick={() => setCameraMode("home")}>
+              <ViewerToolbar appearance="surface" label="PCD 카메라 프리셋">
+                <ViewerToolbarButton
+                  kind="toggle"
+                  label="기본 시점"
+                  pressed={cameraMode === "home"}
+                  onClick={() => setCameraMode("home")}
+                >
                   <Icon name="home" size={16} aria-hidden="true" />
                 </ViewerToolbarButton>
-                <ViewerToolbarButton label="상단 시점" onClick={() => setCameraMode("top")}>
+                <ViewerToolbarButton
+                  kind="toggle"
+                  label="상단 시점"
+                  pressed={cameraMode === "top"}
+                  onClick={() => setCameraMode("top")}
+                >
                   <Icon name="map" size={16} aria-hidden="true" />
                 </ViewerToolbarButton>
               </ViewerToolbar>
@@ -1048,7 +1098,10 @@ export function SpatialEditingExperience(): ReactNode {
                 height: "100%",
                 minHeight: 420,
                 borderRadius: 0,
-                cursor: isPlacementTool && draftVolume === null ? "crosshair" : "default",
+                cursor:
+                  isPlacementTool && appliedVolume === null
+                    ? "crosshair"
+                    : "default",
               }}
               topBounds={POINT_CLOUD_FOCUS_BOUNDS}
             >
@@ -1069,7 +1122,7 @@ export function SpatialEditingExperience(): ReactNode {
               )}
               <MapEditorPlacementSurface
                 elevationMeters={0}
-                enabled={isPlacementTool && draftVolume === null && appliedVolume === null}
+                enabled={isPlacementTool && appliedVolume === null}
                 extentMeters={[18, 18]}
                 snapMeters={0.05}
                 onPlace={placeDeleteVolume}

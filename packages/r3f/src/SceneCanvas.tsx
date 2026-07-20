@@ -2,11 +2,15 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useId,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
+  type FocusEvent,
   type ForwardedRef,
+  type KeyboardEvent,
   type ReactNode,
 } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
@@ -22,6 +26,7 @@ import {
 
 import { CameraRig } from "./CameraRig.js";
 import { CoreSpace } from "./CoreSpace.js";
+import { OrientationTriad } from "./OrientationTriad.js";
 import { coreToThreePosition } from "./coordinates.js";
 import { SceneEnvironment, SceneStateMarker, type SceneEnvironmentProps } from "./primitives.js";
 import {
@@ -31,6 +36,13 @@ import {
   type SceneRenderQuality,
 } from "./rendering.js";
 import { SceneRuntimeProvider, type ScenePointerDetail } from "./runtime.js";
+import {
+  SCENE_CANVAS_KEYBOARD_INSTRUCTIONS,
+  SCENE_CANVAS_ORBIT_KEY_SHORTCUTS,
+  SCENE_CANVAS_PRESET_KEY_SHORTCUTS,
+  resolveSceneCameraKeyboardEvent,
+  type SceneCameraKeyboardCommand,
+} from "./scene-keyboard.js";
 import {
   DEFAULT_HOME_CAMERA_POSE,
   EMPTY_INTERACTION_STATE,
@@ -47,7 +59,7 @@ import {
   type SceneVisualTheme,
 } from "./themes.js";
 
-export type SceneCameraChangeSource = "toolbar" | "user" | "api" | "prop";
+export type SceneCameraChangeSource = "toolbar" | "keyboard" | "user" | "api" | "prop";
 export type { SceneFrameLoop, SceneRenderQuality } from "./rendering.js";
 
 export interface SceneSelectionChange {
@@ -115,6 +127,10 @@ export interface SceneCanvasProps {
   readonly className?: string;
   readonly style?: CSSProperties;
   readonly ariaLabel?: string;
+  /** ID(s) of caller-owned instructions or scene summary associated with the host. */
+  readonly ariaDescribedBy?: string;
+  /** Enables the documented camera keys while this intentionally focusable host owns focus. */
+  readonly enableKeyboardCameraControls?: boolean;
   /**
    * Visual and GPU-cost preset. Defaults to demand-driven `balanced`;
    * `high` raises DPR and shadow resolution without restoring idle rendering.
@@ -287,6 +303,8 @@ function SceneCanvasComponent(
     className,
     style,
     ariaLabel = "Interactive 3D scene",
+    ariaDescribedBy,
+    enableKeyboardCameraControls = true,
     renderQuality = DEFAULT_SCENE_RENDER_QUALITY,
     frameLoop,
     devicePixelRatio,
@@ -333,6 +351,22 @@ function SceneCanvasComponent(
   );
   const [internalCameraMode, setInternalCameraMode] = useState<SceneCameraMode>(defaultCameraMode);
   const resolvedCameraMode = cameraMode ?? internalCameraMode;
+  const [hostFocused, setHostFocused] = useState(false);
+  const keyboardInstructionsId = useId();
+  const keyboardInstructions = enableKeyboardCameraControls
+    ? enableOrbit
+      ? SCENE_CANVAS_KEYBOARD_INSTRUCTIONS
+      : "Camera keys: Home resets the view, T shows Top, and F focuses the target."
+    : undefined;
+  const describedBy =
+    [keyboardInstructions === undefined ? undefined : keyboardInstructionsId, ariaDescribedBy]
+      .filter((id): id is string => id !== undefined && id.length > 0)
+      .join(" ") || undefined;
+  const keyboardSequence = useRef(0);
+  const [keyboardCommand, setKeyboardCommand] = useState<{
+    readonly sequence: number;
+    readonly command: Exclude<SceneCameraKeyboardCommand, { readonly kind: "preset" }>;
+  }>();
 
   const select = useCallback(
     (detail: ScenePointerDetail): void => {
@@ -389,14 +423,54 @@ function SceneCanvasComponent(
     },
     [cameraMode, onCameraModeChange],
   );
-  const markFreeCamera = useCallback((): void => {
-    if (cameraMode === undefined) setInternalCameraMode("free");
-    onCameraModeChange?.("free", "user");
-  }, [cameraMode, onCameraModeChange]);
+  const markFreeCamera = useCallback(
+    (source: "keyboard" | "user"): void => {
+      if (cameraMode === undefined) setInternalCameraMode("free");
+      onCameraModeChange?.("free", source);
+    },
+    [cameraMode, onCameraModeChange],
+  );
   const requestCameraFromToolbar = useCallback(
     (mode: Exclude<SceneCameraMode, "free">): void => requestCameraMode(mode, "toolbar"),
     [requestCameraMode],
   );
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>): void => {
+      if (
+        !enableKeyboardCameraControls ||
+        event.nativeEvent.isComposing ||
+        event.key === "Process"
+      ) {
+        return;
+      }
+      const command = resolveSceneCameraKeyboardEvent({
+        key: event.key,
+        shiftKey: event.shiftKey,
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        metaKey: event.metaKey,
+        isComposing: event.nativeEvent.isComposing,
+        defaultPrevented: event.defaultPrevented,
+        target: event.target,
+        currentTarget: event.currentTarget,
+        activeElement: event.currentTarget.ownerDocument.activeElement,
+        enableOrbit,
+      });
+      if (command === null) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (command.kind === "preset") {
+        requestCameraMode(command.mode, "keyboard");
+        return;
+      }
+      keyboardSequence.current += 1;
+      setKeyboardCommand({ sequence: keyboardSequence.current, command });
+    },
+    [enableKeyboardCameraControls, enableOrbit, requestCameraMode],
+  );
+  const handleBlur = useCallback((event: FocusEvent<HTMLDivElement>): void => {
+    if (!event.currentTarget.contains(event.relatedTarget)) setHostFocused(false);
+  }, []);
 
   const snapshot = useMemo<SceneCanvasSnapshot>(
     () => ({
@@ -457,16 +531,55 @@ function SceneCanvasComponent(
     borderRadius: 12,
     background: resolvedTheme.scene["scene.background"],
     ...style,
+    outline: hostFocused
+      ? `3px solid ${resolvedTheme.materials.selection}`
+      : "3px solid transparent",
+    outlineOffset: 2,
   };
 
   return (
     <div
+      aria-describedby={describedBy}
+      aria-keyshortcuts={
+        enableKeyboardCameraControls
+          ? enableOrbit
+            ? `${SCENE_CANVAS_PRESET_KEY_SHORTCUTS} ${SCENE_CANVAS_ORBIT_KEY_SHORTCUTS}`
+            : SCENE_CANVAS_PRESET_KEY_SHORTCUTS
+          : undefined
+      }
       aria-label={ariaLabel}
       className={className}
       data-lkds3d-profile={resolvedTheme.id}
       role="application"
       style={rootStyle}
+      tabIndex={0}
+      onBlur={handleBlur}
+      onFocus={() => setHostFocused(true)}
+      onKeyDown={handleKeyDown}
+      onPointerDown={(event) => {
+        if (event.target === event.currentTarget || event.target instanceof HTMLCanvasElement) {
+          event.currentTarget.focus({ preventScroll: true });
+        }
+      }}
     >
+      {keyboardInstructions === undefined ? null : (
+        <span
+          id={keyboardInstructionsId}
+          style={{
+            position: "absolute",
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
+            border: 0,
+          }}
+        >
+          {keyboardInstructions}
+        </span>
+      )}
       <Canvas
         camera={{
           far: 200,
@@ -507,6 +620,7 @@ function SceneCanvasComponent(
             mode={resolvedCameraMode}
             homePose={homePose}
             enableOrbit={enableOrbit}
+            {...(keyboardCommand === undefined ? {} : { keyboardCommand })}
             onManualControl={markFreeCamera}
             {...(focusTarget === undefined ? {} : { focusTarget })}
             {...(focusBounds === undefined ? {} : { focusBounds })}
@@ -515,6 +629,7 @@ function SceneCanvasComponent(
             {...(onCameraSettled === undefined ? {} : { onSettled: onCameraSettled })}
           />
           <SceneEnvironment {...resolvedEnvironment} />
+          <OrientationTriad />
           <CoreSpace>
             {renderState.kind === "ready" ? children : <SceneStateMarker state={renderState} />}
           </CoreSpace>

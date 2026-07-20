@@ -91,7 +91,7 @@ export interface AmrRobotProps {
 export function calculatePathLength(points: readonly Vec3[]): number;
 
 // @public (undocumented)
-export function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, onManualControl, onSettled, }: CameraRigProps): null;
+export function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, keyboardCommand, onManualControl, onSettled, }: CameraRigProps): null;
 
 // @public (undocumented)
 export interface CameraRigProps {
@@ -104,9 +104,16 @@ export interface CameraRigProps {
     // (undocumented)
     readonly homePose?: SceneCameraPose;
     // (undocumented)
+    readonly keyboardCommand?: {
+        readonly sequence: number;
+        readonly command: Exclude<SceneCameraKeyboardCommand, {
+            readonly kind: "preset";
+        }>;
+    };
+    // (undocumented)
     readonly mode: SceneCameraMode;
     // (undocumented)
-    readonly onManualControl?: () => void;
+    readonly onManualControl?: (source: "keyboard" | "user") => void;
     // (undocumented)
     readonly onSettled?: (mode: Exclude<SceneCameraMode, "free">) => void;
     // (undocumented)
@@ -246,6 +253,9 @@ export interface GroundPlaneProps {
     readonly sizeMeters?: number;
 }
 
+// @public (undocumented)
+export function isEditableKeyboardTarget(target: EventTarget | null): boolean;
+
 // @public
 export function MarkerLayer({ snapshot, maxMarkers, freshnessPolicy, renderMesh, onRenderStateChange, }: MarkerLayerProps): react_jsx_runtime.JSX.Element | null;
 
@@ -336,6 +346,9 @@ export interface OccupancyGridSurfaceProps {
 
 // @public (undocumented)
 export const OPERATIONAL_NEUTRAL_THEME: SceneVisualTheme;
+
+// @public
+export function OrientationTriad(): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
 export function PathRibbon({ entity, elevationMeters, variant, animated, selectable, }: PathRibbonProps): react_jsx_runtime.JSX.Element | null;
@@ -449,6 +462,9 @@ export interface ResolveCameraPoseOptions {
 // @public (undocumented)
 export function resolveModelUrl(modelBasePath: string, fileName: string): string;
 
+// @public
+export function resolveSceneCameraKey(input: SceneCameraKeyInput): SceneCameraKeyboardCommand | null;
+
 // @public (undocumented)
 export function resolveSceneTheme(profile?: SceneVisualProfile | SceneVisualTheme, customization?: SceneThemeCustomization): SceneVisualTheme;
 
@@ -456,10 +472,46 @@ export function resolveSceneTheme(profile?: SceneVisualProfile | SceneVisualThem
 export type RobotVisualStatus = "idle" | "live" | "warning" | "error";
 
 // @public (undocumented)
+export const SCENE_CANVAS_KEYBOARD_INSTRUCTIONS = "Camera keys: Home resets the view, T shows Top, F focuses the target, arrow keys orbit, Shift plus arrow keys pans, and plus, minus, Page Up, or Page Down zooms.";
+
+// @public (undocumented)
 export const SCENE_VISUAL_THEMES: Readonly<Record<SceneVisualProfile, SceneVisualTheme>>;
 
 // @public (undocumented)
-export type SceneCameraChangeSource = "toolbar" | "user" | "api" | "prop";
+export type SceneCameraChangeSource = "toolbar" | "keyboard" | "user" | "api" | "prop";
+
+// @public (undocumented)
+export type SceneCameraKeyboardCommand = {
+    readonly kind: "preset";
+    readonly mode: "home" | "top" | "focus";
+} | {
+    readonly kind: "orbit";
+    readonly horizontal: -1 | 0 | 1;
+    readonly vertical: -1 | 0 | 1;
+} | {
+    readonly kind: "pan";
+    readonly horizontal: -1 | 0 | 1;
+    readonly vertical: -1 | 0 | 1;
+} | {
+    readonly kind: "zoom";
+    readonly direction: "in" | "out";
+};
+
+// @public (undocumented)
+export interface SceneCameraKeyInput {
+    // (undocumented)
+    readonly altKey?: boolean;
+    // (undocumented)
+    readonly ctrlKey?: boolean;
+    // (undocumented)
+    readonly isComposing?: boolean;
+    // (undocumented)
+    readonly key: string;
+    // (undocumented)
+    readonly metaKey?: boolean;
+    // (undocumented)
+    readonly shiftKey?: boolean;
+}
 
 // @public (undocumented)
 export type SceneCameraMode = "home" | "top" | "focus" | "free";
@@ -491,6 +543,7 @@ export interface SceneCanvasHandle {
 
 // @public (undocumented)
 export interface SceneCanvasProps {
+    readonly ariaDescribedBy?: string;
     // (undocumented)
     readonly ariaLabel?: string;
     // (undocumented)
@@ -505,6 +558,7 @@ export interface SceneCanvasProps {
     readonly defaultSelectedEntityId?: EntityId | null;
     // (undocumented)
     readonly devicePixelRatio?: number | readonly [number, number];
+    readonly enableKeyboardCameraControls?: boolean;
     // (undocumented)
     readonly enableOrbit?: boolean;
     // (undocumented)

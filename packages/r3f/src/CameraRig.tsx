@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Vector3 } from "three";
+import { Quaternion, Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import type { Bounds3, Vec3 } from "@lk-robotics/design-system-3d-core";
 
@@ -8,6 +8,7 @@ import { resolveCameraMotionPolicy } from "./camera-motion.js";
 import { coreToThreePosition } from "./coordinates.js";
 import { usePrefersReducedMotion } from "./motion.js";
 import { shouldScheduleDemandFrame } from "./rendering.js";
+import type { SceneCameraKeyboardCommand } from "./scene-keyboard.js";
 import {
   DEFAULT_HOME_CAMERA_POSE,
   resolveCameraPose,
@@ -24,7 +25,11 @@ export interface CameraRigProps {
   readonly homePose?: SceneCameraPose;
   readonly transitionSpeed?: number;
   readonly enableOrbit?: boolean;
-  readonly onManualControl?: () => void;
+  readonly keyboardCommand?: {
+    readonly sequence: number;
+    readonly command: Exclude<SceneCameraKeyboardCommand, { readonly kind: "preset" }>;
+  };
+  readonly onManualControl?: (source: "keyboard" | "user") => void;
   readonly onSettled?: (mode: Exclude<SceneCameraMode, "free">) => void;
 }
 
@@ -41,12 +46,14 @@ export function CameraRig({
   homePose = DEFAULT_HOME_CAMERA_POSE,
   transitionSpeed = 6,
   enableOrbit = true,
+  keyboardCommand,
   onManualControl,
   onSettled,
 }: CameraRigProps) {
   const { camera, frameloop, get, gl, invalidate, set } = useThree();
   const prefersReducedMotion = usePrefersReducedMotion();
   const controlsRef = useRef<OrbitControls | null>(null);
+  const processedKeyboardSequence = useRef<number | undefined>(undefined);
   const transitionActive = useRef(mode !== "free");
   const requestDemandFrame = useCallback(
     (active: boolean): void => {
@@ -93,7 +100,7 @@ export function CameraRig({
     controls.target.copy(asVector3(coreToThreePosition(homePose.target)));
     const handleStart = (): void => {
       transitionActive.current = false;
-      onManualControl?.();
+      onManualControl?.("user");
       requestDemandFrame(true);
     };
     const handleChange = (): void => requestDemandFrame(true);
@@ -119,6 +126,58 @@ export function CameraRig({
     requestDemandFrame,
     set,
   ]);
+
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (
+      controls === null ||
+      keyboardCommand === undefined ||
+      keyboardCommand.sequence === processedKeyboardSequence.current
+    ) {
+      return;
+    }
+    processedKeyboardSequence.current = keyboardCommand.sequence;
+    if (!enableOrbit) return;
+    const { command } = keyboardCommand;
+    const target = controls.target;
+    const offset = camera.position.clone().sub(target);
+    const distance = offset.length();
+    const up = camera.up.clone().normalize();
+    const forward = target.clone().sub(camera.position).normalize();
+    const right = new Vector3().crossVectors(forward, up).normalize();
+
+    transitionActive.current = false;
+    onManualControl?.("keyboard");
+    if (command.kind === "orbit") {
+      const orbitStep = Math.PI / 18;
+      if (command.horizontal !== 0) {
+        offset.applyQuaternion(
+          new Quaternion().setFromAxisAngle(up, -command.horizontal * orbitStep),
+        );
+      }
+      if (command.vertical !== 0) {
+        offset.applyQuaternion(
+          new Quaternion().setFromAxisAngle(right, command.vertical * orbitStep),
+        );
+      }
+      camera.position.copy(target).add(offset);
+    } else if (command.kind === "pan") {
+      const screenUp = new Vector3().crossVectors(right, forward).normalize();
+      const translation = right
+        .multiplyScalar(command.horizontal * distance * 0.08)
+        .add(screenUp.multiplyScalar(command.vertical * distance * 0.08));
+      camera.position.add(translation);
+      target.add(translation);
+    } else {
+      const desiredDistance = Math.min(
+        controls.maxDistance,
+        Math.max(controls.minDistance, distance * (command.direction === "in" ? 0.84 : 1.19)),
+      );
+      camera.position.copy(target).add(offset.setLength(desiredDistance));
+    }
+    controls.update();
+    requestDemandFrame(true);
+  }, [camera, enableOrbit, keyboardCommand, onManualControl, requestDemandFrame]);
 
   useEffect(() => {
     if (mode === "free") {

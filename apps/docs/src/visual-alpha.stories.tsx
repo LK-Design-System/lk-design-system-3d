@@ -9,7 +9,7 @@ import {
 } from "@lk-robotics/lds-core";
 import { Legend } from "@lk-robotics/lds-product";
 import { SegmentedControl } from "@lk-robotics/lds-core/components/selection/SegmentedControl";
-import { useMemo, useState, type ComponentProps, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import {
   GoalMarker,
   PathRibbon,
@@ -680,6 +680,8 @@ function renderStateFor(state: VisualRuntimeState): SceneRenderState {
       return { kind: "ready" };
     case "loading":
       return { kind: "loading", label: "GLB 카탈로그 로딩 중", progress: 0.58 };
+    case "retrying":
+      return { kind: "loading", label: "렌더러 재시도 중", progress: 0.32 };
     case "empty":
       return { kind: "empty", title: "공간 객체 없음", description: "렌더러 준비됨" };
     case "error":
@@ -696,13 +698,19 @@ export function RendererStateExperience(): ReactNode {
   const [runtimeState, setRuntimeState] = useState<VisualRuntimeState>("loading");
   const [cameraMode, setCameraMode] = useState<VisualCameraMode>("home");
   const details = selectedDetails(PRIMARY_AMR_ID);
+  useEffect(() => {
+    if (runtimeState !== "retrying") return undefined;
+    const recoveryTimer = window.setTimeout(() => setRuntimeState("ready"), 700);
+    return () => window.clearTimeout(recoveryTimer);
+  }, [runtimeState]);
+  const selected = runtimeState === "empty" ? undefined : details;
   return (
     <LdsFocusedViewerPage
       cameraMode={cameraMode}
       description="페이지 셸을 유지한 채 렌더러의 로딩·빈 상태·오류·재시도·복구 상태를 확인합니다."
       eyebrow="LDS 3D / 상태"
       onCameraModeChange={setCameraMode}
-      onRetry={() => setRuntimeState("ready")}
+      onRetry={() => setRuntimeState("retrying")}
       pageTitle="렌더러 수명주기와 복구"
       profile="operational"
       reviewControls={(
@@ -721,7 +729,7 @@ export function RendererStateExperience(): ReactNode {
       )}
       runtimeState={runtimeState}
       sceneTitle="창고 / LK-MAP"
-      {...(details === undefined ? {} : { selected: details })}
+      {...(selected === undefined ? {} : { selected })}
     >
       <SceneCanvas
         ariaLabel="렌더러 수명주기 상태 인터랙티브 장면"
@@ -733,17 +741,19 @@ export function RendererStateExperience(): ReactNode {
         homePose={HOME_CAMERA}
         profile="operational-neutral"
         renderState={renderStateFor(runtimeState)}
-        selectedEntityId={PRIMARY_AMR_ID}
+        selectedEntityId={runtimeState === "empty" ? null : PRIMARY_AMR_ID}
         style={{ height: "100%", minHeight: 480, borderRadius: 0 }}
         topBounds={FLOOR_BOUNDS}
       >
-        <WarehouseContents
-          animateAmbientMotion={false}
-          hovered={null}
-          profile="operational-neutral"
-          selected={PRIMARY_AMR_ID}
-          persistentRouteLabels={false}
-        />
+        {runtimeState === "empty" ? null : (
+          <WarehouseContents
+            animateAmbientMotion={false}
+            hovered={null}
+            profile="operational-neutral"
+            selected={PRIMARY_AMR_ID}
+            persistentRouteLabels={false}
+          />
+        )}
       </SceneCanvas>
     </LdsFocusedViewerPage>
   );

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T12:38:01.363Z",
+  "generatedAt": "2026-07-20T17:58:41.685Z",
   "passed": true,
   "checks": {
     "actualWebGlCanvas": true,
@@ -25,11 +25,11 @@
     "canvas": true,
     "canvasCssSize": {
       "width": 1382,
-      "height": 539
+      "height": 587
     },
     "canvasBackingSize": {
       "width": 1382,
-      "height": 539
+      "height": 587
     },
     "canvasPixelRatio": 1,
     "webgl": true,
@@ -60,7 +60,7 @@
     "frameVariant": "standalone",
     "frameOwnsExteriorPerimeter": true,
     "frameFillsWorkspace": true,
-    "framePanelOverlapArea": 162300,
+    "framePanelOverlapArea": 176700,
     "legendPanelOverlapArea": 0,
     "viewportDominates": true,
     "wideLayout": true,
@@ -68,12 +68,12 @@
     "legacyCustomChromeCount": 0,
     "ldsPrimaryToken": "#3878B3",
     "glbResources": [
-      "http://127.0.0.1:57551/visual-alpha/amr.glb",
-      "http://127.0.0.1:57551/visual-alpha/rack.glb",
-      "http://127.0.0.1:57551/visual-alpha/pallet.glb",
-      "http://127.0.0.1:57551/visual-alpha/cargo-bin.glb",
-      "http://127.0.0.1:57551/visual-alpha/charging-station.glb",
-      "http://127.0.0.1:57551/visual-alpha/safety-cone.glb"
+      "http://127.0.0.1:54082/visual-alpha/amr.glb",
+      "http://127.0.0.1:54082/visual-alpha/rack.glb",
+      "http://127.0.0.1:54082/visual-alpha/pallet.glb",
+      "http://127.0.0.1:54082/visual-alpha/cargo-bin.glb",
+      "http://127.0.0.1:54082/visual-alpha/charging-station.glb",
+      "http://127.0.0.1:54082/visual-alpha/safety-cone.glb"
     ],
     "inspectorMatches": true,
     "foundationSvgSubstituteCount": 0
@@ -81,14 +81,14 @@
   "interaction": {
     "hoverLabel": "랙 R-01",
     "hoverPoint": [
-      737,
-      297
+      740,
+      298
     ],
     "inspectorText": "선택한 공간 객체\n랙 R-01\n랙\n대기\n공간 식별 정보\n객체 ID\nrack/r-01\n위치\n-2.50 · 4.25 · 0.00 m",
-    "pointerEventCount": 38,
+    "pointerEventCount": 1,
     "selectionPoint": [
-      737,
-      297
+      740,
+      298
     ]
   },
   "diagnostic": {
@@ -113,6 +113,7 @@
     "loading": true,
     "empty": true,
     "error": true,
+    "retrying": true,
     "retry": true
   },
   "responsive": {
@@ -125,35 +126,35 @@
       "drawerTrigger": false,
       "workspaceRect": {
         "left": 20,
-        "top": 142.890625,
+        "top": 126.890625,
         "right": 972,
-        "bottom": 834.890625,
+        "bottom": 866.890625,
         "width": 952,
-        "height": 692
+        "height": 740
       },
       "frameRect": {
         "left": 20,
-        "top": 142.890625,
+        "top": 126.890625,
         "right": 972,
-        "bottom": 834.890625,
+        "bottom": 866.890625,
         "width": 952,
-        "height": 692
+        "height": 740
       },
       "canvasRect": {
         "left": 21,
-        "top": 143.890625,
+        "top": 127.890625,
         "right": 971,
-        "bottom": 833.890625,
+        "bottom": 865.890625,
         "width": 950,
-        "height": 690
+        "height": 738
       },
       "inspectorRect": {
         "left": 672,
-        "top": 142.890625,
+        "top": 126.890625,
         "right": 972,
-        "bottom": 834.890625,
+        "bottom": 866.890625,
         "width": 300,
-        "height": 692
+        "height": 740
       },
       "viewportToInspectorRatio": 3.1733333333333333,
       "inspectorInsideWorkspace": true,
@@ -167,12 +168,12 @@
       "canvasInsideFrame": true,
       "canvasPreservesViewport": true,
       "canvasPixelRatio": 1,
-      "canvasCssPixels": 655500,
-      "canvasBackingPixels": 655500,
+      "canvasCssPixels": 701100,
+      "canvasBackingPixels": 701100,
       "toolbarInsideFrame": true,
       "toolbarHudOverlapArea": 0,
       "toolbarPanelOverlapArea": 0,
-      "framePanelOverlapArea": 207600,
+      "framePanelOverlapArea": 222000,
       "panelOverlaysCanvas": true,
       "selectionStatusFullyVisible": true,
       "legendInsideFrame": true,
@@ -188,35 +189,35 @@
       "drawerTrigger": false,
       "workspaceRect": {
         "left": 20,
-        "top": 142.890625,
+        "top": 126.890625,
         "right": 972,
-        "bottom": 834.890625,
+        "bottom": 866.890625,
         "width": 952,
-        "height": 692
+        "height": 740
       },
       "frameRect": {
         "left": 20,
-        "top": 142.890625,
+        "top": 126.890625,
         "right": 972,
-        "bottom": 834.890625,
+        "bottom": 866.890625,
         "width": 952,
-        "height": 692
+        "height": 740
       },
       "canvasRect": {
         "left": 21,
-        "top": 143.890625,
+        "top": 127.890625,
         "right": 971,
-        "bottom": 833.890625,
+        "bottom": 865.890625,
         "width": 950,
-        "height": 690
+        "height": 738
       },
       "inspectorRect": {
         "left": 656,
-        "top": 142.890625,
+        "top": 126.890625,
         "right": 972,
-        "bottom": 834.890625,
+        "bottom": 866.890625,
         "width": 316,
-        "height": 692
+        "height": 740
       },
       "viewportToInspectorRatio": 3.0126582278481013,
       "inspectorInsideWorkspace": true,
@@ -230,12 +231,12 @@
       "canvasInsideFrame": true,
       "canvasPreservesViewport": true,
       "canvasPixelRatio": 1,
-      "canvasCssPixels": 655500,
-      "canvasBackingPixels": 655500,
+      "canvasCssPixels": 701100,
+      "canvasBackingPixels": 701100,
       "toolbarInsideFrame": true,
       "toolbarHudOverlapArea": 0,
       "toolbarPanelOverlapArea": 0,
-      "framePanelOverlapArea": 218672,
+      "framePanelOverlapArea": 233840,
       "panelOverlaysCanvas": true,
       "selectionStatusFullyVisible": true,
       "legendInsideFrame": true,
@@ -246,20 +247,20 @@
       "workspaceRect": {
         "left": 20,
         "right": 972,
-        "top": 142.890625,
-        "bottom": 834.890625
+        "top": 126.890625,
+        "bottom": 866.890625
       },
       "frameRect": {
         "left": 20,
         "right": 972,
-        "top": 142.890625,
-        "bottom": 834.890625
+        "top": 126.890625,
+        "bottom": 866.890625
       },
       "handleRect": {
         "left": 948,
         "right": 972,
-        "top": 158.890625,
-        "bottom": 206.890625
+        "top": 142.890625,
+        "bottom": 190.890625
       },
       "handleInsideWorkspace": true,
       "handleAtWorkspaceDockEdge": true
@@ -365,54 +366,54 @@
     "drawerOpened": true,
     "drawerReopenedAfterRoundTrip": false,
     "capture320": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
-      "bytes": 78267,
-      "sha256": "9a11694283651100c50c8b97810d844358e30a2f6bff2adcca4a4e388ec4234e"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
+      "bytes": 77590,
+      "sha256": "9d690b4dc9e020255eb453f855f9271c72ee2eea69d1074126a9d7122836938a"
     }
   },
   "captures": {
     "home": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-home.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\operational-neutral.png",
-      "bytes": 207962,
-      "sha256": "ab21201ec9245c78853c13ef5a39cff17a4b1ee75523d1e0d85460c56bde08cd"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-home.png",
+      "mirrorFile": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\operational-neutral.png",
+      "bytes": 216651,
+      "sha256": "c6b427aaad8ba4c5f52df850bdf2717fc8b453f05b3fa3eb603c94bf1afc3e2b"
     },
     "top": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-top.png",
-      "bytes": 106925,
-      "sha256": "e998038c6bb450550b0d1e790ba4f140f75f304fd4c3fb545e8bd35f5c2cbe3e"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-top.png",
+      "bytes": 99601,
+      "sha256": "4195fbc452b866afb73d9786762b8b0d3c9575945cf2ca52c641d0177df37130"
     },
     "focus": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-focus.png",
-      "bytes": 120754,
-      "sha256": "cbfbeda4abecc49999c5ebc16fe33ae3915046ad0d5d9f1949ddcc2c9574ee7a"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-focus.png",
+      "bytes": 123837,
+      "sha256": "376b5d89201e0207c665738a7186ed281c45e1e5f70c569b3c23c48dc9056d3b"
     },
     "diagnostic": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\diagnostic-technical.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\diagnostic-technical.png",
-      "bytes": 276876,
-      "sha256": "875d97708ab03c6f48fabca85349c736f31bb32040baaf1276237791349af0a2"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\diagnostic-technical.png",
+      "mirrorFile": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\diagnostic-technical.png",
+      "bytes": 285054,
+      "sha256": "2e8f32e0b4050e2c0290739b42de1d65ede232fbdac7bf052e919ba800d366d8"
     },
     "assetCatalog": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\asset-catalog.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\asset-catalog.png",
-      "bytes": 150126,
-      "sha256": "09cc9387c2061313627da021ec719c69f5d0b0100c49086d1de96838129666ef"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\asset-catalog.png",
+      "mirrorFile": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\asset-catalog.png",
+      "bytes": 151962,
+      "sha256": "388c1353f9205f5a89628cb104210f41f820e458d14c031ae5b7d541724f6fda"
     },
     "goalPath": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\goal-path-states.png",
-      "bytes": 117740,
-      "sha256": "ffaa714c9e17482308e216fda88de24a066314f45b087b52ea45b90f11708970"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\goal-path-states.png",
+      "bytes": 118364,
+      "sha256": "3c00b6f265cda4b78cead64ed389d9cd42e85c3257180c47880dca5cde0002aa"
     },
     "recovered": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\renderer-recovered.png",
-      "bytes": 182724,
-      "sha256": "552b544e0bbc714de54dbd4ac8a1154d6b9d75acae6befebf8628342b333f974"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\renderer-recovered.png",
+      "bytes": 181921,
+      "sha256": "ba7b0d5a0dde4ef9559e5de1b43a2b680852e83c5af02cd6d057c3a7d455372f"
     },
     "responsive320": {
-      "file": "C:\\Users\\seoul\\Documents\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
-      "bytes": 78267,
-      "sha256": "9a11694283651100c50c8b97810d844358e30a2f6bff2adcca4a4e388ec4234e"
+      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
+      "bytes": 77590,
+      "sha256": "9d690b4dc9e020255eb453f855f9271c72ee2eea69d1074126a9d7122836938a"
     }
   }
 }

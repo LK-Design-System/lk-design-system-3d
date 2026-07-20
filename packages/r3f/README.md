@@ -39,6 +39,17 @@ renderer package to LDS or to one product shell. `showStatusOverlay` is an
 opt-in, non-interactive renderer diagnostic for loading, empty, and error
 states; it defaults to `false`.
 
+The scene host is intentionally focusable and shows its own focus outline.
+Focused camera keys are `Home` (home), `T` (top), `F` (focus), arrows (orbit),
+`Shift` + arrows (pan), and `+`/`-` or `Page Up`/`Page Down` (zoom). The host
+handles keys only while it (or its WebGL canvas) actually owns focus; editable
+and interactive descendants retain their own keys, as do already-handled events
+and IME composition. With `enableOrbit={false}`, only the three preset keys are
+advertised and handled. Connect `ariaDescribedBy` to caller-owned help or scene
+summaries when more context is needed. A camera-fixed labelled XYZ
+triad is rendered in WebGL by default for both visual profiles; optional
+world-origin axes supplement rather than replace it.
+
 Start with the smallest semantic spatial atoms. `AmrOperationalScene` and
 `VisualAlphaModel` are fixed Visual Alpha scenario helpers, not the default
 product composition starting point. See the repository's

@@ -309,10 +309,12 @@ items contain the subordinate `구 범위 배치`, `축 정렬 상자 범위 배
 영역 이동`, and `삭제 영역 크기 조절` tools. A public LDS `Divider` separates
 that contextual trigger from the parent toolbar. This avoids presenting
 workflow, shape, and manipulation choices as five peer tools. Only after a
-placement item is active and the user clicks the WebGL ground plane does the
-Story create and select a transient volume. Returning to `선택` preserves the
-draft and keeps it available for later manipulation. Wheel zoom and camera
-navigation remain available while a placement, move, or resize mode is idle;
+placement item is chosen, the Story creates and selects a deterministic
+transient volume at the scene origin and exposes its numeric fields. A ground
+plane click repositions that same draft without resetting its size or
+orientation. Returning to `선택` preserves the draft and keeps it available for
+later manipulation. Wheel zoom and camera navigation remain available while a
+placement, move, or resize mode is idle;
 camera input is suspended only for the duration of an actual transform-handle
 drag. Only `배치 취소` or Escape discards the draft.
 
@@ -478,13 +480,15 @@ are `CanvasEditorShell`, `CanvasEditorCommandBar`, `EditorToolbar`, `Tree`,
 `FloorSelector`, `SelectionInspector`, `NumberField`, `Select`,
 `ConfirmDialog`, `Modal`, `ViewportStatusBar`, and `Scene3DFrame`. The docs app
 continues to consume only public LDS exports and the official CSS entry. Its
-local `link:` dependency is suitable for this review but is not release
-portability evidence.
+pinned RC dependency remains the portable baseline. The 2026-07-21 controlled
+Tree integration is verified against the sibling public source locally and
+requires the corresponding LDS package artifact before release portability can
+be claimed.
 
 | Reading/anatomy region                                                                                                                                                           | Owner and mapping                                                                                                                      |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | Document/site identity, import/generate/save, dirty state, undo/redo, permissions, errors, and revision conflict                                                                 | Product workflow composed with LDS `CanvasEditorShell` and `CanvasEditorCommandBar`                                                    |
-| Level/object hierarchy, floor navigation, and active selection                                                                                                                   | `FloorSelector` covers level switching, but the current public shell/`Tree` contract does not cover a controlled selectable structure tree; this is an LDS gap, not an LDS3D custom-panel opportunity |
+| Level/object hierarchy, floor navigation, and active selection                                                                                                                   | `FloorSelector` covers level switching; public `Tree` now covers controlled single selection, `aria-selected`, and caller-directed reveal/focus. Visibility, lock, import/diff status, and row actions remain separate LDS/product decisions |
 | Translate/rotate/scale mode, snap values, material/property fields, delete/duplicate, and keyboard alternative                                                                   | LDS `EditorToolbar` and public form/actions create the same renderer-neutral change intent; `SelectionInspector` applies only when an entity is selected |
 | Site/Building/Level placement, floor elevation, primitive/asset nodes, PBR factors, depth, picking, selected outline, and transform handles                                      | LDS3D core contracts and actual WebGL primitives inside one `SceneCanvas`                                                              |
 | Wall curves, navigation graph, PGM floor texture mapping, product asset presets, marquee/multi-selection pivot, and final validation | Unimplemented in this audited foundation. ADR-0002/M5 promotes the common wall/graph subset to a later LDS3D capability review; product-specific policy and workflow remain product-owned |
@@ -538,9 +542,10 @@ The page anatomy and keyboard/reading order are fixed before implementation:
    commands are intentionally absent.
 2. `EditorToolbar`: selection, transform, route, area, goal, primitive, and asset
    tools.
-3. Left shell region: `FloorSelector` plus a real display-layer tree only when
-   one exists. A selectable level/object structure tree is currently an LDS
-   ownership gap and is not fabricated in LDS3D.
+3. Left shell region: `FloorSelector` plus public LDS `Tree` for the current
+   single-select level/object hierarchy. Canvas-origin selection requests
+   reveal/focus through the Tree handle; display-layer visibility and lock
+   actions remain separate contracts.
 4. Dominant center: one embedded `Scene3DFrame` containing the actual WebGL
    `SceneCanvas`, completed spatial entities, the active draft, snap cues, ghost
    placement, and transform handles.
@@ -552,15 +557,12 @@ The page anatomy and keyboard/reading order are fixed before implementation:
 
 `LayerPanel` is deliberately not used as the object hierarchy. Its public prompt
 defines `activeLayerId` as a display-layer key rather than a canvas-object
-selection. The current public `Tree` lacks controlled selection, selected state,
-lock/visibility, import mapping, diff/validation status and row actions; the
-current Story mounting it in `CanvasEditorShell.layers` is provisional
-composition debt, not an approved reusable pattern. Before a production
-structure panel is implemented, choose explicitly between an additive LDS
-structure slot/richer tree contract and a product-owned structure composition.
-That scope decision is not approved by this LDS3D documentation change. Until
-then the integration Story must omit the structure panel or use `LayerPanel`
-only for genuine display layers.
+selection. Public `Tree` owns controlled single selection, persistent selected
+state, and caller-directed reveal/focus for the current Story. It still does not
+own lock/visibility, import mapping, diff/validation status, or row actions.
+Before a production structure panel adds those capabilities, choose explicitly
+between an additive LDS richer-tree contract and a product-owned structure
+composition. `LayerPanel` remains reserved for genuine display layers.
 
 On wide surfaces, the viewport remains the dominant region beside only the
 approved supporting panels. On narrow surfaces,
@@ -578,7 +580,7 @@ IME composition.
 
 | Surface or behavior | Owner |
 | --- | --- |
-| Shell, tools, floor navigation, fields, actions, status, focus, display layers, and responsive region switching | LDS public components; selectable structure hierarchy remains an unresolved LDS/product ownership decision |
+| Shell, tools, floor navigation, fields, actions, status, focus, controlled single-select hierarchy, display layers, and responsive region switching | LDS public components; hierarchy visibility, lock, diff, and row-action policy remain an LDS/product ownership decision |
 | Frames, draft validation, snap results, transform preview/commit/cancel, picking, GLB normalization, and actual WebGL route/area/goal/ghost geometry | LDS3D core/assets/R3F |
 | In-memory document reducer, ID allocation, active level/tool/selection, bounded undo/redo, one-gesture transactions, and keyboard routing | Docs Story composition (product-boundary example) |
 | Persistence, transport, authentication, permissions, conflict resolution, domain schemas, generated topology, and production validation | Product; intentionally absent |
