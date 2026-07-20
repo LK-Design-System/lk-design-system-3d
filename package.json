@@ -17,7 +17,7 @@
     "typecheck": "pnpm -r --if-present run typecheck",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
-    "storybook": "storybook dev --config-dir apps/docs/.storybook --port 6006",
+    "storybook": "storybook dev --config-dir apps/docs/.storybook --port 6007 --host 127.0.0.1",
     "build-storybook": "storybook build --config-dir apps/docs/.storybook --output-dir storybook-static && node scripts/check-storybook.mjs && pnpm check:representative-stories",
     "check:lds-style": "node scripts/check-lds-style.mjs",
     "check:representative-stories": "node scripts/check-lds-style.mjs --storybook-index storybook-static/index.json --require-built-stories",
