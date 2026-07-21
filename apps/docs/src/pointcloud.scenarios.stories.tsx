@@ -393,9 +393,9 @@ export function FocusedPointCloudViewerExperience(): ReactNode {
           <span>{renderState.requestedPointCount.toLocaleString()}개 점 · 레이어 2개</span>
         </>
       }
-      reviewControls={
+      sceneDetails={
         <DescriptionList
-          columns={1}
+          columns={2}
           items={[
             { term: "장면 프레임", description: POINT_CLOUD_FRAME },
             { term: "소스 프레임", description: "lk-map · lidar-front" },

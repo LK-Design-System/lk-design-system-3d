@@ -44,6 +44,10 @@ body {
   .lds3d-focused-viewer-layout {
     grid-column: 1 / -1;
   }
+
+  .lds3d-scene-details {
+    grid-column: 1 / -1;
+  }
 }
 
 .lds3d-review-controls {

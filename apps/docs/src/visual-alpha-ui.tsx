@@ -56,6 +56,7 @@ export interface LdsFocusedViewerPageProps extends PropsWithChildren {
   readonly emptySelectionLabel?: ReactNode;
   readonly inspectorActions?: ReactNode;
   readonly reviewControls?: ReactNode;
+  readonly sceneDetails?: ReactNode;
   readonly storyMeta?: ReactNode;
 }
 
@@ -240,6 +241,7 @@ export function LdsFocusedViewerPage({
   emptySelectionLabel,
   inspectorActions,
   reviewControls,
+  sceneDetails,
   storyMeta = (
     <>
       <span>AMR 운영</span>
@@ -469,6 +471,12 @@ export function LdsFocusedViewerPage({
             </div>
           )}
         </div>
+
+        {sceneDetails === undefined ? null : (
+          <section className="lds3d-scene-details" aria-label={`${sceneTitle} 세부 정보`}>
+            {sceneDetails}
+          </section>
+        )}
       </Container>
 
       {isNarrow ? (
