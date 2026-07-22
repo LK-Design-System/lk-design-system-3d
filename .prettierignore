@@ -9,3 +9,4 @@ docs
 pnpm-lock.yaml
 *.api.md
 packages/assets/visual-alpha/**/*.json
+.omc/

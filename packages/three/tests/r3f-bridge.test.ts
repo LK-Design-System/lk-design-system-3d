@@ -1,12 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Line } from "three";
 
-import {
-  assetId,
-  entityId,
-  frameId,
-  type SceneThemeValues,
-} from "@lk-robotics/lds-3d-core";
+import { assetId, entityId, frameId, type SceneThemeValues } from "@lk-robotics/lds-3d-core";
 
 import { createThreeVisualInstance } from "../src/r3f-bridge.js";
 

@@ -21,7 +21,7 @@ catalog:
   vitest: 3.2.4
 
 minimumReleaseAgeExclude:
-  - '@lk-robotics/lds-core@0.1.0-rc.0 || 0.1.0-rc.1'
-  - '@lk-robotics/lds-product@0.1.0-rc.0 || 0.1.0-rc.1'
-  - '@lk-robotics/lds-robotics-ui@0.1.0-rc.0 || 0.1.0-rc.1 || 0.1.0-rc.2'
-  - '@lk-robotics/lds-theme@0.1.0-rc.0 || 0.1.0-rc.1'
+  - "@lk-robotics/lds-core@0.1.0-rc.0 || 0.1.0-rc.1"
+  - "@lk-robotics/lds-product@0.1.0-rc.0 || 0.1.0-rc.1"
+  - "@lk-robotics/lds-robotics-ui@0.1.0-rc.0 || 0.1.0-rc.1 || 0.1.0-rc.2"
+  - "@lk-robotics/lds-theme@0.1.0-rc.0 || 0.1.0-rc.1"
