@@ -10,6 +10,15 @@ const candidates = [
   path.resolve(
     repositoryRoot,
     "..",
+    "lk-design-system",
+    "packages",
+    "conformance",
+    "src",
+    "cli.mjs",
+  ),
+  path.resolve(
+    repositoryRoot,
+    "..",
     "LK Design System",
     "packages",
     "conformance",
