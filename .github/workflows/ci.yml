@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      NODE_AUTH_TOKEN: ${{ github.token }}
+      NODE_AUTH_TOKEN: ${{ secrets.LK_PACKAGES_READ_TOKEN || github.token }}
     defaults:
       run:
         shell: pwsh
@@ -39,7 +39,7 @@ jobs:
 
       - name: Run pinned LDS conformance
         id: lds_conformance
-        uses: LK-ROBOTICS/lk-design-system/.github/actions/lds-conformance@b06aef7c605c47bd11ca2bfdc371d25bf7c9ba92
+        uses: LK-Design-System/lk-design-system/.github/actions/lds-conformance@9fa53fea7e069287601d448f987bf43a157b8a82
         with:
           profile: lds3d-ui
           root: lk-design-system-3d
