@@ -19,7 +19,7 @@ import {
   occupancyCellDataIndex,
   occupancyImagePixelCenter,
   occupancyImagePixelToCell,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 describe("foundation fixtures", () => {
   it("defines a one-meter cube with eight vertices and twelve triangles", () => {

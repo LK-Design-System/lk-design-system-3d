@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
-import type { EntityId, FrameId, Vec3 } from "@lk-robotics/design-system-3d-core";
+import type { EntityId, FrameId, Vec3 } from "@lk-robotics/lds-3d-core";
 
 import { threeToCorePosition } from "./coordinates.js";
 import type { SceneCameraMode, SceneInteractionState } from "./state.js";

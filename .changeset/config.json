@@ -4,12 +4,12 @@
   "commit": false,
   "fixed": [
     [
-      "@lk-robotics/design-system-3d-core",
-      "@lk-robotics/design-system-3d-assets",
-      "@lk-robotics/design-system-3d-testing",
-      "@lk-robotics/design-system-3d-pointcloud",
-      "@lk-robotics/design-system-3d-three",
-      "@lk-robotics/design-system-3d-r3f"
+      "@lk-robotics/lds-3d-core",
+      "@lk-robotics/lds-3d-assets",
+      "@lk-robotics/lds-3d-testing",
+      "@lk-robotics/lds-3d-pointcloud",
+      "@lk-robotics/lds-3d-three",
+      "@lk-robotics/lds-3d-r3f"
     ]
   ],
   "linked": [],

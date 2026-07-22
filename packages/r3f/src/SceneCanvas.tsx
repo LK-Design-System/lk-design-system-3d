@@ -22,7 +22,7 @@ import {
   type EntityId,
   type FrameId,
   type Vec3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 import { CameraRig } from "./CameraRig.js";
 import { CoreSpace } from "./CoreSpace.js";

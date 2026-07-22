@@ -1,4 +1,4 @@
-# @lk-robotics/design-system-3d-r3f
+# @lk-robotics/lds-3d-r3f
 
 React Three Fiber renderer for LK Design System 3D Visual Alpha. It renders a
 real WebGL scene while keeping public spatial data in the LK core convention:
@@ -8,8 +8,8 @@ core-to-Three basis once; descendants must not rotate the world again.
 ## Quick start
 
 ```tsx
-import { AmrRobot, GoalMarker, PathRibbon, SceneCanvas } from "@lk-robotics/design-system-3d-r3f";
-import { frameId } from "@lk-robotics/design-system-3d-core";
+import { AmrRobot, GoalMarker, PathRibbon, SceneCanvas } from "@lk-robotics/lds-3d-r3f";
+import { frameId } from "@lk-robotics/lds-3d-core";
 
 <SceneCanvas
   frame={frameId("lk-map")}
@@ -66,7 +66,7 @@ explicit `maxPoints` and let the caller render the resulting eligibility state
 in LDS/product DOM.
 
 ```tsx
-import { PointCloudLayer, SceneCanvas } from "@lk-robotics/design-system-3d-r3f";
+import { PointCloudLayer, SceneCanvas } from "@lk-robotics/lds-3d-r3f";
 
 <SceneCanvas frame={snapshot.frame} frameLoop="demand">
   <PointCloudLayer maxPoints={50_000} snapshot={snapshot} />
@@ -114,7 +114,7 @@ zero at texture `v=0`, and combines cell lines with an unknown checker and
 occupied diagonal pattern so state is not colour-only.
 
 ```tsx
-import { OccupancyGridSurface, SceneCanvas } from "@lk-robotics/design-system-3d-r3f";
+import { OccupancyGridSurface, SceneCanvas } from "@lk-robotics/lds-3d-r3f";
 
 <SceneCanvas frame={snapshot.geometry.gridToFrame.targetFrame} frameLoop="demand">
   <OccupancyGridSurface

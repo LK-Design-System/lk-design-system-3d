@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bounds3, entityId, frameId } from "@lk-robotics/design-system-3d-core";
+import { bounds3, entityId, frameId } from "@lk-robotics/lds-3d-core";
 
 import {
   EMPTY_INTERACTION_STATE,

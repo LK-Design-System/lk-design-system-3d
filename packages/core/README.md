@@ -1,4 +1,4 @@
-# @lk-robotics/design-system-3d-core
+# @lk-robotics/lds-3d-core
 
 Renderer-neutral spatial contracts for LK Design System 3D. The package uses a
 right-handed, Z-up, +X-forward coordinate system measured in meters. It has no

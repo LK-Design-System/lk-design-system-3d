@@ -3,9 +3,9 @@ import {
   frameId,
   quaternionFromYaw,
   rigidTransform3,
-} from "@lk-robotics/design-system-3d-core";
-import { coreToThreePosition } from "@lk-robotics/design-system-3d-three/coordinates";
-import { createPointCloudSnapshot } from "@lk-robotics/design-system-3d-pointcloud";
+} from "@lk-robotics/lds-3d-core";
+import { coreToThreePosition } from "@lk-robotics/lds-3d-three/coordinates";
+import { createPointCloudSnapshot } from "@lk-robotics/lds-3d-pointcloud";
 import { BufferAttribute, Color, StaticDrawUsage, Vector3 } from "three";
 import { describe, expect, it, vi } from "vitest";
 

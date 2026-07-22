@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-deprecated -- This isolated subpath implements the deprecated migration API itself. */
 
-import type { Axis, RigidTransform3, Vec3 } from "@lk-robotics/design-system-3d-core";
+import type { Axis, RigidTransform3, Vec3 } from "@lk-robotics/lds-3d-core";
 
 import type { FileCoordinate } from "./manifest.js";
 import { axisToVector, rotateVectorByQuaternion } from "./spatial.js";

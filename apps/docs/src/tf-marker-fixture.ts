@@ -11,10 +11,10 @@ import {
   type Bounds3,
   type FrameId,
   type RigidTransform3,
-} from "@lk-robotics/design-system-3d-core";
-import { createMarkerLayerSnapshot } from "@lk-robotics/design-system-3d-markers";
-import { createPointCloudLayerSnapshot } from "@lk-robotics/design-system-3d-pointcloud";
-import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/design-system-3d-tf";
+} from "@lk-robotics/lds-3d-core";
+import { createMarkerLayerSnapshot } from "@lk-robotics/lds-3d-markers";
+import { createPointCloudLayerSnapshot } from "@lk-robotics/lds-3d-pointcloud";
+import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/lds-3d-tf";
 
 import { POINT_CLOUD_LIDAR } from "./pointcloud-fixture.js";
 

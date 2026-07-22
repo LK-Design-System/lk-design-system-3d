@@ -1,5 +1,5 @@
 {
-  "name": "@lk-robotics/design-system-3d-r3f",
+  "name": "@lk-robotics/lds-3d-r3f",
   "version": "0.1.0-alpha.1",
   "description": "React Three Fiber WebGL renderer for LK Design System 3D scenes.",
   "type": "module",
@@ -43,11 +43,11 @@
     "api-report": "api-extractor run --local"
   },
   "dependencies": {
-    "@lk-robotics/design-system-3d-assets": "workspace:*",
-    "@lk-robotics/design-system-3d-core": "workspace:*",
-    "@lk-robotics/design-system-3d-markers": "workspace:*",
-    "@lk-robotics/design-system-3d-pointcloud": "workspace:*",
-    "@lk-robotics/design-system-3d-three": "workspace:*"
+    "@lk-robotics/lds-3d-assets": "workspace:*",
+    "@lk-robotics/lds-3d-core": "workspace:*",
+    "@lk-robotics/lds-3d-markers": "workspace:*",
+    "@lk-robotics/lds-3d-pointcloud": "workspace:*",
+    "@lk-robotics/lds-3d-three": "workspace:*"
   },
   "peerDependencies": {
     "@react-three/fiber": "^9.6.1",

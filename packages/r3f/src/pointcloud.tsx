@@ -9,14 +9,14 @@ import {
   type PointCloudLayerSnapshot,
   type PointCloudRenderState,
   type PointCloudSnapshot,
-} from "@lk-robotics/design-system-3d-pointcloud";
+} from "@lk-robotics/lds-3d-pointcloud";
 import {
   FrameMismatchError,
   assertValidBounds3,
   type Bounds3,
   type FrameId,
   type RigidTransform3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 import type { WebGLRenderer } from "three";
 
 import {

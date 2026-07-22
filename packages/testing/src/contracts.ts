@@ -9,13 +9,13 @@ import {
   type PickHit,
   type RigidTransform3,
   type Vec3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 import {
   createAssetReport,
   normalizeAssetPointToCore,
   type AssetValidationIssue,
   type AssetValidationReport,
-} from "@lk-robotics/design-system-3d-assets";
+} from "@lk-robotics/lds-3d-assets";
 import {
   AUTHORITATIVE_FLOOR_HIT_FIXTURE,
   INVALID_ASSET_MANIFEST_FIXTURES,

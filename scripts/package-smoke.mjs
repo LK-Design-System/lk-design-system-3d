@@ -8,14 +8,14 @@ const root = process.cwd();
 const artifactDirectory = path.join(root, "artifacts", "package-smoke");
 const evidenceDirectory = path.join(root, "evidence", "m2", "consumer-pack-smoke");
 const packageSpecs = [
-  ["core", "@lk-robotics/design-system-3d-core"],
-  ["assets", "@lk-robotics/design-system-3d-assets"],
-  ["testing", "@lk-robotics/design-system-3d-testing"],
-  ["pointcloud", "@lk-robotics/design-system-3d-pointcloud"],
-  ["tf", "@lk-robotics/design-system-3d-tf"],
-  ["markers", "@lk-robotics/design-system-3d-markers"],
-  ["three", "@lk-robotics/design-system-3d-three"],
-  ["r3f", "@lk-robotics/design-system-3d-r3f"],
+  ["core", "@lk-robotics/lds-3d-core"],
+  ["assets", "@lk-robotics/lds-3d-assets"],
+  ["testing", "@lk-robotics/lds-3d-testing"],
+  ["pointcloud", "@lk-robotics/lds-3d-pointcloud"],
+  ["tf", "@lk-robotics/lds-3d-tf"],
+  ["markers", "@lk-robotics/lds-3d-markers"],
+  ["three", "@lk-robotics/lds-3d-three"],
+  ["r3f", "@lk-robotics/lds-3d-r3f"],
 ].map(([directoryName, packageName]) => ({
   directoryName,
   packageName,
@@ -167,19 +167,19 @@ try {
   );
   await writeFile(
     path.join(consumerDirectory, "smoke.ts"),
-    `import { clockId, entityId, frameId, identityTransform, layerId, pose3, rigidTransform3, timestamp } from "@lk-robotics/design-system-3d-core";
-import { createAssetReport } from "@lk-robotics/design-system-3d-assets";
-import { Y_UP_GLB_MANIFEST_FIXTURE, checkTransformRoundTrip } from "@lk-robotics/design-system-3d-testing";
-import { createPointCloudSnapshot } from "@lk-robotics/design-system-3d-pointcloud";
-import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/design-system-3d-tf";
-import { createMarkerLayerSnapshot, resolveMarkerLayerRenderState } from "@lk-robotics/design-system-3d-markers";
-import { createGltfAssetLoader, type ThreeSceneHostOptions } from "@lk-robotics/design-system-3d-three";
-import { coreToThreePosition as coreToImperativeThreePosition } from "@lk-robotics/design-system-3d-three/coordinates";
-import { cloneThreeSceneInstance } from "@lk-robotics/design-system-3d-three/r3f-bridge";
-import type { ThreeResolvedAsset } from "@lk-robotics/design-system-3d-three/r3f-bridge";
-import type { SceneCanvasProps } from "@lk-robotics/design-system-3d-r3f";
-import { coreToThreePosition } from "@lk-robotics/design-system-3d-r3f/coordinates";
-import { OPERATIONAL_NEUTRAL_THEME } from "@lk-robotics/design-system-3d-r3f/themes";
+    `import { clockId, entityId, frameId, identityTransform, layerId, pose3, rigidTransform3, timestamp } from "@lk-robotics/lds-3d-core";
+import { createAssetReport } from "@lk-robotics/lds-3d-assets";
+import { Y_UP_GLB_MANIFEST_FIXTURE, checkTransformRoundTrip } from "@lk-robotics/lds-3d-testing";
+import { createPointCloudSnapshot } from "@lk-robotics/lds-3d-pointcloud";
+import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/lds-3d-tf";
+import { createMarkerLayerSnapshot, resolveMarkerLayerRenderState } from "@lk-robotics/lds-3d-markers";
+import { createGltfAssetLoader, type ThreeSceneHostOptions } from "@lk-robotics/lds-3d-three";
+import { coreToThreePosition as coreToImperativeThreePosition } from "@lk-robotics/lds-3d-three/coordinates";
+import { cloneThreeSceneInstance } from "@lk-robotics/lds-3d-three/r3f-bridge";
+import type { ThreeResolvedAsset } from "@lk-robotics/lds-3d-three/r3f-bridge";
+import type { SceneCanvasProps } from "@lk-robotics/lds-3d-r3f";
+import { coreToThreePosition } from "@lk-robotics/lds-3d-r3f/coordinates";
+import { OPERATIONAL_NEUTRAL_THEME } from "@lk-robotics/lds-3d-r3f/themes";
 
 const transform = identityTransform(frameId("consumer-map"));
 const validation = createAssetReport(Y_UP_GLB_MANIFEST_FIXTURE);
@@ -207,17 +207,17 @@ console.log(JSON.stringify({ validation: validation.valid, roundTrip: violations
   );
   await writeFile(
     path.join(consumerDirectory, "runtime.mjs"),
-    `import { clockId, entityId, frameId, identityTransform, layerId, pose3, rigidTransform3, timestamp } from "@lk-robotics/design-system-3d-core";
-import { createAssetReport } from "@lk-robotics/design-system-3d-assets";
-import { Y_UP_GLB_MANIFEST_FIXTURE, checkTransformRoundTrip } from "@lk-robotics/design-system-3d-testing";
-import { createPointCloudSnapshot } from "@lk-robotics/design-system-3d-pointcloud";
-import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/design-system-3d-tf";
-import { createMarkerLayerSnapshot, resolveMarkerLayerRenderState } from "@lk-robotics/design-system-3d-markers";
-import { createGltfAssetLoader } from "@lk-robotics/design-system-3d-three";
-import { coreToThreePosition as coreToImperativeThreePosition } from "@lk-robotics/design-system-3d-three/coordinates";
-import { cloneThreeSceneInstance } from "@lk-robotics/design-system-3d-three/r3f-bridge";
-import { coreToThreePosition } from "@lk-robotics/design-system-3d-r3f/coordinates";
-import { OPERATIONAL_NEUTRAL_THEME } from "@lk-robotics/design-system-3d-r3f/themes";
+    `import { clockId, entityId, frameId, identityTransform, layerId, pose3, rigidTransform3, timestamp } from "@lk-robotics/lds-3d-core";
+import { createAssetReport } from "@lk-robotics/lds-3d-assets";
+import { Y_UP_GLB_MANIFEST_FIXTURE, checkTransformRoundTrip } from "@lk-robotics/lds-3d-testing";
+import { createPointCloudSnapshot } from "@lk-robotics/lds-3d-pointcloud";
+import { createFrameGraph, lookupFrameTransform } from "@lk-robotics/lds-3d-tf";
+import { createMarkerLayerSnapshot, resolveMarkerLayerRenderState } from "@lk-robotics/lds-3d-markers";
+import { createGltfAssetLoader } from "@lk-robotics/lds-3d-three";
+import { coreToThreePosition as coreToImperativeThreePosition } from "@lk-robotics/lds-3d-three/coordinates";
+import { cloneThreeSceneInstance } from "@lk-robotics/lds-3d-three/r3f-bridge";
+import { coreToThreePosition } from "@lk-robotics/lds-3d-r3f/coordinates";
+import { OPERATIONAL_NEUTRAL_THEME } from "@lk-robotics/lds-3d-r3f/themes";
 const transform = identityTransform(frameId("runtime-map"));
 const pointCloud = createPointCloudSnapshot({ frame: frameId("runtime-map"), positions: new Float32Array([0, 0, 0]), revision: 1 });
 const markerTime = timestamp(clockId("runtime-time"), 1, 0);

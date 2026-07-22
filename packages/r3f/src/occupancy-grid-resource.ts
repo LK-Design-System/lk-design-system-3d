@@ -8,7 +8,7 @@ import {
   type FrameId,
   type OccupancyGridCell,
   type OccupancyGridSnapshot,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 import {
   BufferGeometry,
   ClampToEdgeWrapping,

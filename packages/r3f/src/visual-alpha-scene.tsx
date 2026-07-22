@@ -6,7 +6,7 @@ import type {
   Quat,
   RobotEntity,
   Vec3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 import { VisualAlphaModel, type VisualAlphaModelKey } from "./models.js";
 import { AmrRobot, GoalMarker, PathRibbon, type RobotVisualStatus } from "./primitives.js";

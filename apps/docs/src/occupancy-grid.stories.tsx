@@ -7,13 +7,13 @@ import {
   SceneCanvas,
   type OccupancyGridCellPointerDetail,
   type OccupancyGridRenderState,
-} from "@lk-robotics/design-system-3d-r3f";
+} from "@lk-robotics/lds-3d-r3f";
 import {
   occupancyCellDataIndex,
   occupancyCellToImagePixel,
   occupancyDataIndexToCell,
   type OccupancyGridCell,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 import { useState } from "react";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";

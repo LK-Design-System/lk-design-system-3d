@@ -1,5 +1,5 @@
 {
-  "name": "@lk-robotics/design-system-3d-pointcloud",
+  "name": "@lk-robotics/lds-3d-pointcloud",
   "version": "0.1.0-alpha.1",
   "description": "Renderer-neutral point-cloud snapshot and frame contracts for LK Design System 3D.",
   "type": "module",
@@ -23,7 +23,7 @@
     "api-report": "api-extractor run --local"
   },
   "dependencies": {
-    "@lk-robotics/design-system-3d-core": "workspace:*"
+    "@lk-robotics/lds-3d-core": "workspace:*"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",

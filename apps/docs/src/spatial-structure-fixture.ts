@@ -9,7 +9,7 @@ import {
   type SpatialNodeTransform,
   type SpatialStructure,
   type SpatialStructureNode,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 export const SPATIAL_STRUCTURE_FRAME = frameId("lk-map");
 export const SPATIAL_STRUCTURE_TARGET_ID = entityId("site/object/work-cell");

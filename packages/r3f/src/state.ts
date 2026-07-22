@@ -4,7 +4,7 @@ import {
   type Bounds3,
   type EntityId,
   type Vec3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 export type SceneCameraMode = "home" | "top" | "focus" | "free";
 

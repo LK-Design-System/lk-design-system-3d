@@ -1,4 +1,4 @@
-# @lk-robotics/design-system-3d-tf
+# @lk-robotics/lds-3d-tf
 
 Renderer-neutral, timestamped frame-tree contracts for LDS3D.
 

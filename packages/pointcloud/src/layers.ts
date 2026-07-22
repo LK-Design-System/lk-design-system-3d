@@ -12,7 +12,7 @@ import {
   type RigidTransform3,
   type Timestamp,
   type Vec3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 import { assertPointCloudSnapshot, type PointCloudSnapshot } from "./snapshot.js";
 

@@ -6,7 +6,7 @@ import {
   entityId,
   frameId,
   type SceneThemeValues,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 import { createThreeVisualInstance } from "../src/r3f-bridge.js";
 

@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { Code, Grid, Stack, StatusBadge } from "@lk-robotics/lds-core";
 import { DescriptionList, Table } from "@lk-robotics/lds-product";
-import { createAssetReport } from "@lk-robotics/design-system-3d-assets";
+import { createAssetReport } from "@lk-robotics/lds-3d-assets";
 import {
   INVALID_ASSET_MANIFEST_FIXTURES,
   Y_UP_GLB_MANIFEST_FIXTURE,
   checkAssetFixtureContracts,
-} from "@lk-robotics/design-system-3d-testing";
+} from "@lk-robotics/lds-3d-testing";
 import {
   JsonInspector,
   TechnicalSection,

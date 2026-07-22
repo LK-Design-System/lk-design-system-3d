@@ -1,5 +1,5 @@
 {
-  "name": "@lk-robotics/design-system-3d-assets",
+  "name": "@lk-robotics/lds-3d-assets",
   "version": "0.1.0-alpha.1",
   "description": "Validated glTF asset manifests and renderer-neutral loading ownership contracts for LK Design System 3D.",
   "type": "module",
@@ -38,7 +38,7 @@
     "api-report": "api-extractor run --local"
   },
   "dependencies": {
-    "@lk-robotics/design-system-3d-core": "workspace:*"
+    "@lk-robotics/lds-3d-core": "workspace:*"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",

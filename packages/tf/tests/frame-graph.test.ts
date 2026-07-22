@@ -5,7 +5,7 @@ import {
   quaternionFromYaw,
   rigidTransform3,
   timestamp,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 import { FrameGraphValidationError, createFrameGraph, lookupFrameTransform } from "../src/index.js";
 

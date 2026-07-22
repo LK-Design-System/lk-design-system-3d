@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Quaternion, Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import type { Bounds3, Vec3 } from "@lk-robotics/design-system-3d-core";
+import type { Bounds3, Vec3 } from "@lk-robotics/lds-3d-core";
 
 import { resolveCameraMotionPolicy } from "./camera-motion.js";
 import { coreToThreePosition } from "./coordinates.js";

@@ -1,6 +1,6 @@
-import type { AssetManifestV1 } from "@lk-robotics/design-system-3d-assets";
-import tronManifestJson from "@lk-robotics/design-system-3d-assets/robots/tron/tron.asset-manifest.json";
-import { bounds3, type Bounds3, type FrameId } from "@lk-robotics/design-system-3d-core";
+import type { AssetManifestV1 } from "@lk-robotics/lds-3d-assets";
+import tronManifestJson from "@lk-robotics/lds-3d-assets/robots/tron/tron.asset-manifest.json";
+import { bounds3, type Bounds3, type FrameId } from "@lk-robotics/lds-3d-core";
 
 /** The single approved GLB entry used by the Storybook map-authoring fixture. */
 export const MAP_EDITOR_TRON_MANIFEST =

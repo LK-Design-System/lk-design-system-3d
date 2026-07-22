@@ -1,4 +1,4 @@
-import type { SceneThemeOverrides, SceneThemeValues } from "@lk-robotics/design-system-3d-core";
+import type { SceneThemeOverrides, SceneThemeValues } from "@lk-robotics/lds-3d-core";
 
 export type SceneVisualProfile = "operational-neutral" | "diagnostic-technical";
 

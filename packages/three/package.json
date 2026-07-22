@@ -1,5 +1,5 @@
 {
-  "name": "@lk-robotics/design-system-3d-three",
+  "name": "@lk-robotics/lds-3d-three",
   "version": "0.1.0-alpha.1",
   "description": "Imperative Three.js scene host and resource lifecycle adapter for LK Design System 3D.",
   "type": "module",
@@ -31,8 +31,8 @@
     "api-report": "api-extractor run --local"
   },
   "dependencies": {
-    "@lk-robotics/design-system-3d-assets": "workspace:*",
-    "@lk-robotics/design-system-3d-core": "workspace:*"
+    "@lk-robotics/lds-3d-assets": "workspace:*",
+    "@lk-robotics/lds-3d-core": "workspace:*"
   },
   "peerDependencies": {
     "three": ">=0.185.1 <1"

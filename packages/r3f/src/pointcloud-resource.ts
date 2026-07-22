@@ -4,8 +4,8 @@ import {
   assertValidRigidTransform,
   type Bounds3,
   type RigidTransform3,
-} from "@lk-robotics/design-system-3d-core";
-import type { PointCloudSnapshot } from "@lk-robotics/design-system-3d-pointcloud";
+} from "@lk-robotics/lds-3d-core";
+import type { PointCloudSnapshot } from "@lk-robotics/lds-3d-pointcloud";
 import {
   BufferAttribute,
   BufferGeometry,

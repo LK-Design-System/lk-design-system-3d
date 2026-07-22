@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { AssetManifestV1 } from "@lk-robotics/design-system-3d-assets";
-import type { EntityId } from "@lk-robotics/design-system-3d-core";
+import type { AssetManifestV1 } from "@lk-robotics/lds-3d-assets";
+import type { EntityId } from "@lk-robotics/lds-3d-core";
 
 const mocks = vi.hoisted(() => {
   const useLoader = Object.assign(vi.fn(), {
@@ -41,7 +41,7 @@ vi.mock("react", () => {
 });
 
 vi.mock("@react-three/fiber", () => ({ useLoader: mocks.useLoader }));
-vi.mock("@lk-robotics/design-system-3d-three/r3f-bridge", () => ({
+vi.mock("@lk-robotics/lds-3d-three/r3f-bridge", () => ({
   cloneThreeSceneInstance: mocks.cloneThreeSceneInstance,
   releaseThreeSceneInstance: mocks.releaseThreeSceneInstance,
 }));

@@ -1,4 +1,4 @@
-# `@lk-robotics/design-system-3d-testing`
+# `@lk-robotics/lds-3d-testing`
 
 Runner-neutral fixtures and contract checks for LK Design System 3D Foundation.
 
@@ -12,7 +12,7 @@ import {
   assertNoContractViolations,
   checkCoordinateContract,
   coordinateFixtures,
-} from "@lk-robotics/design-system-3d-testing";
+} from "@lk-robotics/lds-3d-testing";
 
 const violations = checkCoordinateContract(adapter, Object.values(coordinateFixtures));
 assertNoContractViolations(violations);

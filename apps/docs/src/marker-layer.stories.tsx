@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Stack, StatusBadge } from "@lk-robotics/lds-core";
 import { DescriptionList } from "@lk-robotics/lds-product";
-import { MarkerLayer, SceneCanvas, type SceneCameraPose } from "@lk-robotics/design-system-3d-r3f";
-import { resolveMarkerLayerRenderState } from "@lk-robotics/design-system-3d-markers";
+import { MarkerLayer, SceneCanvas, type SceneCameraPose } from "@lk-robotics/lds-3d-r3f";
+import { resolveMarkerLayerRenderState } from "@lk-robotics/lds-3d-markers";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";
 import { PrimitiveReviewEvidence, primitiveReviewParameters } from "./primitives.stories.js";

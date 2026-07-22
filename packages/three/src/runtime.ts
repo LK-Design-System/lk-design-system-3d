@@ -2,13 +2,13 @@ import {
   consumeAssetOwnershipToken,
   type AdoptedAsset,
   type AssetOwnershipToken,
-} from "@lk-robotics/design-system-3d-assets";
+} from "@lk-robotics/lds-3d-assets";
 import type {
   AssetEntity,
   FrameId,
   P0SpatialEntity,
   SceneThemeValues,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 import {
   BoxGeometry,
   BufferGeometry,

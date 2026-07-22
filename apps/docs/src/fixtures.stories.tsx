@@ -5,7 +5,7 @@ import {
   AUTHORITATIVE_FLOOR_HIT_FIXTURE,
   ROBOT_POSE_FIXTURE,
   checkAuthoritativeFloorHitProjection,
-} from "@lk-robotics/design-system-3d-testing";
+} from "@lk-robotics/lds-3d-testing";
 import {
   JsonInspector,
   TechnicalSection,

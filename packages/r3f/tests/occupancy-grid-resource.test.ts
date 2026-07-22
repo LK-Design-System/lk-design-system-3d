@@ -8,7 +8,7 @@ import {
   occupancyGridGeometry,
   quaternionFromYaw,
   rigidTransform3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 import { NearestFilter, NoColorSpace } from "three";
 
 import {

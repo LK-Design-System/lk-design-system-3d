@@ -4,13 +4,13 @@ import { GLTFLoader, type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js"
 import {
   cloneThreeSceneInstance,
   releaseThreeSceneInstance,
-} from "@lk-robotics/design-system-3d-three/r3f-bridge";
+} from "@lk-robotics/lds-3d-three/r3f-bridge";
 import {
   createFileToCoreRotation,
   validateAssetManifest,
   type AssetManifestV1,
-} from "@lk-robotics/design-system-3d-assets";
-import type { EntityId, Quat, Vec3 } from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-assets";
+import type { EntityId, Quat, Vec3 } from "@lk-robotics/lds-3d-core";
 
 import { SceneStateMarker, Selectable } from "./primitives.js";
 import { useSceneRuntime } from "./runtime.js";

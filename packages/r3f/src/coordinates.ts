@@ -9,4 +9,4 @@ export {
   coreToThreeQuaternion,
   threeToCorePosition,
   threeToCoreQuaternion,
-} from "@lk-robotics/design-system-3d-three/coordinates";
+} from "@lk-robotics/lds-3d-three/coordinates";

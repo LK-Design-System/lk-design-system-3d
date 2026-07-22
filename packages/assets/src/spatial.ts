@@ -1,4 +1,4 @@
-import type { Axis, FramedPoint3, Quat, Vec3 } from "@lk-robotics/design-system-3d-core";
+import type { Axis, FramedPoint3, Quat, Vec3 } from "@lk-robotics/lds-3d-core";
 
 import type { AssetManifestV1, FileCoordinate } from "./manifest.js";
 

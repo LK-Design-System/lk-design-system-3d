@@ -7,7 +7,7 @@ import {
   quaternionFromYaw,
   spatialNodeTransform,
   type Vec3,
-} from "@lk-robotics/design-system-3d-core";
+} from "@lk-robotics/lds-3d-core";
 
 import { MAP_EDITOR_TRON_MANIFEST } from "./map-editor-asset-catalog.js";
 import {
