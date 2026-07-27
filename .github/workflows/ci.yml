@@ -102,13 +102,12 @@ jobs:
       - name: Install dependencies
         run: |
           $manifestBackup = Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json'
-          $rootManifestBackup = Join-Path $env:RUNNER_TEMP 'lds3d-package.json'
+          $workspaceConfigBackup = Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-workspace.yaml'
           $lockfileBackup = Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml'
           Copy-Item apps/docs/package.json $manifestBackup
-          Copy-Item package.json $rootManifestBackup
+          Copy-Item pnpm-workspace.yaml $workspaceConfigBackup
           Copy-Item pnpm-lock.yaml $lockfileBackup
           $manifest = Get-Content -Raw apps/docs/package.json | ConvertFrom-Json
-          $rootManifest = Get-Content -Raw package.json | ConvertFrom-Json
           $overrides = [ordered]@{}
           New-Item -ItemType Directory -Force apps/docs/vendor | Out-Null
           foreach ($package in 'core', 'product', 'theme') {
@@ -126,12 +125,15 @@ jobs:
           }
           $manifest.dependencies.'@lk-robotics/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
           $overrides.'@lk-robotics/lds-robotics-ui' = "file:./$($roboticsTarball.Name)"
-          $rootManifest | Add-Member -NotePropertyName pnpm -NotePropertyValue ([pscustomobject]@{ overrides = $overrides }) -Force
+          $overrideYaml = "`noverrides:`n"
+          foreach ($entry in $overrides.GetEnumerator()) {
+            $overrideYaml += "  `"$($entry.Key)`": `"$($entry.Value)`"`n"
+          }
+          Add-Content -Path pnpm-workspace.yaml -Value $overrideYaml
           $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
-          $rootManifest | ConvertTo-Json -Depth 100 | Set-Content package.json
           pnpm install --lockfile=false
           Copy-Item $manifestBackup apps/docs/package.json -Force
-          Copy-Item $rootManifestBackup package.json -Force
+          Copy-Item $workspaceConfigBackup pnpm-workspace.yaml -Force
           Copy-Item $lockfileBackup pnpm-lock.yaml -Force
 
       - name: Build
