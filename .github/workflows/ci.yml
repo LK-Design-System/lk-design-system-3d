@@ -106,12 +106,14 @@ jobs:
           Copy-Item apps/docs/package.json $manifestBackup
           Copy-Item pnpm-lock.yaml $lockfileBackup
           $manifest = Get-Content -Raw apps/docs/package.json | ConvertFrom-Json
+          New-Item -ItemType Directory -Force apps/docs/vendor | Out-Null
           foreach ($package in 'core', 'product', 'theme') {
             $tarball = Get-ChildItem -Filter "lk-robotics-lds-$package-*.tgz" | Select-Object -First 1
             if (-not $tarball) {
               throw "The public LDS $package package could not be packed."
             }
             $manifest.dependencies."@lk-robotics/lds-$package" = "file:../../$($tarball.Name)"
+            Copy-Item $tarball.FullName "apps/docs/vendor/$($tarball.Name)" -Force
           }
           $roboticsTarball = Get-ChildItem -Filter 'lk-robotics-lds-robotics-ui-*.tgz' | Select-Object -First 1
           if (-not $roboticsTarball) {
