@@ -132,9 +132,6 @@ jobs:
           Add-Content -Path pnpm-workspace.yaml -Value $overrideYaml
           $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
           pnpm install --lockfile=false
-          Copy-Item $manifestBackup apps/docs/package.json -Force
-          Copy-Item $workspaceConfigBackup pnpm-workspace.yaml -Force
-          Copy-Item $lockfileBackup pnpm-lock.yaml -Force
 
       - name: Build
         run: pnpm build
@@ -152,7 +149,11 @@ jobs:
         run: pnpm format:check
 
       - name: Build Storybook
-        run: pnpm build-storybook
+        run: |
+          ./node_modules/.bin/storybook build --config-dir apps/docs/.storybook --output-dir storybook-static
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/check-storybook.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Locate Chrome
         run: |
@@ -167,3 +168,12 @@ jobs:
 
       - name: Regenerate evidence
         run: pnpm evidence
+
+      - name: Restore release manifests
+        run: |
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json') apps/docs/package.json -Force
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-workspace.yaml') pnpm-workspace.yaml -Force
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml') pnpm-lock.yaml -Force
+
+      - name: Validate LDS conformance
+        run: node scripts/check-lds-style.mjs --storybook-index storybook-static/index.json --require-built-stories

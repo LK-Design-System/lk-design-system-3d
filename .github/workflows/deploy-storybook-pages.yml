@@ -109,9 +109,6 @@ jobs:
           Add-Content -Path pnpm-workspace.yaml -Value $overrideYaml
           $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
           pnpm install --lockfile=false
-          Copy-Item $manifestBackup apps/docs/package.json -Force
-          Copy-Item $workspaceConfigBackup pnpm-workspace.yaml -Force
-          Copy-Item $lockfileBackup pnpm-lock.yaml -Force
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -120,10 +117,25 @@ jobs:
         run: pnpm build
 
       - name: Build Storybook
+        shell: pwsh
+        run: |
+          & .\node_modules\.bin\storybook.cmd build --config-dir apps/docs/.storybook --output-dir storybook-static
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/check-storybook.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Restore release manifests
+        shell: pwsh
+        run: |
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json') apps/docs/package.json -Force
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-workspace.yaml') pnpm-workspace.yaml -Force
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml') pnpm-lock.yaml -Force
+
+      - name: Validate LDS conformance
         env:
           LDS_CONFORMANCE_CLI: ${{ github.workspace }}/.lds-package-source/packages/conformance/src/cli.mjs
           LDS_CONFORMANCE_ROOT: ${{ github.workspace }}/.lds-package-source
-        run: pnpm build-storybook
+        run: node scripts/check-lds-style.mjs --storybook-index storybook-static/index.json --require-built-stories
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
