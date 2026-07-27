@@ -12,6 +12,7 @@ import {
   StatusBadge,
 } from "@lk-robotics/lds-core";
 import { NumberField, Tree } from "@lk-robotics/lds-product";
+import type { TreeHandle } from "@lk-robotics/lds-product/components/data/Tree";
 import {
   CanvasEditorCommandBar,
   CanvasEditorShell,
@@ -22,7 +23,7 @@ import {
   ViewerToolbar,
   ViewerToolbarButton,
   ViewportStatusBar,
-} from "@lk-robotics/lds-robotics-ui";
+} from "@lk-robotics/lds-product";
 import {
   GoalMarker,
   SceneCanvas,
@@ -482,46 +483,7 @@ function mapTree(document: MapEditorDocument): MapTreeNode[] {
   return roots.map(toTreeNode);
 }
 
-function treePath(
-  nodes: readonly MapTreeNode[],
-  targetId: string,
-  ancestors: readonly string[] = [],
-): readonly string[] | null {
-  for (const node of nodes) {
-    const path = [...ancestors, node.id];
-    if (node.id === targetId) return path;
-    const childPath = treePath(node.children ?? [], targetId, path);
-    if (childPath !== null) return childPath;
-  }
-  return null;
-}
-
-function treeNodesWithStableLabels(
-  nodes: readonly MapTreeNode[],
-): MapTreeNode[] {
-  return nodes.map((node) => ({
-    ...node,
-    label: <span data-map-tree-id={node.id}>{node.label}</span>,
-    ...(node.children === undefined
-      ? {}
-      : { children: treeNodesWithStableLabels(node.children) }),
-  }));
-}
-
-function rowId(row: HTMLElement): string | null {
-  return row.querySelector<HTMLElement>("[data-map-tree-id]")?.dataset
-    .mapTreeId ?? null;
-}
-
-function findTreeRow(root: HTMLElement, id: string): HTMLElement | null {
-  return (
-    Array.from(
-      root.querySelectorAll<HTMLElement>('[role="treeitem"]'),
-    ).find((row) => rowId(row) === id) ?? null
-  );
-}
-
-interface RuntimeCompatibleTreeProps {
+interface MapStructureTreeProps {
   readonly ariaLabel: string;
   readonly defaultExpanded: readonly string[];
   readonly focusRequest?: TreeFocusRequest | null;
@@ -530,110 +492,30 @@ interface RuntimeCompatibleTreeProps {
   readonly selectedId: string | null;
 }
 
-/**
- * Selection compatibility for the currently pinned LDS Product RC.
- *
- * The RC Tree does not expose controlled selection, expansion, or an imperative
- * handle. Keep those unsupported props off the component and adapt only its
- * documented tree semantics. Stable label markers let this continue to work
- * when a newer Tree changes its private row data attributes.
- */
-function RuntimeCompatibleTree({
+/** LDS owns selection, expansion, and focus through its documented Tree API. */
+function MapStructureTree({
   ariaLabel,
   defaultExpanded,
   focusRequest = null,
   nodes,
   onSelect,
   selectedId,
-}: RuntimeCompatibleTreeProps): ReactNode {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const markedNodes = useMemo(() => treeNodesWithStableLabels(nodes), [nodes]);
+}: MapStructureTreeProps): ReactNode {
+  const treeRef = useRef<TreeHandle>(null);
 
   useEffect(() => {
-    const root = rootRef.current;
-    if (root === null) return;
-    const applySelection = (): void => {
-      root.querySelectorAll<HTMLElement>('[role="treeitem"]').forEach((row) => {
-        const nextValue = rowId(row) === selectedId ? "true" : "false";
-        if (row.getAttribute("aria-selected") !== nextValue) {
-          row.setAttribute("aria-selected", nextValue);
-        }
-      });
-    };
-    applySelection();
-    const observer = new MutationObserver(applySelection);
-    observer.observe(root, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [markedNodes, selectedId]);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (root === null || focusRequest === null) return;
-    const path = treePath(nodes, focusRequest.id);
-    if (path === null) return;
-
-    let frame = 0;
-    let cancelled = false;
-    const reveal = (index: number): void => {
-      if (cancelled) return;
-      if (index < path.length - 1) {
-        const ancestor = findTreeRow(root, path[index] ?? "");
-        if (ancestor === null) {
-          frame = window.requestAnimationFrame(() => reveal(index));
-          return;
-        }
-        if (ancestor.getAttribute("aria-expanded") === "false") {
-          ancestor.dispatchEvent(
-            new KeyboardEvent("keydown", {
-              bubbles: true,
-              cancelable: true,
-              key: "ArrowRight",
-            }),
-          );
-        }
-        frame = window.requestAnimationFrame(() => reveal(index + 1));
-        return;
-      }
-
-      const target = findTreeRow(root, focusRequest.id);
-      if (target === null) {
-        frame = window.requestAnimationFrame(() => reveal(index));
-        return;
-      }
-      target.focus({ preventScroll: true });
-      target.scrollIntoView({ block: "nearest" });
-    };
-    reveal(0);
-    return () => {
-      cancelled = true;
-      window.cancelAnimationFrame(frame);
-    };
-  }, [focusRequest, nodes]);
+    if (focusRequest !== null) treeRef.current?.focusItem(focusRequest.id, { reveal: true });
+  }, [focusRequest]);
 
   return (
-    <div ref={rootRef} className="map-tree-runtime-compat">
-      <style>{`
-        .map-tree-runtime-compat [role="treeitem"][aria-selected="false"] > div:first-child {
-          background: transparent !important;
-          border-color: transparent !important;
-        }
-        .map-tree-runtime-compat [role="treeitem"][aria-selected="false"]:hover > div:first-child {
-          background: var(--color-semantic-background-normal-alternative) !important;
-        }
-        .map-tree-runtime-compat [role="treeitem"][aria-selected="true"] > div:first-child {
-          background: var(--color-semantic-primary-surface-normal) !important;
-          border-color: var(--color-semantic-primary-normal) !important;
-        }
-      `}</style>
-      <Tree
-        ariaLabel={ariaLabel}
-        defaultExpanded={[...defaultExpanded]}
-        nodes={markedNodes}
-        onSelect={(node) => {
-          if (typeof node.id === "string") onSelect(node.id);
-        }}
-      />
-    </div>
+    <Tree
+      ref={treeRef}
+      ariaLabel={ariaLabel}
+      defaultExpanded={[...defaultExpanded]}
+      nodes={[...nodes]}
+      selectedId={selectedId}
+      onSelectedIdChange={onSelect}
+    />
   );
 }
 
@@ -2090,7 +1972,7 @@ function SpatialMapEditor(): ReactNode {
                 onChange={(value) => changeFloor(value as EntityId)}
               />
               <Divider />
-              <RuntimeCompatibleTree
+              <MapStructureTree
                 ariaLabel="맵 객체 계층"
                 defaultExpanded={[
                   "site",
@@ -2407,7 +2289,7 @@ function TreeCompatibilityContract(): ReactNode {
   return (
     <Stack gap="var(--space-3)" style={{ maxWidth: 320, padding: "var(--space-4)" }}>
       <Button onClick={selectFromCanvas}>Select target from canvas</Button>
-      <RuntimeCompatibleTree
+      <MapStructureTree
         ariaLabel="Runtime-compatible scene hierarchy"
         defaultExpanded={["compat-root"]}
         focusRequest={focusRequest}
@@ -2424,16 +2306,11 @@ export const TreeRuntimeCompatibility: Story = {
   render: () => <TreeCompatibilityContract />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const branchLabel = canvasElement.querySelector<HTMLElement>(
-      '[data-map-tree-id="compat-branch"]',
-    );
-    await expect(branchLabel?.closest('[role="treeitem"]')).toHaveAttribute(
+    await expect(canvas.getByRole("treeitem", { name: "Second floor" })).toHaveAttribute(
       "aria-expanded",
       "false",
     );
-    await expect(
-      canvasElement.querySelector('[data-map-tree-id="compat-target"]'),
-    ).toBeNull();
+    await expect(canvas.queryByRole("treeitem", { name: "Target object" })).toBeNull();
 
     await userEvent.click(
       canvas.getByRole("button", { name: "Select target from canvas" }),
@@ -2441,17 +2318,11 @@ export const TreeRuntimeCompatibility: Story = {
 
     await waitFor(
       async () => {
-        const targetLabel = canvasElement.querySelector<HTMLElement>(
-          '[data-map-tree-id="compat-target"]',
-        );
-        const targetRow =
-          targetLabel?.closest<HTMLElement>('[role="treeitem"]');
+        const targetRow = canvas.getByRole("treeitem", { name: "Target object" });
         await expect(targetRow).toHaveAttribute("aria-selected", "true");
         await expect(targetRow).toHaveFocus();
         await expect(
-          Array.from(
-            canvasElement.querySelectorAll<HTMLElement>('[role="treeitem"]'),
-          ).every((row) => row.hasAttribute("aria-selected")),
+          canvas.getAllByRole("treeitem").every((row) => row.hasAttribute("aria-selected")),
         ).toBe(true);
       },
       { timeout: 3_000 },

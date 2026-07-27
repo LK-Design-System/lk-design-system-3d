@@ -95,21 +95,6 @@ body {
   z-index: 4;
 }
 
-/*
- * The docs app is pinned to the current Robotics RC, whose viewer topbar is
- * transparent over WebGL. Mirror the newer package contract here so automated
- * contrast checks have one deterministic, opaque surface until that RC moves.
- */
-[data-viewer-topbar] {
-  background: var(--color-semantic-background-normal-normal) !important;
-  border-bottom: 1px solid var(--color-semantic-line-solid-normal);
-}
-
-[data-viewer-topbar] [data-viewer-source],
-[data-viewer-topbar] [data-viewer-hud] {
-  color: var(--color-semantic-label-normal) !important;
-}
-
 .visual-canvas-slot {
   position: relative;
   width: 100%;

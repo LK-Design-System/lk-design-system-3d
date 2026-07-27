@@ -19,7 +19,7 @@ import {
   ViewerToolbar,
   ViewerToolbarButton,
   ViewportStatusBar,
-} from "@lk-robotics/lds-robotics-ui";
+} from "@lk-robotics/lds-product";
 import {
   EditVolume,
   PointCloudLayer,

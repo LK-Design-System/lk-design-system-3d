@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, Stack, StatusBadge } from "@lk-robotics/lds-core";
 import { DescriptionList } from "@lk-robotics/lds-product";
-import { Scene3DFrame } from "@lk-robotics/lds-robotics-ui";
+import { Scene3DFrame } from "@lk-robotics/lds-product";
 import {
   OccupancyGridSurface,
   SceneCanvas,

@@ -137,9 +137,6 @@ importers:
       '@lk-robotics/lds-product':
         specifier: 0.1.0-rc.1
         version: 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-robotics/lds-robotics-ui':
-        specifier: 0.1.0-rc.2
-        version: 0.1.0-rc.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-robotics/lds-theme':
         specifier: 0.1.0-rc.1
         version: 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
