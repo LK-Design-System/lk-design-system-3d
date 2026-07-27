@@ -79,10 +79,14 @@ jobs:
         shell: pwsh
         run: |
           $manifestBackup = Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json'
+          $rootManifestBackup = Join-Path $env:RUNNER_TEMP 'lds3d-package.json'
           $lockfileBackup = Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml'
           Copy-Item apps/docs/package.json $manifestBackup
+          Copy-Item package.json $rootManifestBackup
           Copy-Item pnpm-lock.yaml $lockfileBackup
           $manifest = Get-Content -Raw apps/docs/package.json | ConvertFrom-Json
+          $rootManifest = Get-Content -Raw package.json | ConvertFrom-Json
+          $overrides = [ordered]@{}
           New-Item -ItemType Directory -Force apps/docs/vendor | Out-Null
           foreach ($package in 'core', 'product', 'theme') {
             $tarball = Get-ChildItem -Filter "lk-robotics-lds-$package-*.tgz" | Select-Object -First 1
@@ -91,15 +95,20 @@ jobs:
             }
             $manifest.dependencies."@lk-robotics/lds-$package" = "file:../../$($tarball.Name)"
             Copy-Item $tarball.FullName "apps/docs/vendor/$($tarball.Name)" -Force
+            $overrides."@lk-robotics/lds-$package" = "file:./$($tarball.Name)"
           }
           $roboticsTarball = Get-ChildItem -Filter 'lk-robotics-lds-robotics-ui-*.tgz' | Select-Object -First 1
           if (-not $roboticsTarball) {
             throw 'The public Robotics UI package could not be packed.'
           }
           $manifest.dependencies.'@lk-robotics/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
+          $overrides.'@lk-robotics/lds-robotics-ui' = "file:./$($roboticsTarball.Name)"
+          $rootManifest | Add-Member -NotePropertyName pnpm -NotePropertyValue ([pscustomobject]@{ overrides = $overrides }) -Force
           $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
+          $rootManifest | ConvertTo-Json -Depth 100 | Set-Content package.json
           pnpm install --lockfile=false
           Copy-Item $manifestBackup apps/docs/package.json -Force
+          Copy-Item $rootManifestBackup package.json -Force
           Copy-Item $lockfileBackup pnpm-lock.yaml -Force
 
       - name: Configure GitHub Pages
