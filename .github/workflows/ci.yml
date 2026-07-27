@@ -119,7 +119,7 @@ jobs:
           }
           $manifest.dependencies.'@lk-robotics/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
           $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
-          pnpm install --no-frozen-lockfile
+          pnpm install --lockfile=false
           Copy-Item $manifestBackup apps/docs/package.json -Force
           Copy-Item $lockfileBackup pnpm-lock.yaml -Force
 
