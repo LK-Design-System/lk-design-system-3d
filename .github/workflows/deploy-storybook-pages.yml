@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  packages: read
   pages: write
   id-token: write
 
@@ -19,9 +18,7 @@ concurrency:
 jobs:
   build:
     name: Build Storybook
-    runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.LK_PACKAGES_READ_TOKEN || github.token }}
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
@@ -38,11 +35,70 @@ jobs:
         with:
           node-version: 22.17.1
           cache: pnpm
-          registry-url: https://npm.pkg.github.com
-          scope: "@lk-robotics"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Checkout public LDS package source
+        uses: actions/checkout@v7.0.0
+        with:
+          repository: LK-Design-System/lk-design-system
+          ref: a9ac5fc15bb2be0d6300c7029807ca393f223496
+          path: .lds-package-source
+
+      - name: Build public LDS packages
+        working-directory: .lds-package-source
+        run: |
+          npm.cmd ci
+          npm.cmd run build:workspaces
+
+      - name: Checkout public Robotics package source
+        uses: actions/checkout@v7.0.0
+        with:
+          repository: LK-Design-System/lk-design-system-robotics
+          ref: 870d2ff5d1c1c10ddf3489f07b3129f975e1a885
+          path: .lds-robotics-package-source
+
+      - name: Build public Robotics package
+        working-directory: .lds-robotics-package-source
+        run: |
+          npm.cmd ci
+          npm.cmd run build
+
+      - name: Pack public LDS packages
+        shell: pwsh
+        run: |
+          foreach ($package in 'core', 'product', 'theme') {
+            Push-Location ".lds-package-source/packages/$package"
+            npm.cmd pack --pack-destination "$env:GITHUB_WORKSPACE"
+            Pop-Location
+          }
+          Push-Location .lds-robotics-package-source
+          npm.cmd pack --pack-destination "$env:GITHUB_WORKSPACE"
+          Pop-Location
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        shell: pwsh
+        run: |
+          $manifestBackup = Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json'
+          $lockfileBackup = Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml'
+          Copy-Item apps/docs/package.json $manifestBackup
+          Copy-Item pnpm-lock.yaml $lockfileBackup
+          $manifest = Get-Content -Raw apps/docs/package.json | ConvertFrom-Json
+          foreach ($package in 'core', 'product', 'theme') {
+            $tarball = Get-ChildItem -Filter "lk-robotics-lds-$package-*.tgz" | Select-Object -First 1
+            if (-not $tarball) {
+              throw "The public LDS $package package could not be packed."
+            }
+            $manifest.dependencies."@lk-robotics/lds-$package" = "file:../../$($tarball.Name)"
+          }
+          $roboticsTarball = Get-ChildItem -Filter 'lk-robotics-lds-robotics-ui-*.tgz' | Select-Object -First 1
+          if (-not $roboticsTarball) {
+            throw 'The public Robotics UI package could not be packed.'
+          }
+          $manifest.dependencies.'@lk-robotics/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
+          $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
+          pnpm install --no-frozen-lockfile
+          Copy-Item $manifestBackup apps/docs/package.json -Force
+          Copy-Item $lockfileBackup pnpm-lock.yaml -Force
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -51,6 +107,9 @@ jobs:
         run: pnpm build
 
       - name: Build Storybook
+        env:
+          LDS_CONFORMANCE_CLI: ${{ github.workspace }}/.lds-package-source/packages/conformance/src/cli.mjs
+          LDS_CONFORMANCE_ROOT: ${{ github.workspace }}/.lds-package-source
         run: pnpm build-storybook
 
       - name: Upload GitHub Pages artifact

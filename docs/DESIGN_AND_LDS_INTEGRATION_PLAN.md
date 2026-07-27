@@ -83,10 +83,9 @@ local `link:`는 시각 검토용일 뿐 CI/배포 portability 증거는 아니�
 
 2026-07-21 현재 실행 디자인 계약과 checkout/package 상태는 루트
 [`DESIGN.md`](../DESIGN.md)가 소유한다. `apps/docs`의 portable baseline은 공개
-`@lk-robotics/lds-core@0.1.0-rc.0`, `@lk-robotics/lds-product@0.1.0-rc.0`,
-`@lk-robotics/lds-robotics-ui@0.1.0-rc.1` pin이다. 이후 controlled `Tree`와 Robotics
-UI 수정의 sibling-source 검증은 다음 package artifact 발행 전까지 로컬 증거로만
-취급한다.
+`@lk-robotics/lds-core@0.1.0-rc.1`, `@lk-robotics/lds-product@0.1.0-rc.1` pin이다.
+Pages는 public LDS source를 고정 commit에서 직접 빌드해 같은 package surface를
+재현한다.
 
 `Scene3DFrame`의 public contract와 `variant="embedded"`를 실제 source와 선언에서
 확인했다. 부모 surface(`CanvasEditorShell`, `Card`)가 border/radius/overflow를

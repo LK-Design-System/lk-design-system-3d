@@ -9,17 +9,18 @@ import {
   SegmentedControl,
   StatusBadge,
 } from "@lk-robotics/lds-core";
-import { DescriptionList, NumberField } from "@lk-robotics/lds-product";
 import {
   CanvasEditorCommandBar,
   CanvasEditorShell,
+  DescriptionList,
   EditorToolbar,
+  NumberField,
   Scene3DFrame,
   SelectionInspector,
   ViewerToolbar,
   ViewerToolbarButton,
   ViewportStatusBar,
-} from "@lk-robotics/lds-robotics-ui";
+} from "@lk-robotics/lds-product";
 import {
   EditVolume,
   PointCloudLayer,

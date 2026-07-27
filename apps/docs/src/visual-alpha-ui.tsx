@@ -1,16 +1,16 @@
 import { Button } from "@lk-robotics/lds-core/components/buttons/Button";
 import { StatusBadge } from "@lk-robotics/lds-core/components/content/StatusBadge";
-import { SelectionInspector } from "@lk-robotics/lds-robotics-ui/components/editor/SelectionInspector";
-import { ViewportStatusBar } from "@lk-robotics/lds-robotics-ui/components/editor/ViewportStatusBar";
+import { SelectionInspector } from "@lk-robotics/lds-product/components/editor/SelectionInspector";
+import { ViewportStatusBar } from "@lk-robotics/lds-product/components/editor/ViewportStatusBar";
 import { Icon } from "@lk-robotics/lds-core/components/icon/Icon";
 import { Container } from "@lk-robotics/lds-core/components/layout/Container";
 import { DockPanel } from "@lk-robotics/lds-product/components/layout/DockPanel";
 import { Drawer } from "@lk-robotics/lds-product/components/overlay/Drawer";
-import { Scene3DFrame } from "@lk-robotics/lds-robotics-ui/components/viz/Scene3DFrame";
+import { Scene3DFrame } from "@lk-robotics/lds-product/components/viz/Scene3DFrame";
 import {
   ViewerToolbar,
   ViewerToolbarButton,
-} from "@lk-robotics/lds-robotics-ui/components/viz/ViewerToolbar";
+} from "@lk-robotics/lds-product/components/viz/ViewerToolbar";
 import {
   useEffect,
   useRef,
@@ -32,7 +32,9 @@ export interface SelectedAssetDetails {
   readonly kind: string;
   readonly status: "live" | "warning" | "error" | "idle";
   readonly statusLabel?: string;
-  readonly statusTone?: NonNullable<ComponentProps<typeof StatusBadge>["tone"]>;
+  readonly statusTone?: NonNullable<
+    NonNullable<ComponentProps<typeof SelectionInspector>["item"]>["statusTone"]
+  >;
   readonly pose: readonly [number, number, number];
   readonly battery?: number;
   readonly task?: string;
@@ -127,7 +129,7 @@ function useNarrowViewer(): boolean {
 
 function inspectorTone(
   status: SelectedAssetDetails["status"],
-): NonNullable<ComponentProps<typeof StatusBadge>["tone"]> {
+): NonNullable<NonNullable<ComponentProps<typeof SelectionInspector>["item"]>["statusTone"]> {
   switch (status) {
     case "live":
       return "positive";

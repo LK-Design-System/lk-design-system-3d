@@ -26,17 +26,15 @@ Primitive catalog는 `SceneCanvas`, `Selectable`, `AmrRobot`, `GoalMarker`,
 goal·path 상태, renderer loading·empty·error·retry, 실제 LDS composition도 각 소유
 group 아래에서 검토합니다. 기본 시각 방향은
 운영 상태 식별성과 LDS chrome 조합성이 더 높은 `Operational Neutral`입니다.
-문서 앱은 공개 배포된 `@lk-robotics/lds-core@0.1.0-rc.0`,
-`@lk-robotics/lds-product@0.1.0-rc.0`,
-`@lk-robotics/lds-robotics-ui@0.1.0-rc.1`과 공식 `styles.css`를 고정해 실제 public
+문서 앱은 공개 LDS source에서 빌드한 `@lk-robotics/lds-core@0.1.0-rc.1`,
+`@lk-robotics/lds-product@0.1.0-rc.1`과 공식 `styles.css`를 고정해 실제 public
 API로 사용합니다. `Scene3DFrame`, `SelectionInspector`, `Tree`,
 `SegmentedControl`, `ViewportStatusBar`와 `StatusBadge`가 DOM chrome을 소유하며,
 renderer package에는 LDS 의존성을 넣지 않습니다.
 
 2026-07-21 교차 저장소 수정은 [디자인 계약](DESIGN.md)에 기록된 sibling source와
-각 Storybook에서 로컬 검증합니다. 새 controlled `Tree`와 Robotics UI 수정은 해당
-LDS package artifact가 발행·고정되기 전까지 portable release 증거가 아닙니다.
-Registry publish와 제품 repository 적용은 이 로컬 검토 범위에 포함하지 않습니다.
+각 Storybook에서 로컬 검증합니다. Pages는 public LDS source를 고정 커밋에서 직접
+빌드하므로 비공개 package registry 접근에 의존하지 않습니다.
 
 2026-07-17 LDS baseline audit에서 `Scene3DFrame`의 public
 `variant="embedded"` 계약을 확인했습니다. `CanvasEditorShell`처럼 부모 surface에

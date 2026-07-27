@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: read
-  packages: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -23,8 +22,6 @@ jobs:
     # setting. The hosted image also includes Chrome for the WebGL runtime QA.
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.LK_PACKAGES_READ_TOKEN || github.token }}
     defaults:
       run:
         shell: pwsh
@@ -64,11 +61,67 @@ jobs:
           node-version: 22.17.1
           cache: pnpm
           cache-dependency-path: lk-design-system-3d/pnpm-lock.yaml
-          registry-url: https://npm.pkg.github.com
-          scope: "@lk-robotics"
+
+      - name: Checkout public LDS package source
+        uses: actions/checkout@v7.0.0
+        with:
+          repository: LK-Design-System/lk-design-system
+          ref: a9ac5fc15bb2be0d6300c7029807ca393f223496
+          path: lk-design-system-source
+
+      - name: Build public LDS packages
+        working-directory: lk-design-system-source
+        run: |
+          npm ci
+          npm run build:workspaces
+
+      - name: Checkout public Robotics package source
+        uses: actions/checkout@v7.0.0
+        with:
+          repository: LK-Design-System/lk-design-system-robotics
+          ref: 870d2ff5d1c1c10ddf3489f07b3129f975e1a885
+          path: lk-design-system-robotics-source
+
+      - name: Build public Robotics package
+        working-directory: lk-design-system-robotics-source
+        run: |
+          npm ci
+          npm run build
+
+      - name: Pack public LDS packages
+        run: |
+          foreach ($package in 'core', 'product', 'theme') {
+            Push-Location "../lk-design-system-source/packages/$package"
+            npm pack --pack-destination "$env:GITHUB_WORKSPACE/lk-design-system-3d"
+            Pop-Location
+          }
+          Push-Location ../lk-design-system-robotics-source
+          npm pack --pack-destination "$env:GITHUB_WORKSPACE/lk-design-system-3d"
+          Pop-Location
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          $manifestBackup = Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json'
+          $lockfileBackup = Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml'
+          Copy-Item apps/docs/package.json $manifestBackup
+          Copy-Item pnpm-lock.yaml $lockfileBackup
+          $manifest = Get-Content -Raw apps/docs/package.json | ConvertFrom-Json
+          foreach ($package in 'core', 'product', 'theme') {
+            $tarball = Get-ChildItem -Filter "lk-robotics-lds-$package-*.tgz" | Select-Object -First 1
+            if (-not $tarball) {
+              throw "The public LDS $package package could not be packed."
+            }
+            $manifest.dependencies."@lk-robotics/lds-$package" = "file:../../$($tarball.Name)"
+          }
+          $roboticsTarball = Get-ChildItem -Filter 'lk-robotics-lds-robotics-ui-*.tgz' | Select-Object -First 1
+          if (-not $roboticsTarball) {
+            throw 'The public Robotics UI package could not be packed.'
+          }
+          $manifest.dependencies.'@lk-robotics/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
+          $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
+          pnpm install --no-frozen-lockfile
+          Copy-Item $manifestBackup apps/docs/package.json -Force
+          Copy-Item $lockfileBackup pnpm-lock.yaml -Force
 
       - name: Build
         run: pnpm build
