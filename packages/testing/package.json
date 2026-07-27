@@ -2,6 +2,7 @@
   "name": "@lk-robotics/lds-3d-testing",
   "version": "0.1.0-alpha.1",
   "description": "Runner-neutral golden fixtures and contract checks for LK Design System 3D",
+  "license": "MIT",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -48,7 +49,6 @@
   "engines": {
     "node": ">=22"
   },
-  "license": "UNLICENSED",
   "publishConfig": {
     "access": "restricted"
   }

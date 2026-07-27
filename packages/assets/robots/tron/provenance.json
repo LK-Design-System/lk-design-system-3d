@@ -28,9 +28,10 @@
     "floorNormalizationMeters": 0.100680016
   },
   "license": {
-    "spdx": "LicenseRef-LK-Robotics-Internal",
+    "spdx": "CC-BY-4.0",
     "holder": "LK Robotics",
-    "attributionRequired": false,
-    "authorization": "The asset creator confirmed use in LK Design System 3D on 2026-07-18."
+    "attributionRequired": true,
+    "authorization": "LK Robotics authorized public distribution of this runtime derivative under CC-BY-4.0 on 2026-07-27.",
+    "attribution": "Tron Robot model © LK Robotics, licensed under CC BY 4.0."
   }
 }

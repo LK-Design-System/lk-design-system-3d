@@ -2,6 +2,7 @@
   "name": "@lk-robotics/lds-3d",
   "version": "0.1.0-alpha.1",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@11.9.0",
   "engines": {

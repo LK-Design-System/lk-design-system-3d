@@ -17,10 +17,12 @@ robot is published through:
 - `./robots/tron/tron.asset-manifest.json`
 - `./robots/tron/provenance.json`
 
-The packaged Tron file is a runtime derivative of the creator-authorized source
-asset. Its provenance record preserves the immutable source repository revision,
-source and derivative SHA-256 digests, coordinate evidence, and the reproducible
-gltfpack command used to reduce the WebGL triangle and transfer budget.
+The packaged Tron file is a runtime derivative of an LK Robotics source asset.
+It is distributed under [CC BY 4.0](./robots/tron/LICENSE.md); reuse must retain
+the provided LK Robotics attribution. Its provenance record preserves the
+immutable source repository revision, source and derivative SHA-256 digests,
+coordinate evidence, and the reproducible gltfpack command used to reduce the
+WebGL triangle and transfer budget.
 
 ## Deferred Tron material authoring plan
 

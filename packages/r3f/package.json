@@ -2,6 +2,7 @@
   "name": "@lk-robotics/lds-3d-r3f",
   "version": "0.1.0-alpha.1",
   "description": "React Three Fiber WebGL renderer for LK Design System 3D scenes.",
+  "license": "MIT",
   "type": "module",
   "sideEffects": false,
   "files": [

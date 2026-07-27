@@ -29,9 +29,9 @@
         "sha256": "a2ca4479f1fe098c624b6b657ac9e343dc66a800474a45c6d16c49ba75dbf1fa"
       },
       "license": {
-        "spdx": "LicenseRef-LK-Robotics-Internal",
+        "spdx": "CC-BY-4.0",
         "holder": "LK Robotics",
-        "attributionRequired": false
+        "attributionRequired": true
       }
     }
   ]
