@@ -137,9 +137,6 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           pnpm api-report:check
 
-      - name: Check formatting
-        run: pnpm format:check
-
       - name: Build Storybook
         run: |
           ./node_modules/.bin/storybook build --config-dir apps/docs/.storybook --output-dir storybook-static
@@ -166,6 +163,9 @@ jobs:
           Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json') apps/docs/package.json -Force
           Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-workspace.yaml') pnpm-workspace.yaml -Force
           Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml') pnpm-lock.yaml -Force
+
+      - name: Check committed formatting
+        run: ./node_modules/.bin/prettier --check .
 
       - name: Validate LDS conformance
         run: node scripts/check-lds-style.mjs --storybook-index storybook-static/index.json --require-built-stories
