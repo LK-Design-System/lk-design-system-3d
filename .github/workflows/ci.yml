@@ -66,7 +66,7 @@ jobs:
         uses: actions/checkout@v7.0.0
         with:
           repository: LK-Design-System/lk-design-system
-          ref: a9ac5fc15bb2be0d6300c7029807ca393f223496
+          ref: 10a99516143eaba79ae13a5375f138fbc8c0f993
           path: lk-design-system-source
 
       - name: Build public LDS packages
@@ -75,19 +75,6 @@ jobs:
           npm ci
           npm run build:workspaces
 
-      - name: Checkout public Robotics package source
-        uses: actions/checkout@v7.0.0
-        with:
-          repository: LK-Design-System/lk-design-system-robotics
-          ref: 870d2ff5d1c1c10ddf3489f07b3129f975e1a885
-          path: lk-design-system-robotics-source
-
-      - name: Build public Robotics package
-        working-directory: lk-design-system-robotics-source
-        run: |
-          npm ci
-          npm run build
-
       - name: Pack public LDS packages
         run: |
           foreach ($package in 'core', 'product', 'theme') {
@@ -95,9 +82,7 @@ jobs:
             npm pack --pack-destination "$env:GITHUB_WORKSPACE/lk-design-system-3d"
             Pop-Location
           }
-          Push-Location ../lk-design-system-robotics-source
-          npm pack --pack-destination "$env:GITHUB_WORKSPACE/lk-design-system-3d"
-          Pop-Location
+          Copy-Item ../lk-design-system-source/vendor/lk-robotics-lds-robotics-ui-0.1.0-rc.2.tgz .
 
       - name: Install dependencies
         run: |

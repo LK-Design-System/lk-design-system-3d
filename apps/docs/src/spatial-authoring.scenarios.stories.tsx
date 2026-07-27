@@ -11,19 +11,18 @@ import {
   Stack,
   StatusBadge,
 } from "@lk-robotics/lds-core";
+import { NumberField, Tree } from "@lk-robotics/lds-product";
 import {
   CanvasEditorCommandBar,
   CanvasEditorShell,
   EditorToolbar,
   FloorSelector,
-  NumberField,
   Scene3DFrame,
   SelectionInspector,
-  Tree,
   ViewerToolbar,
   ViewerToolbarButton,
   ViewportStatusBar,
-} from "@lk-robotics/lds-product";
+} from "@lk-robotics/lds-robotics-ui";
 import {
   GoalMarker,
   SceneCanvas,
@@ -2363,6 +2362,7 @@ function SpatialMapEditor(): ReactNode {
         open={deleteOpen}
         title="선택 객체를 삭제할까요?"
         tone="danger"
+        toneLabel="파괴적 작업"
         confirmLabel="객체 삭제"
         cancelLabel="취소"
         onConfirm={confirmDelete}
