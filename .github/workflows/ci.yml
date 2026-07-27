@@ -128,7 +128,14 @@ jobs:
         run: pnpm test
 
       - name: Lint
-        run: pnpm lint
+        run: |
+          pnpm exec eslint .
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          pnpm boundary
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          pnpm exports:check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          pnpm api-report:check
 
       - name: Check formatting
         run: pnpm format:check
