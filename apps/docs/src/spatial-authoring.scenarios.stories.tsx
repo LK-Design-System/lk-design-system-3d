@@ -2362,7 +2362,6 @@ function SpatialMapEditor(): ReactNode {
         open={deleteOpen}
         title="선택 객체를 삭제할까요?"
         tone="danger"
-        toneLabel="파괴적 작업"
         confirmLabel="객체 삭제"
         cancelLabel="취소"
         onConfirm={confirmDelete}

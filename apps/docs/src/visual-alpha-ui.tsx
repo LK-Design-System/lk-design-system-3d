@@ -32,7 +32,9 @@ export interface SelectedAssetDetails {
   readonly kind: string;
   readonly status: "live" | "warning" | "error" | "idle";
   readonly statusLabel?: string;
-  readonly statusTone?: NonNullable<ComponentProps<typeof StatusBadge>["tone"]>;
+  readonly statusTone?: NonNullable<
+    NonNullable<ComponentProps<typeof SelectionInspector>["item"]>["statusTone"]
+  >;
   readonly pose: readonly [number, number, number];
   readonly battery?: number;
   readonly task?: string;
@@ -127,7 +129,7 @@ function useNarrowViewer(): boolean {
 
 function inspectorTone(
   status: SelectedAssetDetails["status"],
-): NonNullable<ComponentProps<typeof StatusBadge>["tone"]> {
+): NonNullable<NonNullable<ComponentProps<typeof SelectionInspector>["item"]>["statusTone"]> {
   switch (status) {
     case "live":
       return "positive";
