@@ -20,7 +20,7 @@
     "@lk-robotics/lds-core": "0.1.0-rc.1",
     "@lk-robotics/lds-product": "0.1.0-rc.1",
     "@lk-robotics/lds-theme": "0.1.0-rc.1",
-    "@react-three/drei": "catalog:",
+    "@lk-robotics/lds-robotics-ui": "0.1.0-rc.2",
     "@react-three/fiber": "catalog:",
     "react": "19.1.1",
     "react-dom": "19.1.1",

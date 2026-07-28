@@ -1,4 +1,4 @@
-import { Card, Code, Container, Stack } from "@lk-robotics/lds-core";
+import { Card, Code, Container, ScrollArea, Stack } from "@lk-robotics/lds-core";
 import { PageHeader } from "@lk-robotics/lds-product";
 import { useId, type PropsWithChildren, type ReactNode } from "react";
 
@@ -134,8 +134,21 @@ export function JsonInspector({
   readonly label: string;
 }): ReactNode {
   return (
-    <Code block aria-label={label} tabIndex={0} style={{ maxHeight: "28rem" }}>
-      {JSON.stringify(value, null, 2)}
-    </Code>
+    <ScrollArea
+      label={label}
+      maxHeight="28rem"
+      style={{ paddingRight: "var(--space-2)", paddingBottom: "var(--space-2)" }}
+    >
+      <Code
+        block
+        style={{
+          whiteSpace: "pre-wrap",
+          overflowWrap: "anywhere",
+          wordBreak: "break-word",
+        }}
+      >
+        {JSON.stringify(value, null, 2)}
+      </Code>
+    </ScrollArea>
   );
 }

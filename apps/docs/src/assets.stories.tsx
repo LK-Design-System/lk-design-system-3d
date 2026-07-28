@@ -141,7 +141,10 @@ export function InvalidManifestCasesExperience(): ReactNode {
           description="모든 예제는 예상한 계약 경로에서 거부되어야 합니다."
         >
           <Stack gap="var(--space-4)">
-            <StatusBadge tone={aggregate.passed ? "positive" : "negative"}>
+            <StatusBadge
+              style={{ alignSelf: "flex-start" }}
+              tone={aggregate.passed ? "positive" : "negative"}
+            >
               {aggregate.passed ? "예상한 실패를 모두 거부함" : "계약 실패"}
             </StatusBadge>
             <Table<InvalidCaseRow>

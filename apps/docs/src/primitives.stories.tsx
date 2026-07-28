@@ -348,6 +348,7 @@ export function SceneCanvasExperience(): ReactNode {
               { value: "free", label: "자유" },
             ]}
             size="sm"
+            style={{ alignSelf: "flex-start" }}
             value={cameraMode}
             onChange={(value) => setCameraMode(value as ReviewCameraMode)}
           />

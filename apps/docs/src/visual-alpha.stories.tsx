@@ -6,6 +6,7 @@ import {
   FormField,
   Stack,
   StatusBadge,
+  StatusIndicator,
 } from "@lk-robotics/lds-core";
 import { Legend } from "@lk-robotics/lds-product";
 import { SegmentedControl } from "@lk-robotics/lds-core/components/selection/SegmentedControl";
@@ -282,9 +283,15 @@ function WorldLabel({
         <ContentBadge color="neutral" size="xsmall">
           {title}
         </ContentBadge>
-        <StatusBadge tone={statusTone ?? worldLabelTone(status)}>
-          {statusLabel ?? `${visualEntityStatusLabel(status)} · ${detail}`}
-        </StatusBadge>
+        {status === "live" ? (
+          <StatusIndicator tone={statusTone ?? "positive"}>
+            {statusLabel ?? `${visualEntityStatusLabel(status)} · ${detail}`}
+          </StatusIndicator>
+        ) : (
+          <StatusBadge tone={statusTone ?? worldLabelTone(status)}>
+            {statusLabel ?? `${visualEntityStatusLabel(status)} · ${detail}`}
+          </StatusBadge>
+        )}
       </Stack>
     </Html>
   );

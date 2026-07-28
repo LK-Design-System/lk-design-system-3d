@@ -215,6 +215,7 @@ function SelectionDetails({
               label: selected.name,
               kind: selected.kind,
               status: selected.statusLabel ?? inspectorStatusLabel(selected.status),
+              statusPresentation: selected.status === "live" ? "indicator" : "badge",
               statusTone: selected.statusTone ?? inspectorTone(selected.status),
             }
       }

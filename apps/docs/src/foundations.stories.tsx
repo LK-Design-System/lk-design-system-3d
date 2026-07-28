@@ -176,8 +176,11 @@ export const TransformRoundTrip: Story = {
             description="왕복 불변 조건을 사람이 읽기 쉬운 형태로 요약합니다."
           >
             <Stack gap="var(--space-4)">
-              <StatusBadge tone={report.passed ? "positive" : "negative"}>
-                {report.passed ? "통과" : "실패"}
+              <StatusBadge
+                style={{ alignSelf: "flex-start" }}
+                tone={report.passed ? "positive" : "negative"}
+              >
+                {report.passed ? "변환 왕복 검증 통과" : "변환 왕복 검증 실패"}
               </StatusBadge>
               <DescriptionList
                 items={[
@@ -247,8 +250,11 @@ export const ShiftedOrigin: Story = {
             description="집계된 예제 결과와 직렬화 가능한 근거입니다."
           >
             <Stack gap="var(--space-4)">
-              <StatusBadge tone={report.passed ? "positive" : "negative"}>
-                {report.passed ? "통과" : "실패"}
+              <StatusBadge
+                style={{ alignSelf: "flex-start" }}
+                tone={report.passed ? "positive" : "negative"}
+              >
+                {report.passed ? "좌표 계약 검증 통과" : "좌표 계약 검증 실패"}
               </StatusBadge>
               <JsonInspector value={report} label="이동한 원점 좌표 계약 보고서" />
             </Stack>
