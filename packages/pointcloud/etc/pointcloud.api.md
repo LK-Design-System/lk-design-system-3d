@@ -26,6 +26,12 @@ export function createPointCloudLayerSnapshot(input: PointCloudLayerSnapshotInpu
 // @public (undocumented)
 export function createPointCloudSnapshot(input: PointCloudSnapshotInput): PointCloudSnapshot;
 
+// @public
+export function createSegmentationColors(labels: ArrayLike<number>, palette?: readonly SegmentationColor[]): Float32Array;
+
+// @public
+export const DEFAULT_SEGMENTATION_PALETTE: readonly SegmentationColor[];
+
 // @public (undocumented)
 export type PointCloudBufferOwnership = "caller-retained";
 
@@ -219,6 +225,9 @@ export function resolvePointCloudLayerSetRenderState(layerSet: PointCloudLayerSe
 
 // @public (undocumented)
 export function resolvePointCloudRenderState(snapshot: PointCloudSnapshot, sceneFrame: FrameId, maxPoints: number): PointCloudRenderState;
+
+// @public
+export type SegmentationColor = readonly [number, number, number];
 
 // (No @packageDocumentation comment for this package)
 

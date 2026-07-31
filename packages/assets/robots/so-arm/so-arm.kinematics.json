@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "assetId": "robots/so-arm",
+  "version": "0.1.0",
+  "baseLink": "base",
+  "links": [
+    {
+      "linkId": "base",
+      "nodeName": "Base"
+    },
+    {
+      "linkId": "shoulder",
+      "nodeName": "Shoulder"
+    },
+    {
+      "linkId": "upper_arm",
+      "nodeName": "UpperArm"
+    },
+    {
+      "linkId": "forearm",
+      "nodeName": "Forearm"
+    },
+    {
+      "linkId": "wrist",
+      "nodeName": "Wrist"
+    },
+    {
+      "linkId": "gripper",
+      "nodeName": "Gripper"
+    },
+    {
+      "linkId": "jaw",
+      "nodeName": "Jaw"
+    }
+  ],
+  "joints": [
+    {
+      "jointId": "shoulder_pan",
+      "type": "revolute",
+      "parentLink": "base",
+      "childLink": "shoulder",
+      "origin": {
+        "translation": [
+          0,
+          0,
+          0.06
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limits": {
+        "lower": -1.92,
+        "upper": 1.92
+      }
+    },
+    {
+      "jointId": "shoulder_lift",
+      "type": "revolute",
+      "parentLink": "shoulder",
+      "childLink": "upper_arm",
+      "origin": {
+        "translation": [
+          0,
+          0,
+          0.03
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limits": {
+        "lower": -1.75,
+        "upper": 1.75
+      }
+    },
+    {
+      "jointId": "elbow_flex",
+      "type": "revolute",
+      "parentLink": "upper_arm",
+      "childLink": "forearm",
+      "origin": {
+        "translation": [
+          0,
+          0,
+          0.11
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limits": {
+        "lower": -1.69,
+        "upper": 1.69
+      }
+    },
+    {
+      "jointId": "wrist_flex",
+      "type": "revolute",
+      "parentLink": "forearm",
+      "childLink": "wrist",
+      "origin": {
+        "translation": [
+          0,
+          0,
+          0.1
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limits": {
+        "lower": -1.66,
+        "upper": 1.66
+      }
+    },
+    {
+      "jointId": "wrist_roll",
+      "type": "revolute",
+      "parentLink": "wrist",
+      "childLink": "gripper",
+      "origin": {
+        "translation": [
+          0,
+          0,
+          0.045
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limits": {
+        "lower": -2.79,
+        "upper": 2.79
+      }
+    },
+    {
+      "jointId": "gripper_jaw",
+      "type": "revolute",
+      "parentLink": "gripper",
+      "childLink": "jaw",
+      "origin": {
+        "translation": [
+          -0.013,
+          0,
+          0.038
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limits": {
+        "lower": 0,
+        "upper": 1.1
+      }
+    }
+  ]
+}

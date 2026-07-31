@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "assetId": "robots/lk-lift",
+  "containsCustomerData": false,
+  "source": {
+    "tool": "scripts/import-urdf-robot.mjs",
+    "urdf": "packages/assets/robots/lk-lift/source/lk-lift.urdf",
+    "urdfSha256": "b3aa3c9e6de3da20aeae36c00d1ca9e5b2a1b11f2498548ee10cd5dd5ac39088",
+    "meshes": [
+      {
+        "file": "bracket.stl",
+        "bytes": 484,
+        "sha256": "4c512a73f8596374b11a18f8262721732b25c9874397006118575bb9612bbc8d",
+        "triangles": 8
+      }
+    ]
+  },
+  "derivative": {
+    "file": "./lk-lift.glb",
+    "bytes": 18392,
+    "sha256": "8584d088b62dba07aee51dca6012177a1b298cbe3e8a70a0d8a6b4615063407c",
+    "triangles": 620
+  },
+  "coordinateEvidence": {
+    "basis": "URDF right-handed Z-up meters (REP-103), identical to the LK core convention",
+    "upAxis": "+Z",
+    "forwardAxis": "+X",
+    "forwardAxisReason": "URDF/REP-103 defines +X as the robot's forward axis; the importer preserves it verbatim.",
+    "floorNormalizationMeters": 0
+  },
+  "license": {
+    "spdx": "CC-BY-4.0",
+    "holder": "LK Robotics",
+    "attributionRequired": true,
+    "authorization": "LK Robotics authorized importing this URDF source into the shared robots catalog.",
+    "attribution": "LK Lift Mast model © LK Robotics."
+  }
+}

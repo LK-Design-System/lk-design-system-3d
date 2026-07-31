@@ -26,3 +26,9 @@ export {
   type PointCloudLayerSnapshot,
   type PointCloudLayerSnapshotInput,
 } from "./layers.js";
+
+export {
+  DEFAULT_SEGMENTATION_PALETTE,
+  createSegmentationColors,
+  type SegmentationColor,
+} from "./segmentation.js";

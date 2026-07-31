@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.lk-robotics.com/design-system-3d/robot-kinematics.v1.schema.json",
+  "title": "LK Design System 3D Robot Kinematics V1",
+  "description": "A renderer-neutral joint-chain contract that maps an articulated robot asset's links to glTF nodes and declares each joint's motion in file-local units.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "assetId", "version", "baseLink", "links", "joints"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "assetId": { "$ref": "#/$defs/nonEmptyIdentifier" },
+    "version": { "type": "string", "minLength": 1 },
+    "baseLink": { "$ref": "#/$defs/nonEmptyIdentifier" },
+    "links": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/link" }
+    },
+    "joints": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/joint" }
+    }
+  },
+  "$defs": {
+    "nonEmptyIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "finiteNumber": { "type": "number" },
+    "vec3": {
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/finiteNumber" },
+        { "$ref": "#/$defs/finiteNumber" },
+        { "$ref": "#/$defs/finiteNumber" }
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "quat": {
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/finiteNumber" },
+        { "$ref": "#/$defs/finiteNumber" },
+        { "$ref": "#/$defs/finiteNumber" },
+        { "$ref": "#/$defs/finiteNumber" }
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["linkId", "nodeName"],
+      "properties": {
+        "linkId": { "$ref": "#/$defs/nonEmptyIdentifier" },
+        "nodeName": { "$ref": "#/$defs/nonEmptyIdentifier" }
+      }
+    },
+    "joint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["jointId", "type", "parentLink", "childLink", "origin", "axis", "limits"],
+      "properties": {
+        "jointId": { "$ref": "#/$defs/nonEmptyIdentifier" },
+        "type": { "enum": ["revolute", "prismatic"] },
+        "parentLink": { "$ref": "#/$defs/nonEmptyIdentifier" },
+        "childLink": { "$ref": "#/$defs/nonEmptyIdentifier" },
+        "origin": { "$ref": "#/$defs/origin" },
+        "axis": { "$ref": "#/$defs/vec3" },
+        "limits": { "$ref": "#/$defs/limits" }
+      }
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["translation", "rotation"],
+      "properties": {
+        "translation": { "$ref": "#/$defs/vec3" },
+        "rotation": { "$ref": "#/$defs/quat" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lower", "upper"],
+      "properties": {
+        "lower": { "$ref": "#/$defs/finiteNumber" },
+        "upper": { "$ref": "#/$defs/finiteNumber" }
+      }
+    }
+  }
+}

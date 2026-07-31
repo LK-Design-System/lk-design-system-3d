@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "assetId": "robots/so-arm",
+  "containsCustomerData": false,
+  "source": {
+    "generator": "scripts/generate-so-arm-asset.mjs",
+    "deterministic": true,
+    "description": "Original procedural SO-ARM-class desktop manipulator authored in this repository; joint topology and limits approximate a 6-servo hobby arm, and no external mesh or URDF was imported."
+  },
+  "derivative": {
+    "file": "./so-arm.glb",
+    "bytes": 9756,
+    "sha256": "e39f43e04874794802af6a9aaf1199a86061443456643cf76293949ee9d2b8a1",
+    "triangles": 252
+  },
+  "coordinateEvidence": {
+    "basis": "glTF 2.0 right-handed meters",
+    "upAxis": "+Z",
+    "forwardAxis": "+X",
+    "forwardAxisReason": "The generator authors the arm directly in the LK core convention; the fixed gripper jaw faces local +X at rest.",
+    "floorNormalizationMeters": 0
+  },
+  "license": {
+    "spdx": "CC-BY-4.0",
+    "holder": "LK Robotics",
+    "attributionRequired": true,
+    "authorization": "LK Robotics authored this procedural asset in-repository for public distribution under CC-BY-4.0.",
+    "attribution": "SO-ARM Desktop Manipulator model © LK Robotics, licensed under CC BY 4.0."
+  }
+}

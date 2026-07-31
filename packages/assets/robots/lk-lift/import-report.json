@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "tool": "scripts/import-urdf-robot.mjs",
+  "source": {
+    "urdf": "packages/assets/robots/lk-lift/source/lk-lift.urdf"
+  },
+  "foldedFixedJoints": [
+    {
+      "joint": "sensor_mount",
+      "child": "sensor",
+      "into": "boom"
+    }
+  ],
+  "warnings": [],
+  "result": {
+    "assetId": "robots/lk-lift",
+    "links": [
+      "base_link",
+      "mast",
+      "boom"
+    ],
+    "joints": [
+      "lift_z",
+      "boom_yaw"
+    ],
+    "bounds": {
+      "min": [
+        -0.25,
+        -0.25,
+        0
+      ],
+      "max": [
+        0.60732,
+        0.25,
+        1.615958
+      ]
+    },
+    "glbBytes": 18392,
+    "sha256": "8584d088b62dba07aee51dca6012177a1b298cbe3e8a70a0d8a6b4615063407c"
+  }
+}

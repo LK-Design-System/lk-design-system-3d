@@ -191,6 +191,15 @@ export function axesAreOrthogonal(left: Axis, right: Axis): boolean;
 // @public (undocumented)
 export function axisToVector(axis: Axis): Vec3;
 
+// @public (undocumented)
+export function clampJointValue(joint: KinematicsJoint, value: number): number;
+
+// @public
+export function computeJointPoses(kinematics: RobotKinematicsV1, jointValues?: JointValues): readonly JointPose[];
+
+// @public
+export function computeLinkPoses(kinematics: RobotKinematicsV1, jointValues?: JointValues): ReadonlyMap<FrameId, LinkPose>;
+
 // @public
 export function consumeAssetOwnershipToken<TResource>(token: AssetOwnershipToken<TResource>): AdoptedAsset<TResource>;
 
@@ -202,6 +211,12 @@ export function createAssetReport(input: unknown): AssetValidationReport;
 
 // @public
 export function createFileToCoreRotation(upAxis: Axis, forwardAxis: Axis): Quat;
+
+// @public
+export function createJointFrameTransforms(kinematics: RobotKinematicsV1, jointValues?: JointValues): readonly RigidTransform3[];
+
+// @public (undocumented)
+export function createJointTrajectory(samples: readonly JointTrajectorySample[]): JointTrajectory;
 
 // @public
 export function createLoadedAsset<TResource>(options: CreateLoadedAssetOptions<TResource>): LoadedAsset<TResource>;
@@ -240,6 +255,117 @@ export const GLTF_Y_UP_COORDINATE: Readonly<{
     readonly metersPerUnit: 1;
 }>;
 
+// @public
+export interface JointPose {
+    // (undocumented)
+    readonly childLink: FrameId;
+    // (undocumented)
+    readonly jointId: string;
+    // (undocumented)
+    readonly nodeName: string;
+    // (undocumented)
+    readonly rotation: Quat;
+    // (undocumented)
+    readonly translation: Vec3;
+    readonly value: number;
+}
+
+// @public (undocumented)
+export interface JointPoseIkSolution {
+    // (undocumented)
+    readonly iterations: number;
+    // (undocumented)
+    readonly kind: "converged" | "not-converged";
+    // (undocumented)
+    readonly residualMeters: number;
+    // (undocumented)
+    readonly residualRadians: number;
+    readonly values: JointValues;
+}
+
+// @public (undocumented)
+export interface JointPositionIkSolution {
+    readonly iterations: number;
+    // (undocumented)
+    readonly kind: "converged" | "not-converged";
+    readonly residualMeters: number;
+    readonly values: JointValues;
+}
+
+// @public (undocumented)
+export interface JointTrajectory {
+    // (undocumented)
+    readonly samples: readonly JointTrajectorySample[];
+}
+
+// @public
+export interface JointTrajectorySample {
+    // (undocumented)
+    readonly timeSeconds: number;
+    // (undocumented)
+    readonly values: JointValues;
+}
+
+// @public
+export type JointValues = Readonly<Record<string, number>>;
+
+// @public (undocumented)
+export interface KinematicsJoint {
+    readonly axis: Vec3;
+    // (undocumented)
+    readonly childLink: FrameId;
+    // (undocumented)
+    readonly jointId: string;
+    // (undocumented)
+    readonly limits: KinematicsJointLimits;
+    // (undocumented)
+    readonly origin: KinematicsJointOrigin;
+    // (undocumented)
+    readonly parentLink: FrameId;
+    // (undocumented)
+    readonly type: KinematicsJointType;
+}
+
+// @public (undocumented)
+export interface KinematicsJointLimits {
+    readonly lower: number;
+    // (undocumented)
+    readonly upper: number;
+}
+
+// @public (undocumented)
+export interface KinematicsJointOrigin {
+    // (undocumented)
+    readonly rotation: Quat;
+    readonly translation: Vec3;
+}
+
+// @public (undocumented)
+export type KinematicsJointType = "revolute" | "prismatic";
+
+// @public (undocumented)
+export interface KinematicsLink {
+    // (undocumented)
+    readonly linkId: FrameId;
+    readonly nodeName: string;
+}
+
+// @public (undocumented)
+export class KinematicsValidationError extends RangeError {
+    // (undocumented)
+    readonly name = "KinematicsValidationError";
+}
+
+// @public
+export interface LinkPose {
+    // (undocumented)
+    readonly linkId: FrameId;
+    // (undocumented)
+    readonly rotation: Quat;
+    // (undocumented)
+    readonly translation: Vec3;
+}
+
 // @public (undocumented)
 export interface LoadedAsset<TResource> {
     // (undocumented)
@@ -259,13 +385,86 @@ export function normalizeAssetPointToCore(manifest: AssetManifestV1, rawFilePosi
 export function parseAssetManifest(input: unknown): AssetManifestParseResult;
 
 // @public (undocumented)
+export function parseRobotKinematics(input: unknown): RobotKinematicsParseResult;
+
+// @public (undocumented)
+export type RobotKinematicsParseResult = {
+    readonly ok: true;
+    readonly value: RobotKinematicsV1;
+} | {
+    readonly ok: false;
+    readonly issues: readonly AssetValidationIssue[];
+};
+
+// @public
+export interface RobotKinematicsV1 {
+    // (undocumented)
+    readonly assetId: AssetId;
+    // (undocumented)
+    readonly baseLink: FrameId;
+    // (undocumented)
+    readonly joints: readonly KinematicsJoint[];
+    // (undocumented)
+    readonly links: readonly KinematicsLink[];
+    // (undocumented)
+    readonly schemaVersion: 1;
+    // (undocumented)
+    readonly version: string;
+}
+
+// @public (undocumented)
 export function rotateVectorByQuaternion(rotation: Quat, value: Vec3): Vec3;
 
 // @public (undocumented)
 export function rotationMatchesCoordinate(rotation: Quat, coordinate: Pick<FileCoordinate, "upAxis" | "forwardAxis">, tolerance?: number): boolean;
 
+// @public
+export function sampleJointTrajectory(trajectory: JointTrajectory, timeSeconds: number): JointValues;
+
+// @public
+export function solveJointPoseIk(kinematics: RobotKinematicsV1, options: SolveJointPoseIkOptions): JointPoseIkSolution;
+
+// @public (undocumented)
+export interface SolveJointPoseIkOptions {
+    readonly dampingFactor?: number;
+    readonly effectorLink: FrameId;
+    readonly initialValues?: JointValues;
+    readonly maxIterations?: number;
+    readonly targetOrientation: Quat;
+    readonly targetPosition: Vec3;
+    readonly toleranceMeters?: number;
+    readonly toleranceRadians?: number;
+}
+
+// @public (undocumented)
+export function solveJointPositionIk(kinematics: RobotKinematicsV1, options: SolveJointPositionIkOptions): JointPositionIkSolution;
+
+// @public
+export interface SolveJointPositionIkOptions {
+    readonly effectorLink: FrameId;
+    readonly initialValues?: JointValues;
+    readonly maxIterations?: number;
+    readonly targetPosition: Vec3;
+    readonly toleranceMeters?: number;
+}
+
+// @public (undocumented)
+export function trajectoryEndSeconds(trajectory: JointTrajectory): number;
+
+// @public (undocumented)
+export function trajectoryStartSeconds(trajectory: JointTrajectory): number;
+
+// @public (undocumented)
+export class TrajectoryValidationError extends RangeError {
+    // (undocumented)
+    readonly name = "TrajectoryValidationError";
+}
+
 // @public (undocumented)
 export function validateAssetManifest(input: unknown): readonly AssetValidationIssue[];
+
+// @public (undocumented)
+export function validateRobotKinematics(input: unknown): readonly AssetValidationIssue[];
 
 // (No @packageDocumentation comment for this package)
 

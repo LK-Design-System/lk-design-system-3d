@@ -9,6 +9,7 @@
     "dist",
     "robots",
     "asset-manifest.v1.schema.json",
+    "robot-kinematics.v1.schema.json",
     "README.md"
   ],
   "types": "./dist/index.d.ts",

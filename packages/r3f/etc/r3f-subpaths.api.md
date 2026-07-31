@@ -14,6 +14,7 @@ import { CSSProperties } from 'react';
 import { EntityId } from '@lk-robotics/lds-3d-core';
 import { FrameId } from '@lk-robotics/lds-3d-core';
 import { GoalEntity } from '@lk-robotics/lds-3d-core';
+import { JointValues } from '@lk-robotics/lds-3d-assets';
 import { MarkerFreshnessPolicy } from '@lk-robotics/lds-3d-markers';
 import { MarkerLayerRenderState } from '@lk-robotics/lds-3d-markers';
 import { MarkerLayerSnapshot } from '@lk-robotics/lds-3d-markers';
@@ -32,6 +33,7 @@ import * as react from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ReactNode } from 'react';
 import { RobotEntity } from '@lk-robotics/lds-3d-core';
+import { RobotKinematicsV1 } from '@lk-robotics/lds-3d-assets';
 import { SceneThemeOverrides } from '@lk-robotics/lds-3d-core';
 import { SceneThemeValues } from '@lk-robotics/lds-3d-core';
 import { SpatialAssetNode } from '@lk-robotics/lds-3d-core';
@@ -87,8 +89,40 @@ interface AmrRobotProps {
     readonly status?: RobotVisualStatus;
 }
 
+// @public
+function ArticulatedGltfModel(props: ArticulatedGltfModelProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+type ArticulatedGltfModelProps = GltfModelProps & GltfModelArticulationContract;
+
+// @public (undocumented)
+function assertValidVoxelSnapshot(snapshot: VoxelLayerSnapshot, maxVoxels: number): number;
+
 // @public (undocumented)
 function calculatePathLength(points: readonly Vec3[]): number;
+
+// @public
+function CameraFrustum({ entityId, position, orientation, fovYRadians, aspect, nearMeters, farMeters, color, opacity, showFarPlane, }: CameraFrustumProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+interface CameraFrustumProps {
+    readonly aspect: number;
+    // (undocumented)
+    readonly color?: string;
+    // (undocumented)
+    readonly entityId: EntityId;
+    // (undocumented)
+    readonly farMeters: number;
+    readonly fovYRadians: number;
+    // (undocumented)
+    readonly nearMeters: number;
+    // (undocumented)
+    readonly opacity?: number;
+    // (undocumented)
+    readonly orientation?: Quat;
+    readonly position?: Vec3;
+    readonly showFarPlane?: boolean;
+}
 
 // @public (undocumented)
 function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, keyboardCommand, onManualControl, onSettled, }: CameraRigProps): null;
@@ -126,6 +160,9 @@ interface CameraRigProps {
 
 // @public (undocumented)
 function clearGltfModel(url: string): void;
+
+// @public
+function computeFrustumCorners(fovYRadians: number, aspect: number, nearMeters: number, farMeters: number): readonly Vec3[];
 
 declare namespace coordinates {
     export {
@@ -195,6 +232,13 @@ interface EntityInteractionBindings {
 
 // @public (undocumented)
 function GltfModel({ onLoadStateChange, ...props }: GltfModelProps): react_jsx_runtime.JSX.Element;
+
+// @public
+interface GltfModelArticulationContract {
+    readonly jointValues?: JointValues;
+    // (undocumented)
+    readonly kinematics: RobotKinematicsV1;
+}
 
 // @public
 type GltfModelCoordinateContract = {
@@ -282,7 +326,10 @@ type ModelLoadState = "loading" | "ready" | "error";
 
 declare namespace models {
     export {
+        ArticulatedGltfModel,
+        ArticulatedGltfModelProps,
         GltfModel,
+        GltfModelArticulationContract,
         GltfModelCoordinateContract,
         GltfModelProps,
         ModelLoadState,
@@ -499,6 +546,8 @@ declare namespace scene {
         AmrOperationalSceneProps,
         AmrRobot,
         AmrRobotProps,
+        CameraFrustum,
+        CameraFrustumProps,
         CameraRig,
         CameraRigProps,
         CoreSpace,
@@ -566,6 +615,11 @@ declare namespace scene {
         TransformGizmo,
         TransformGizmoProps,
         VisualAlphaAssetPlacement,
+        VoxelLayer,
+        VoxelLayerProps,
+        VoxelLayerSnapshot,
+        assertValidVoxelSnapshot,
+        computeFrustumCorners,
         isEditableKeyboardTarget,
         resolveSceneCameraKey,
         useEntityInteraction,
@@ -1127,6 +1181,31 @@ interface VisualAlphaModelProps {
 
 // @public (undocumented)
 type VisualAlphaModelUrls = Readonly<Record<VisualAlphaModelKey, string>>;
+
+// @public
+function VoxelLayer({ snapshot, maxVoxels, position, orientation, color, opacity, }: VoxelLayerProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+interface VoxelLayerProps {
+    // (undocumented)
+    readonly color?: string;
+    readonly maxVoxels: number;
+    // (undocumented)
+    readonly opacity?: number;
+    // (undocumented)
+    readonly orientation?: Quat;
+    readonly position?: Vec3;
+    // (undocumented)
+    readonly snapshot: VoxelLayerSnapshot;
+}
+
+// @public (undocumented)
+interface VoxelLayerSnapshot {
+    readonly centers: Float32Array;
+    // (undocumented)
+    readonly frame: FrameId;
+    readonly resolutionMeters: number;
+}
 
 // (No @packageDocumentation comment for this package)
 

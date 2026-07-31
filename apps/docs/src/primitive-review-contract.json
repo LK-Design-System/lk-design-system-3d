@@ -33,7 +33,9 @@
     },
     "lds-3d-primitives-selectable--overview": {
       "actualWebgl": true,
-      "atoms": ["Selectable"],
+      "atoms": [
+        "Selectable"
+      ],
       "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "Selectable은 일시적 호버와 하나의 지속 공간 식별자만 제공하며 제품 명령은 렌더러 밖에 둡니다.",
@@ -47,7 +49,9 @@
     },
     "lds-3d-primitives-amr-robot--overview": {
       "actualWebgl": true,
-      "atoms": ["AmrRobot"],
+      "atoms": [
+        "AmrRobot"
+      ],
       "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "AmrRobot은 의미를 갖는 대체 AMR 시각 요소이며 작업 카드, 명령 표면, 자산 레지스트리가 아닙니다.",
@@ -61,7 +65,9 @@
     },
     "lds-3d-primitives-goal-marker--overview": {
       "actualWebgl": true,
-      "atoms": ["GoalMarker"],
+      "atoms": [
+        "GoalMarker"
+      ],
       "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "GoalMarker는 공간 의도만 전달하며 목표 확인이나 확정은 제품 소유 LDS 액션이 담당해야 합니다.",
@@ -75,7 +81,9 @@
     },
     "lds-3d-primitives-path-ribbon--overview": {
       "actualWebgl": true,
-      "atoms": ["PathRibbon"],
+      "atoms": [
+        "PathRibbon"
+      ],
       "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "PathRibbon은 기본적으로 수동 경로 형상이며 경로 편집기 워크플로와 탐색 목록은 이 프리미티브에 포함하지 않습니다.",
@@ -89,7 +97,9 @@
     },
     "lds-3d-primitives-scene-state-marker--overview": {
       "actualWebgl": true,
-      "atoms": ["SceneStateMarker"],
+      "atoms": [
+        "SceneStateMarker"
+      ],
       "scenarioStoryId": "lds-3d-states-renderer-lifecycle--overview",
       "stages": {
         "overview": "SceneStateMarker는 호스트가 구동하는 WebGL 수명주기 형상이며 페이지 수준 복구 정책이나 중복 앱 오류 셸이 아닙니다.",
@@ -103,7 +113,9 @@
     },
     "lds-3d-primitives-gltf-model--overview": {
       "actualWebgl": true,
-      "atoms": ["GltfModel"],
+      "atoms": [
+        "GltfModel"
+      ],
       "scenarioStoryId": "visual-alpha--operational-neutral",
       "stages": {
         "overview": "GltfModel은 배치, 로딩, 소스 규약 정규화, 배치 수명주기를 소유하며 제품 자산 레지스트리와 워크플로는 밖에 둡니다.",
@@ -117,7 +129,10 @@
     },
     "lds-3d-primitives-point-cloud-layer--overview": {
       "actualWebgl": true,
-      "atoms": ["PointCloudLayer", "PointCloudLayers"],
+      "atoms": [
+        "PointCloudLayer",
+        "PointCloudLayers"
+      ],
       "scenarioStoryId": "lds-3d-scenes-point-cloud-foundation--lds-integration",
       "stages": {
         "overview": "PointCloudLayer는 검증된 LK 코어 스냅샷 하나를 렌더링하고 PointCloudLayers는 호출자가 계산한 여러 소스 프레임을 하나의 원자적 점 예산 아래 조합합니다. 두 프리미티브는 어댑터가 만든 점 형상과 재질만 소유하며 ROS 전송, TF 그래프 계산, PCD 파싱, LOD, 피킹, 제품 뷰어 UI는 밖에 둡니다.",
@@ -131,7 +146,9 @@
     },
     "lds-3d-primitives-occupancy-grid-surface--overview": {
       "actualWebgl": true,
-      "atoms": ["OccupancyGridSurface"],
+      "atoms": [
+        "OccupancyGridSurface"
+      ],
       "scenarioStoryId": "lds-3d-scenes-occupancy-grid--overview",
       "stages": {
         "overview": "OccupancyGridSurface renders a validated, frame-scoped occupancy snapshot as one actual WebGL quad backed by one nearest-filter categorical data texture.",
@@ -145,7 +162,9 @@
     },
     "lds-3d-primitives-marker-layer--overview": {
       "actualWebgl": true,
-      "atoms": ["MarkerLayer"],
+      "atoms": [
+        "MarkerLayer"
+      ],
       "scenarioStoryId": "lds-3d-scenes-tf-marker--overview",
       "stages": {
         "overview": "MarkerLayer renders frame-scoped, non-interactive spatial annotations as actual WebGL geometry without owning transport or TF lookup.",
@@ -159,7 +178,10 @@
     },
     "lds-3d-primitives-spatial-editing--overview": {
       "actualWebgl": true,
-      "atoms": ["SectionBox", "EditVolume"],
+      "atoms": [
+        "SectionBox",
+        "EditVolume"
+      ],
       "scenarioStoryId": "lds-3d-scenes-spatial-editing--overview",
       "stages": {
         "overview": "SectionBox는 검증된 하나의 장면 프레임 XYZ 범위를 시각화하고 EditVolume은 호출자 소유 삭제 또는 복원 의도를 시각화합니다. 어느 쪽도 점 변경, 실행 취소, 권한, 파괴적 확정을 소유하지 않습니다.",
@@ -173,7 +195,10 @@
     },
     "lds-3d-primitives-spatial-authoring--overview": {
       "actualWebgl": true,
-      "atoms": ["SpatialStructure", "TransformGizmo"],
+      "atoms": [
+        "SpatialStructure",
+        "TransformGizmo"
+      ],
       "scenarioStoryId": "lds-3d-scenes-spatial-authoring-foundation--lds-integration",
       "stages": {
         "overview": "SpatialStructure는 프레임이 지정된 불변 부지·건물·층 트리를 프리미티브 또는 자산 말단 노드와 함께 렌더링하고 TransformGizmo는 변환 의도만 내보냅니다. 제품 스키마, 이력, 검증, 저장, 충돌 정책은 두 프리미티브 밖에 둡니다.",
@@ -183,6 +208,38 @@
         "accessibility-motion": "이름이 있는 캔버스를 LDS 계층, 선택, 모드, 공간, 최근 commit 요약이 보완합니다. LDS DOM 액션은 이동·회전·크기 조절 모두에 키보드 경로를 제공하고 드래그 중 카메라 제어는 이전 상태로 정확히 복구되며 주변 애니메이션이 필요하지 않습니다.",
         "responsive": "제한된 너비에서 계층은 하나의 캔버스 안에 남고 LDS 제어와 요약은 밖에서 줄바꿈되며 렌더러는 도구 모음, 필드, 인스펙터, 반응형 셸을 만들지 않습니다.",
         "scenario": "lds-3d-scenes-spatial-authoring-foundation--lds-integration은 같은 WebGL 트리와 변환 계약을 공개 LDS CanvasEditorShell 안에 배치합니다."
+      }
+    },
+    "lds-3d-primitives-camera-frustum--overview": {
+      "actualWebgl": true,
+      "atoms": [
+        "CameraFrustum"
+      ],
+      "scenarioStoryId": "lds-3d-scenes-sensor-overlays--overview",
+      "stages": {
+        "overview": "CameraFrustum은 검증된 내재 파라미터에서 파생되는 렌더러 소유 와이어프레임이며 이미지 전송이나 센서 구독을 포함하지 않습니다.",
+        "usage": "실제 SceneCanvas 안에서 장면 프레임 pose와 fovY·aspect·near·far만 받아 마운트하며 광축은 로컬 +X입니다.",
+        "variants-states": "광각·망원·far 평면 채움 해제 변형을 같은 장면에서 검토하고 잘못된 내재 파라미터는 마운트 전에 계약 오류로 거부됩니다.",
+        "interaction": "프러스텀 자체는 비상호작용 표현이고 선택·명령은 호출자 소유 chrome이 담당합니다.",
+        "accessibility-motion": "이름이 있는 캔버스 안의 정적 표현으로 자체 모션이 없고 색은 테마와 caller 지정 색을 따릅니다.",
+        "responsive": "제한된 너비에서도 프러스텀은 호스트 캔버스 경계 안에 남고 페이지 레이아웃은 LDS가 소유합니다.",
+        "scenario": "lds-3d-scenes-sensor-overlays--overview가 세그멘테이션·복셀과의 단일 프레임 정합을 검증합니다."
+      }
+    },
+    "lds-3d-primitives-voxel-layer--overview": {
+      "actualWebgl": true,
+      "atoms": [
+        "VoxelLayer"
+      ],
+      "scenarioStoryId": "lds-3d-scenes-sensor-overlays--overview",
+      "stages": {
+        "overview": "VoxelLayer는 호출자가 복셀화한 중심점 목록을 인스턴싱으로 렌더하는 표현 원자이며 점유 판정이나 다운샘플을 수행하지 않습니다.",
+        "usage": "실제 SceneCanvas 안에서 frame·resolutionMeters·centers 스냅샷과 명시적 maxVoxels 예산을 받아 마운트합니다.",
+        "variants-states": "해상도·밀도가 다른 스냅샷을 같은 장면에서 검토하고 예산 초과·비유한 좌표는 조용한 절단 없이 계약 오류로 거부됩니다.",
+        "interaction": "복셀 자체는 비상호작용 표현이고 선택·편집은 spatial-editing 원자와 호출자 소유 chrome이 담당합니다.",
+        "accessibility-motion": "이름이 있는 캔버스 안의 정적 표현으로 자체 모션이 없으며 불투명도는 caller가 제어합니다.",
+        "responsive": "제한된 너비에서도 인스턴스는 호스트 캔버스 경계 안에 남고 페이지 레이아웃은 LDS가 소유합니다.",
+        "scenario": "lds-3d-scenes-sensor-overlays--overview가 세그멘테이션·프러스텀과의 단일 프레임 정합을 검증합니다."
       }
     }
   }

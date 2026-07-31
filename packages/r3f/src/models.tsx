@@ -1,18 +1,24 @@
 import { Component, Suspense, useEffect, useMemo, useRef, type ReactNode } from "react";
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
+import type { Object3D } from "three";
 import { GLTFLoader, type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
   cloneThreeSceneInstance,
   releaseThreeSceneInstance,
 } from "@lk-robotics/lds-3d-three/r3f-bridge";
 import {
+  computeJointPoses,
   createFileToCoreRotation,
   validateAssetManifest,
+  validateRobotKinematics,
   type AssetManifestV1,
+  type JointValues,
+  type RobotKinematicsV1,
 } from "@lk-robotics/lds-3d-assets";
 import type { EntityId, Quat, Vec3 } from "@lk-robotics/lds-3d-core";
 
 import { SceneStateMarker, Selectable } from "./primitives.js";
+import { shouldScheduleDemandFrame } from "./rendering.js";
 import { useSceneRuntime } from "./runtime.js";
 
 export type VisualAlphaModelKey =
@@ -102,9 +108,88 @@ const GLTF_TO_CORE_ROTATION = createFileToCoreRotation("+Y", "+Z");
 const IDENTITY_QUATERNION: Quat = Object.freeze([0, 0, 0, 1]);
 const ZERO: Vec3 = Object.freeze([0, 0, 0]);
 
-type LoadedGltfModelProps = GltfModelProps & {
-  readonly onReady: () => void;
-};
+/**
+ * The articulation evidence required to pose a joint chain inside the file.
+ *
+ * `kinematics` must validate against the robot kinematics contract, and every
+ * declared link must resolve to exactly one uniquely named glTF node.
+ */
+export interface GltfModelArticulationContract {
+  readonly kinematics: RobotKinematicsV1;
+  /**
+   * Joint values keyed by jointId: radians for revolute joints, file units for
+   * prismatic joints. Missing joints hold their rest value and out-of-range
+   * values clamp to the declared limits.
+   */
+  readonly jointValues?: JointValues;
+}
+
+export type ArticulatedGltfModelProps = GltfModelProps & GltfModelArticulationContract;
+
+type LoadedGltfModelProps = GltfModelProps &
+  Partial<GltfModelArticulationContract> & {
+    readonly onReady: () => void;
+  };
+
+function collectArticulationNodes(
+  root: Object3D,
+  kinematics: RobotKinematicsV1,
+): ReadonlyMap<string, Object3D> {
+  const wanted = new Set(kinematics.links.map((link) => link.nodeName));
+  const found = new Map<string, Object3D>();
+  const duplicated = new Set<string>();
+  const stack: Object3D[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (node === undefined) break;
+    if (wanted.has(node.name)) {
+      if (found.has(node.name)) duplicated.add(node.name);
+      else found.set(node.name, node);
+    }
+    stack.push(...node.children);
+  }
+  const missing = [...wanted].filter((name) => !found.has(name));
+  if (missing.length > 0) {
+    throw new TypeError(
+      `Articulated model is missing glTF nodes for declared links: ${missing.join(", ")}.`,
+    );
+  }
+  if (duplicated.size > 0) {
+    throw new TypeError(
+      `Articulated model contains ambiguous duplicate glTF node names: ${[...duplicated].join(", ")}.`,
+    );
+  }
+  return found;
+}
+
+interface ArticulationDriverProps {
+  readonly root: Object3D;
+  readonly kinematics: RobotKinematicsV1;
+  readonly jointValues?: JointValues;
+}
+
+/**
+ * Poses the cloned scene's link nodes whenever the joint values change. The
+ * driver mutates node-local transforms only, so the placement's coordinate
+ * normalization and selection behavior stay identical to a rigid GltfModel.
+ */
+function ArticulationDriver({ root, kinematics, jointValues }: ArticulationDriverProps) {
+  const frameloop = useThree((state) => state.frameloop);
+  const invalidate = useThree((state) => state.invalidate);
+  const nodes = useMemo(() => collectArticulationNodes(root, kinematics), [kinematics, root]);
+
+  useEffect(() => {
+    for (const pose of computeJointPoses(kinematics, jointValues)) {
+      const node = nodes.get(pose.nodeName);
+      if (node === undefined) continue;
+      node.position.set(pose.translation[0], pose.translation[1], pose.translation[2]);
+      node.quaternion.set(pose.rotation[0], pose.rotation[1], pose.rotation[2], pose.rotation[3]);
+    }
+    if (shouldScheduleDemandFrame(frameloop, true)) invalidate();
+  }, [frameloop, invalidate, jointValues, kinematics, nodes]);
+
+  return null;
+}
 
 function assertGltfModelCoordinateContract({
   manifest,
@@ -123,8 +208,19 @@ function assertGltfModelCoordinateContract({
   );
 }
 
+function assertGltfModelArticulationContract({
+  kinematics,
+}: Pick<LoadedGltfModelProps, "kinematics">): void {
+  if (kinematics === undefined) return;
+  const issues = validateRobotKinematics(kinematics);
+  if (issues.length === 0) return;
+  const details = issues.map((issue) => `${issue.path} (${issue.code})`).join(", ");
+  throw new TypeError(`ArticulatedGltfModel received invalid robot kinematics: ${details}`);
+}
+
 function ValidatedLoadedGltfModel(props: LoadedGltfModelProps) {
   assertGltfModelCoordinateContract(props);
+  assertGltfModelArticulationContract(props);
   return <LoadedGltfModel {...props} />;
 }
 
@@ -136,6 +232,8 @@ function LoadedGltfModel({
   scale = 1,
   manifest,
   sourceConvention,
+  kinematics,
+  jointValues,
   selectable = true,
   castShadow = true,
   receiveShadow = true,
@@ -185,6 +283,13 @@ function LoadedGltfModel({
           scale={normalizationScale}
         >
           <primitive object={sceneInstance} dispose={null} />
+          {kinematics === undefined ? null : (
+            <ArticulationDriver
+              root={sceneInstance}
+              kinematics={kinematics}
+              {...(jointValues === undefined ? {} : { jointValues })}
+            />
+          )}
           {hovered || selected ? (
             <pointLight
               color={selected ? theme.materials.selection : theme.materials.live}
@@ -271,6 +376,18 @@ export function GltfModel({ onLoadStateChange, ...props }: GltfModelProps) {
       </Suspense>
     </ModelErrorBoundary>
   );
+}
+
+/**
+ * A GltfModel whose joint chain is posed from validated robot kinematics.
+ *
+ * The coordinate contract, loading/error/retry lifecycle, placement ownership,
+ * and selection behavior are identical to `GltfModel`; the kinematics
+ * contract additionally maps declared links to uniquely named glTF nodes and
+ * drives their node-local transforms from the supplied joint values.
+ */
+export function ArticulatedGltfModel(props: ArticulatedGltfModelProps) {
+  return GltfModel(props);
 }
 
 export interface VisualAlphaModelProps {

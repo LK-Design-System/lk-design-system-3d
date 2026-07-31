@@ -210,10 +210,158 @@ interface LegacyAssetInferenceReport {
     readonly warnings: readonly string[];
 }
 
+// @public (undocumented)
+type RobotKinematicsV1Schema = typeof robotKinematicsV1Schema;
+
+// @public
+const robotKinematicsV1Schema: {
+    readonly $schema: "https://json-schema.org/draft/2020-12/schema";
+    readonly $id: "https://schemas.lk-robotics.com/design-system-3d/robot-kinematics.v1.schema.json";
+    readonly title: "LK Design System 3D Robot Kinematics V1";
+    readonly description: "A renderer-neutral joint-chain contract that maps an articulated robot asset's links to glTF nodes and declares each joint's motion in file-local units.";
+    readonly type: "object";
+    readonly additionalProperties: false;
+    readonly required: readonly ["schemaVersion", "assetId", "version", "baseLink", "links", "joints"];
+    readonly properties: {
+        readonly schemaVersion: {
+            readonly const: 1;
+        };
+        readonly assetId: {
+            readonly $ref: "#/$defs/nonEmptyIdentifier";
+        };
+        readonly version: {
+            readonly type: "string";
+            readonly minLength: 1;
+        };
+        readonly baseLink: {
+            readonly $ref: "#/$defs/nonEmptyIdentifier";
+        };
+        readonly links: {
+            readonly type: "array";
+            readonly minItems: 1;
+            readonly items: {
+                readonly $ref: "#/$defs/link";
+            };
+        };
+        readonly joints: {
+            readonly type: "array";
+            readonly minItems: 1;
+            readonly items: {
+                readonly $ref: "#/$defs/joint";
+            };
+        };
+    };
+    readonly $defs: {
+        readonly nonEmptyIdentifier: {
+            readonly type: "string";
+            readonly minLength: 1;
+            readonly pattern: ".*\\S.*";
+        };
+        readonly finiteNumber: {
+            readonly type: "number";
+        };
+        readonly vec3: {
+            readonly type: "array";
+            readonly prefixItems: readonly [{
+                readonly $ref: "#/$defs/finiteNumber";
+            }, {
+                readonly $ref: "#/$defs/finiteNumber";
+            }, {
+                readonly $ref: "#/$defs/finiteNumber";
+            }];
+            readonly minItems: 3;
+            readonly maxItems: 3;
+        };
+        readonly quat: {
+            readonly type: "array";
+            readonly prefixItems: readonly [{
+                readonly $ref: "#/$defs/finiteNumber";
+            }, {
+                readonly $ref: "#/$defs/finiteNumber";
+            }, {
+                readonly $ref: "#/$defs/finiteNumber";
+            }, {
+                readonly $ref: "#/$defs/finiteNumber";
+            }];
+            readonly minItems: 4;
+            readonly maxItems: 4;
+        };
+        readonly link: {
+            readonly type: "object";
+            readonly additionalProperties: false;
+            readonly required: readonly ["linkId", "nodeName"];
+            readonly properties: {
+                readonly linkId: {
+                    readonly $ref: "#/$defs/nonEmptyIdentifier";
+                };
+                readonly nodeName: {
+                    readonly $ref: "#/$defs/nonEmptyIdentifier";
+                };
+            };
+        };
+        readonly joint: {
+            readonly type: "object";
+            readonly additionalProperties: false;
+            readonly required: readonly ["jointId", "type", "parentLink", "childLink", "origin", "axis", "limits"];
+            readonly properties: {
+                readonly jointId: {
+                    readonly $ref: "#/$defs/nonEmptyIdentifier";
+                };
+                readonly type: {
+                    readonly enum: readonly ["revolute", "prismatic"];
+                };
+                readonly parentLink: {
+                    readonly $ref: "#/$defs/nonEmptyIdentifier";
+                };
+                readonly childLink: {
+                    readonly $ref: "#/$defs/nonEmptyIdentifier";
+                };
+                readonly origin: {
+                    readonly $ref: "#/$defs/origin";
+                };
+                readonly axis: {
+                    readonly $ref: "#/$defs/vec3";
+                };
+                readonly limits: {
+                    readonly $ref: "#/$defs/limits";
+                };
+            };
+        };
+        readonly origin: {
+            readonly type: "object";
+            readonly additionalProperties: false;
+            readonly required: readonly ["translation", "rotation"];
+            readonly properties: {
+                readonly translation: {
+                    readonly $ref: "#/$defs/vec3";
+                };
+                readonly rotation: {
+                    readonly $ref: "#/$defs/quat";
+                };
+            };
+        };
+        readonly limits: {
+            readonly type: "object";
+            readonly additionalProperties: false;
+            readonly required: readonly ["lower", "upper"];
+            readonly properties: {
+                readonly lower: {
+                    readonly $ref: "#/$defs/finiteNumber";
+                };
+                readonly upper: {
+                    readonly $ref: "#/$defs/finiteNumber";
+                };
+            };
+        };
+    };
+};
+
 declare namespace schema {
     export {
         AssetManifestV1Schema,
-        assetManifestV1Schema
+        RobotKinematicsV1Schema,
+        assetManifestV1Schema,
+        robotKinematicsV1Schema
     }
 }
 

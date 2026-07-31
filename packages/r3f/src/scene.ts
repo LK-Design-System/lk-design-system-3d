@@ -86,3 +86,13 @@ export {
   type OccupancyGridRenderState,
   type OccupancyGridSurfaceProps,
 } from "./occupancy-grid.js";
+
+export {
+  CameraFrustum,
+  VoxelLayer,
+  assertValidVoxelSnapshot,
+  computeFrustumCorners,
+  type CameraFrustumProps,
+  type VoxelLayerProps,
+  type VoxelLayerSnapshot,
+} from "./sensors.js";

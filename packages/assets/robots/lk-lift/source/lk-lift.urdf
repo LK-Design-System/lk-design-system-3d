@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+  LK Lift Mast: deterministic URDF fixture for the importer toolchain.
+  Exercises a prismatic joint, a revolute joint, a fixed joint that must be
+  folded into its parent, primitive geometry, and a binary STL mesh.
+-->
+<robot name="lk_lift">
+  <material name="lift-gray">
+    <color rgba="0.36 0.4 0.43 1"/>
+  </material>
+  <material name="lift-blue">
+    <color rgba="0.025 0.25 0.58 1"/>
+  </material>
+  <material name="lift-orange">
+    <color rgba="0.94 0.24 0.035 1"/>
+  </material>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.05"/>
+      <geometry>
+        <box size="0.5 0.5 0.1"/>
+      </geometry>
+      <material name="lift-gray"/>
+    </visual>
+  </link>
+
+  <link name="mast">
+    <visual>
+      <origin xyz="0 0 0.7"/>
+      <geometry>
+        <box size="0.12 0.12 1.4"/>
+      </geometry>
+      <material name="lift-blue"/>
+    </visual>
+  </link>
+
+  <link name="boom">
+    <visual>
+      <origin xyz="0.3 0 0"/>
+      <geometry>
+        <box size="0.6 0.08 0.08"/>
+      </geometry>
+      <material name="lift-blue"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0"/>
+      <geometry>
+        <cylinder radius="0.06" length="0.1"/>
+      </geometry>
+      <material name="lift-gray"/>
+    </visual>
+  </link>
+
+  <link name="sensor">
+    <visual>
+      <origin xyz="-0.06 -0.04 0"/>
+      <geometry>
+        <mesh filename="bracket.stl"/>
+      </geometry>
+      <material name="lift-orange"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0.09"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+      <material name="lift-gray"/>
+    </visual>
+  </link>
+
+  <joint name="lift_z" type="prismatic">
+    <parent link="base_link"/>
+    <child link="mast"/>
+    <origin xyz="0 0 0.1"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="1.2" effort="100" velocity="0.5"/>
+  </joint>
+
+  <joint name="boom_yaw" type="revolute">
+    <parent link="mast"/>
+    <child link="boom"/>
+    <origin xyz="0 0 1.35"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.7" upper="1.7" effort="60" velocity="1.5"/>
+  </joint>
+
+  <joint name="sensor_mount" type="fixed">
+    <parent link="boom"/>
+    <child link="sensor"/>
+    <origin xyz="0.55 0 0.05" rpy="0 0.3 0"/>
+  </joint>
+</robot>

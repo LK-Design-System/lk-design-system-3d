@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "assetId": "robots/lk-lift",
+  "version": "0.1.0",
+  "baseLink": "base_link",
+  "links": [
+    {
+      "linkId": "base_link",
+      "nodeName": "base_link"
+    },
+    {
+      "linkId": "mast",
+      "nodeName": "mast"
+    },
+    {
+      "linkId": "boom",
+      "nodeName": "boom"
+    }
+  ],
+  "joints": [
+    {
+      "jointId": "lift_z",
+      "type": "prismatic",
+      "parentLink": "base_link",
+      "childLink": "mast",
+      "origin": {
+        "translation": [
+          0,
+          0,
+          0.1
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limits": {
+        "lower": 0,
+        "upper": 1.2
+      }
+    },
+    {
+      "jointId": "boom_yaw",
+      "type": "revolute",
+      "parentLink": "mast",
+      "childLink": "boom",
+      "origin": {
+        "translation": [
+          0,
+          0,
+          1.35
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limits": {
+        "lower": -1.7,
+        "upper": 1.7
+      }
+    }
+  ]
+}

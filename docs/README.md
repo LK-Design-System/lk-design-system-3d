@@ -17,6 +17,7 @@
 | [P0_EXECUTION_SPEC.md](P0_EXECUTION_SPEC.md) | 저장소 scaffold, 초기 API, ticket backlog, 8주 기술 effort와 첫 shadow canary |
 | [TECHNICAL_REFERENCES.md](TECHNICAL_REFERENCES.md) | ROS, glTF, Three.js와 renderer 공식 기술 기준 |
 | [SPATIAL_PRIMITIVES_GUIDE.md](SPATIAL_PRIMITIVES_GUIDE.md) | 공개 WebGL 원자, LDS DOM 경계, Storybook 검토 순서와 사용 지침 |
+| [EXPANSION_ROADMAP.md](EXPANSION_ROADMAP.md) | articulation 스택 이후 승인된 확장 순서: 시간축 재생 → URDF 임포터 → IK → 센서 폭 |
 
 질문별 source of truth는 다음과 같다.
 
@@ -31,6 +32,7 @@
 | live simulator, ROS bridge 또는 remote runtime 연계는 언제 검토하는가 | IMPLEMENTATION_PLAN의 Post-1.0 후보 |
 | P0 API·ticket·shadow 안전 계약은 무엇인가 | P0_EXECUTION_SPEC |
 | 어떤 공간 원자를 어떻게 조합하는가 | SPATIAL_PRIMITIVES_GUIDE |
+| articulation 이후 무엇을 어떤 순서로 확장하는가 | EXPANSION_ROADMAP |
 
 문서의 제품 근거는 repository와 commit을 함께 기록합니다. 제품 코드의 현재
 구현은 필요한 capability와 workflow seam의 근거이지, 이 저장소의 public API,
