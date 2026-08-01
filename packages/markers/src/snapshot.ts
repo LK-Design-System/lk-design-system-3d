@@ -19,7 +19,7 @@ import {
   type RigidTransform3,
   type Timestamp,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 export interface MarkerColor {
   readonly r: number;

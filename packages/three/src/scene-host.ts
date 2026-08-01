@@ -1,4 +1,4 @@
-import { type AssetLoader, type AssetOwnershipToken } from "@lk-robotics/lds-3d-assets";
+import { type AssetLoader, type AssetOwnershipToken } from "@lk-design-system/lds-3d-assets";
 import {
   computeFocusCameraState,
   computeTopCameraState,
@@ -23,7 +23,7 @@ import {
   type SceneThemeOverrides,
   type SceneThemeValues,
   type SpatialEvent,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   AmbientLight,
   DirectionalLight,

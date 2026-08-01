@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Quat, Vec3 } from "@lk-robotics/lds-3d-core";
+import type { Quat, Vec3 } from "@lk-design-system/lds-3d-core";
 
 import {
   coreToThreePosition,

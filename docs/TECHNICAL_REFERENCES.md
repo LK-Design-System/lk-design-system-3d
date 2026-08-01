@@ -221,7 +221,7 @@ pose, scale, colour/alpha, local points, text, and mesh resource fields.
 
 Applied decisions:
 
-- `@lk-robotics/lds-3d-tf` uses `RigidTransform3.sourceFrame` as the
+- `@lk-design-system/lds-3d-tf` uses `RigidTransform3.sourceFrame` as the
   child and `targetFrame` as its single parent. `createFrameGraph` rejects
   multiple parents, duplicate edge timestamps, mixed static/dynamic samples,
   and cycles instead of silently choosing a path.
@@ -229,7 +229,7 @@ Applied decisions:
   or interpolated transforms. A caller-selected bounded hold-last window is
   reported as `held`; before-history, over-limit after-history, stale data,
   missing frames, and clock mismatches are separate outcomes.
-- `@lk-robotics/lds-3d-markers` groups immutable markers by one frame
+- `@lk-design-system/lds-3d-markers` groups immutable markers by one frame
   and optional timestamp. Arrow identity follows local `+X`; line-strip points
   remain ordered local points; pose axes, point sets, view-facing text, volumes,
   and referenced meshes retain distinct semantic shapes.

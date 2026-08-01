@@ -11,7 +11,7 @@ import {
   quaternionFromYaw,
   rigidTransform3,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import { coreToThreePosition } from "../src/coordinates.js";
 import {

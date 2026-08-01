@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { entityId, type Bounds3 } from "@lk-robotics/lds-3d-core";
+import { entityId, type Bounds3 } from "@lk-design-system/lds-3d-core";
 
 import { addMapObject, createMapEditorDocument } from "./map-editor-model.js";
 import { validateMapObjectPlacement } from "./map-editor-placement.js";

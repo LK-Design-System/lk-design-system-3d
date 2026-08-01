@@ -7,7 +7,7 @@ import {
   type Quat,
   type RigidTransform3,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import type { AssetValidationIssue } from "./manifest.js";
 import { rotateVectorByQuaternion } from "./spatial.js";

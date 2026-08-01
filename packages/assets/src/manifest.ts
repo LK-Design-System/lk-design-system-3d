@@ -8,7 +8,7 @@ import {
   type Quat,
   type RigidTransform3,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import { axesAreOrthogonal, rotationMatchesCoordinate } from "./spatial.js";
 

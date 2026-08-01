@@ -30,13 +30,13 @@ import {
   type SceneCameraMode,
   type SceneCameraPose,
   type SceneSelectionChange,
-} from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-r3f";
 import {
   createPointCloudSnapshot,
   resolvePointCloudLayerSetRenderState,
   type PointCloudLayerSetRenderState,
   type PointCloudSnapshot,
-} from "@lk-robotics/lds-3d-pointcloud";
+} from "@lk-design-system/lds-3d-pointcloud";
 import {
   createSpatialEditBox,
   createSpatialEditSphere,
@@ -47,7 +47,7 @@ import {
   type SpatialEditVolume,
   type SpatialTransformChangeSet,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   useCallback,
   useEffect,

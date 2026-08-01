@@ -1,5 +1,5 @@
 {
-  "name": "@lk-robotics/lds-3d-testing",
+  "name": "@lk-design-system/lds-3d-testing",
   "version": "0.1.0-alpha.1",
   "description": "Runner-neutral golden fixtures and contract checks for LK Design System 3D",
   "license": "MIT",
@@ -37,8 +37,8 @@
     "api-report": "api-extractor run --local"
   },
   "dependencies": {
-    "@lk-robotics/lds-3d-assets": "workspace:*",
-    "@lk-robotics/lds-3d-core": "workspace:*"
+    "@lk-design-system/lds-3d-assets": "workspace:*",
+    "@lk-design-system/lds-3d-core": "workspace:*"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",

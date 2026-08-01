@@ -18,8 +18,8 @@ import {
   type RigidTransform3,
   type RobotEntity,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
-import type { AssetManifestV1 } from "@lk-robotics/lds-3d-assets";
+} from "@lk-design-system/lds-3d-core";
+import type { AssetManifestV1 } from "@lk-design-system/lds-3d-assets";
 
 /** Stable frame identifiers shared by every public Alpha.1 fixture. */
 export const FIXTURE_FRAMES = Object.freeze({

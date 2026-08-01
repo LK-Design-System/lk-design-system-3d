@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { composeTransforms, transformPoint, framedPoint3, frameId } from "@lk-robotics/lds-3d-core";
+import { composeTransforms, transformPoint, framedPoint3, frameId } from "@lk-design-system/lds-3d-core";
 
 import {
   KinematicsValidationError,

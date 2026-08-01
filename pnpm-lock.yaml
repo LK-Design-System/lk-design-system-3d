@@ -119,28 +119,28 @@ importers:
       '@lk-design-system/lds-theme':
         specifier: 0.1.0-rc.4
         version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-robotics/lds-3d-assets':
+      '@lk-design-system/lds-3d-assets':
         specifier: workspace:*
         version: link:../../packages/assets
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@lk-robotics/lds-3d-markers':
+      '@lk-design-system/lds-3d-markers':
         specifier: workspace:*
         version: link:../../packages/markers
-      '@lk-robotics/lds-3d-pointcloud':
+      '@lk-design-system/lds-3d-pointcloud':
         specifier: workspace:*
         version: link:../../packages/pointcloud
-      '@lk-robotics/lds-3d-r3f':
+      '@lk-design-system/lds-3d-r3f':
         specifier: workspace:*
         version: link:../../packages/r3f
-      '@lk-robotics/lds-3d-testing':
+      '@lk-design-system/lds-3d-testing':
         specifier: workspace:*
         version: link:../../packages/testing
-      '@lk-robotics/lds-3d-tf':
+      '@lk-design-system/lds-3d-tf':
         specifier: workspace:*
         version: link:../../packages/tf
-      '@lk-robotics/lds-3d-three':
+      '@lk-design-system/lds-3d-three':
         specifier: workspace:*
         version: link:../../packages/three
       '@react-three/drei':
@@ -189,7 +189,7 @@ importers:
 
   packages/assets:
     dependencies:
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -226,7 +226,7 @@ importers:
 
   packages/markers:
     dependencies:
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -245,7 +245,7 @@ importers:
 
   packages/pointcloud:
     dependencies:
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -264,19 +264,19 @@ importers:
 
   packages/r3f:
     dependencies:
-      '@lk-robotics/lds-3d-assets':
+      '@lk-design-system/lds-3d-assets':
         specifier: workspace:*
         version: link:../assets
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../core
-      '@lk-robotics/lds-3d-markers':
+      '@lk-design-system/lds-3d-markers':
         specifier: workspace:*
         version: link:../markers
-      '@lk-robotics/lds-3d-pointcloud':
+      '@lk-design-system/lds-3d-pointcloud':
         specifier: workspace:*
         version: link:../pointcloud
-      '@lk-robotics/lds-3d-three':
+      '@lk-design-system/lds-3d-three':
         specifier: workspace:*
         version: link:../three
     devDependencies:
@@ -310,10 +310,10 @@ importers:
 
   packages/testing:
     dependencies:
-      '@lk-robotics/lds-3d-assets':
+      '@lk-design-system/lds-3d-assets':
         specifier: workspace:*
         version: link:../assets
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -332,7 +332,7 @@ importers:
 
   packages/tf:
     dependencies:
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -351,10 +351,10 @@ importers:
 
   packages/three:
     dependencies:
-      '@lk-robotics/lds-3d-assets':
+      '@lk-design-system/lds-3d-assets':
         specifier: workspace:*
         version: link:../assets
-      '@lk-robotics/lds-3d-core':
+      '@lk-design-system/lds-3d-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:

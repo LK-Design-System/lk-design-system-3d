@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { EntityId } from "@lk-robotics/lds-3d-core";
+import type { EntityId } from "@lk-design-system/lds-3d-core";
 
 const mocks = vi.hoisted(() => {
   const useLoader = Object.assign(vi.fn(), {
@@ -37,7 +37,7 @@ vi.mock("@react-three/fiber", () => ({
   useThree: (selector: (state: unknown) => unknown) =>
     selector({ frameloop: "demand", invalidate: mocks.invalidate }),
 }));
-vi.mock("@lk-robotics/lds-3d-three/r3f-bridge", () => ({
+vi.mock("@lk-design-system/lds-3d-three/r3f-bridge", () => ({
   cloneThreeSceneInstance: mocks.cloneThreeSceneInstance,
   releaseThreeSceneInstance: mocks.releaseThreeSceneInstance,
 }));
@@ -51,7 +51,7 @@ vi.mock("../src/runtime.js", () => ({
   }),
 }));
 
-import { parseRobotKinematics } from "@lk-robotics/lds-3d-assets";
+import { parseRobotKinematics } from "@lk-design-system/lds-3d-assets";
 
 import { ArticulatedGltfModel, type ArticulatedGltfModelProps } from "../src/models.js";
 

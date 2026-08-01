@@ -7,14 +7,14 @@ import {
   layerId,
   quaternionFromYaw,
   rigidTransform3,
-} from "@lk-robotics/lds-3d-core";
-import type { Bounds3, SpatialEditVolume } from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
+import type { Bounds3, SpatialEditVolume } from "@lk-design-system/lds-3d-core";
 import {
   createPointCloudLayerSet,
   createPointCloudSnapshot,
   type PointCloudLayerSet,
   type PointCloudSnapshot,
-} from "@lk-robotics/lds-3d-pointcloud";
+} from "@lk-design-system/lds-3d-pointcloud";
 
 export const POINT_CLOUD_FRAME = frameId("lk-map");
 export const POINT_CLOUD_LIDAR_FRAME = frameId("lidar-front");

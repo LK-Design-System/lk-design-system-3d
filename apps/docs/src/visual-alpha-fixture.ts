@@ -1,4 +1,4 @@
-import { entityId, quaternionFromYaw, type EntityId, type Quat, type Vec3 } from "@lk-robotics/lds-3d-core";
+import { entityId, quaternionFromYaw, type EntityId, type Quat, type Vec3 } from "@lk-design-system/lds-3d-core";
 import type { SelectedAssetDetails } from "./visual-alpha-ui.js";
 
 export type VisualEntityStatus = "live" | "stale" | "warning" | "error" | "idle";

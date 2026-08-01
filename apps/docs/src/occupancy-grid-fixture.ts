@@ -10,13 +10,13 @@ import {
   type GoalEntity,
   type OccupancyGridCellState,
   type PathEntity,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   FIXTURE_FRAMES,
   ROTATED_OCCUPANCY_GRID_FIXTURE,
   type OccupancyGridFixtureCellState,
-} from "@lk-robotics/lds-3d-testing";
-import type { SceneCameraPose } from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-testing";
+import type { SceneCameraPose } from "@lk-design-system/lds-3d-r3f";
 
 const CELL_STATE_CODES = Object.freeze({
   unknown: OCCUPANCY_GRID_CELL_UNKNOWN,

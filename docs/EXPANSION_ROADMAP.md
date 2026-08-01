@@ -10,11 +10,11 @@
 
 2026-07-31에 관절 체인 계약이 플랫폼에 들어왔다:
 
-- `@lk-robotics/lds-3d-assets` — `RobotKinematicsV1`(링크↔glTF 노드 매핑, 조인트
+- `@lk-design-system/lds-3d-assets` — `RobotKinematicsV1`(링크↔glTF 노드 매핑, 조인트
   origin/axis/limits), `parseRobotKinematics`, `computeJointPoses`(FK, 한계
   클램프), `createJointFrameTransforms`(FrameGraph 샘플 호환),
   `robot-kinematics.v1.schema.json`.
-- `@lk-robotics/lds-3d-r3f` — `ArticulatedGltfModel`(검증된 kinematics로 클론된
+- `@lk-design-system/lds-3d-r3f` — `ArticulatedGltfModel`(검증된 kinematics로 클론된
   씬의 링크 노드 로컬 변환을 구동; 로딩·오류·선택 계약은 `GltfModel`과 동일).
 - `packages/assets/robots/so-arm` — 절차 생성 SO-ARM급 6관절 자산(자산
   매니페스트 + 키네마틱스 매니페스트 + provenance + 카탈로그, 전부

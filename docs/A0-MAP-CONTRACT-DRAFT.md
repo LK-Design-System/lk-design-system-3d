@@ -242,7 +242,7 @@ A0 완료 조건은 다음 fixture와 계약 test의 승인이다(구현이 아�
 5. **unknown-preservation** — `x-unknown` 무손실 round-trip.
 6. **derived-provenance** — GLB/occupancy가 source/generator/profile과 함께 비정본으로 기록됨.
 
-이 fixture들은 `@lk-robotics/lds-3d-testing`(또는 신규 `3d-spatial`)의 계약 test에
+이 fixture들은 `@lk-design-system/lds-3d-testing`(또는 신규 `3d-spatial`)의 계약 test에
 바인딩한다. cross-package golden fixture는 개별 package test가 아니라 `testing` package로 승격한다
 (핸드오프 부채 항목).
 

@@ -7,13 +7,13 @@ import {
   SceneCanvas,
   VoxelLayer,
   type SceneCameraPose,
-} from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-r3f";
 import {
   createPointCloudLayerSnapshot,
   createPointCloudSnapshot,
   createSegmentationColors,
   DEFAULT_SEGMENTATION_PALETTE,
-} from "@lk-robotics/lds-3d-pointcloud";
+} from "@lk-design-system/lds-3d-pointcloud";
 import {
   bounds3,
   entityId,
@@ -21,7 +21,7 @@ import {
   identityTransform,
   layerId,
   quaternionFromYaw,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";
 

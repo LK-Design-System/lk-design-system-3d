@@ -1,4 +1,4 @@
-import { FrameMismatchError, frameId } from "@lk-robotics/lds-3d-core";
+import { FrameMismatchError, frameId } from "@lk-design-system/lds-3d-core";
 import { describe, expect, it } from "vitest";
 
 import {

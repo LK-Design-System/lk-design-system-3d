@@ -23,7 +23,7 @@ import {
   type SceneSelectionChange,
   type SceneVisualProfile,
   type VisualAlphaModelKey,
-} from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-r3f";
 import {
   entityId,
   frameId,
@@ -33,7 +33,7 @@ import {
   type GoalEntity,
   type PathEntity,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   ACTIVE_GOAL_POSITION,
   INVALID_GOAL_POSITION,

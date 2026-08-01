@@ -43,7 +43,7 @@ import {
   type SpatialTransformSnap,
   type SpatialTransformSpace,
   type SpatialTranslationDragSession,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import { Selectable, type SelectableRenderState } from "./primitives.js";
 import { useSceneRuntime } from "./runtime.js";

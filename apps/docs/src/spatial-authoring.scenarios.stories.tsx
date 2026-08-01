@@ -30,7 +30,7 @@ import {
   SpatialStructure,
   type SceneCameraMode,
   type SceneCameraPose,
-} from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-r3f";
 import {
   appendSpatialPointDraftPoint,
   beginSpatialGoalPoseDrag,
@@ -58,7 +58,7 @@ import {
   type SpatialTransformMode,
   type SpatialTransformSnap,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   useCallback,
   useEffect,

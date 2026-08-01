@@ -186,7 +186,7 @@ apps      → 모든 package 사용 가능
   contract의 최소 subset만 별도로 binding한다.
 - 제품은 `THREE.Object3D`, renderer, R3F root 또는 Rerun object를 store,
   command payload와 public product API에 저장하지 않는다.
-- P0에는 umbrella package `@lk-robotics/lds-3d`를 만들지 않는다.
+- P0에는 umbrella package `@lk-design-system/lds-3d`를 만들지 않는다.
 
 현재 `3d-three`와 `3d-r3f`의 Three peer range는 `>=0.185.1 <1`이며,
 reference consumer smoke는 React 19.1.1/R3F 9.6.1/Three 0.185.1 조합에서
@@ -209,14 +209,14 @@ public API 변경에는 API report diff, migration note와 Platform Owner 승인
 승인할 entrypoint:
 
 ```text
-@lk-robotics/lds-3d-core
-@lk-robotics/lds-3d-core/coordinates
-@lk-robotics/lds-3d-core/entities
-@lk-robotics/lds-3d-core/camera
-@lk-robotics/lds-3d-core/interaction
-@lk-robotics/lds-3d-core/renderer
-@lk-robotics/lds-3d-core/time
-@lk-robotics/lds-3d-core/theme
+@lk-design-system/lds-3d-core
+@lk-design-system/lds-3d-core/coordinates
+@lk-design-system/lds-3d-core/entities
+@lk-design-system/lds-3d-core/camera
+@lk-design-system/lds-3d-core/interaction
+@lk-design-system/lds-3d-core/renderer
+@lk-design-system/lds-3d-core/time
+@lk-design-system/lds-3d-core/theme
 ```
 
 좌표와 identity:
@@ -624,9 +624,9 @@ semantic token model로 교체할 수 있다. LDS raw token 값이나 CSS variab
 승인할 entrypoint:
 
 ```text
-@lk-robotics/lds-3d-assets
-@lk-robotics/lds-3d-assets/schema
-@lk-robotics/lds-3d-assets/legacy
+@lk-design-system/lds-3d-assets
+@lk-design-system/lds-3d-assets/schema
+@lk-design-system/lds-3d-assets/legacy
 ```
 
 최초 manifest:
@@ -783,7 +783,7 @@ validator는 최소한 다음을 거부한다.
 `integrity.sha256`와 owner가 승인한 transform이 필수다.
 
 ```ts
-// @lk-robotics/lds-3d-assets/legacy
+// @lk-design-system/lds-3d-assets/legacy
 /** @deprecated Migration-only API. */
 export interface LegacyAssetEvidence {
   readonly bounds: {
@@ -910,7 +910,7 @@ RAF와 recovery 작업을 모두 취소한다. `ThreeDisposalReport`의 remainin
 adapter-only subpath를 사용한다.
 
 ```ts
-// @lk-robotics/lds-3d-three/r3f-bridge
+// @lk-design-system/lds-3d-three/r3f-bridge
 import type * as THREE from "three";
 
 export interface ThreeResolvedAsset {

@@ -47,7 +47,7 @@ export default tseslint.config(
             name,
             message: "Alpha.1 core/assets must remain renderer and LDS neutral.",
           })),
-          patterns: ["@lk-robotics/*/src/*", "**/src/internal/*"],
+          patterns: ["@lk-design-system/*/src/*", "**/src/internal/*"],
         },
       ],
     },

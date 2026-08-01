@@ -3,7 +3,7 @@ import {
   type AssetLoader,
   type AssetResourceLoadContext,
   type AssetSource,
-} from "@lk-robotics/lds-3d-assets";
+} from "@lk-design-system/lds-3d-assets";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader, type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {

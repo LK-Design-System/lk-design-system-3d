@@ -1,4 +1,4 @@
-import type { FrameId, Quat, Vec3 } from "@lk-robotics/lds-3d-core";
+import type { FrameId, Quat, Vec3 } from "@lk-design-system/lds-3d-core";
 
 import {
   KinematicsValidationError,

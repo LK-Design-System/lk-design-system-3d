@@ -19,7 +19,7 @@
       "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs publint",
       "passed": true,
       "durationMs": 6240,
-      "stdout": "Running \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-robotics/design-system-3d-core\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nRunning \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-robotics/design-system-3d-assets\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nRunning \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-robotics/design-system-3d-testing\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nPublint passed for all Alpha.1 packages.\n",
+      "stdout": "Running \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-design-system/design-system-3d-core\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nRunning \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-design-system/design-system-3d-assets\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nRunning \u001b[1mpublint v0.3.15\u001b[22m for \u001b[1m@lk-design-system/design-system-3d-testing\u001b[22m...\nPacking files with `pnpm pack`...\nLinting...\n\u001b[1m\u001b[32mAll good!\u001b[39m\u001b[22m\nPublint passed for all Alpha.1 packages.\n",
       "stderr": "$ node scripts/check-package-publint.mjs\n"
     },
     {
@@ -27,7 +27,7 @@
       "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs attw",
       "passed": true,
       "durationMs": 3155,
-      "stdout": "@lk-robotics/design-system-3d-core: ESM-only type resolution passed.\n@lk-robotics/design-system-3d-assets: ESM-only type resolution passed.\n@lk-robotics/design-system-3d-testing: ESM-only type resolution passed.\nPackage type resolution checks passed with the Are The Types Wrong core engine.\n",
+      "stdout": "@lk-design-system/design-system-3d-core: ESM-only type resolution passed.\n@lk-design-system/design-system-3d-assets: ESM-only type resolution passed.\n@lk-design-system/design-system-3d-testing: ESM-only type resolution passed.\nPackage type resolution checks passed with the Are The Types Wrong core engine.\n",
       "stderr": "$ node scripts/check-package-types.mjs\n"
     },
     {
@@ -35,7 +35,7 @@
       "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs pack --pack-destination C:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke",
       "passed": true,
       "durationMs": 784,
-      "stdout": "package: @lk-robotics/design-system-3d-core@0.1.0-alpha.1\nTarball Contents\ndist/camera.d.ts\ndist/camera.js\ndist/camera.js.map\ndist/coordinates.d.ts\ndist/coordinates.js\ndist/coordinates.js.map\ndist/entities.d.ts\ndist/entities.js\ndist/entities.js.map\ndist/identifiers-CaT_PuIh.d.ts\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/interaction.d.ts\ndist/interaction.js\ndist/interaction.js.map\ndist/renderer.d.ts\ndist/renderer.js\ndist/renderer.js.map\ndist/theme.d.ts\ndist/theme.js\ndist/theme.js.map\ndist/time.d.ts\ndist/time.js\ndist/time.js.map\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-core-0.1.0-alpha.1.tgz\n",
+      "stdout": "package: @lk-design-system/design-system-3d-core@0.1.0-alpha.1\nTarball Contents\ndist/camera.d.ts\ndist/camera.js\ndist/camera.js.map\ndist/coordinates.d.ts\ndist/coordinates.js\ndist/coordinates.js.map\ndist/entities.d.ts\ndist/entities.js\ndist/entities.js.map\ndist/identifiers-CaT_PuIh.d.ts\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/interaction.d.ts\ndist/interaction.js\ndist/interaction.js.map\ndist/renderer.d.ts\ndist/renderer.js\ndist/renderer.js.map\ndist/theme.d.ts\ndist/theme.js\ndist/theme.js.map\ndist/time.d.ts\ndist/time.js\ndist/time.js.map\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-core-0.1.0-alpha.1.tgz\n",
       "stderr": ""
     },
     {
@@ -43,7 +43,7 @@
       "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs pack --pack-destination C:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke",
       "passed": true,
       "durationMs": 698,
-      "stdout": "package: @lk-robotics/design-system-3d-assets@0.1.0-alpha.1\nTarball Contents\nasset-manifest.v1.schema.json\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/legacy.d.ts\ndist/legacy.js\ndist/legacy.js.map\ndist/manifest-CaxFTZAw.d.ts\ndist/schema.d.ts\ndist/schema.js\ndist/schema.js.map\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-assets-0.1.0-alpha.1.tgz\n",
+      "stdout": "package: @lk-design-system/design-system-3d-assets@0.1.0-alpha.1\nTarball Contents\nasset-manifest.v1.schema.json\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/legacy.d.ts\ndist/legacy.js\ndist/legacy.js.map\ndist/manifest-CaxFTZAw.d.ts\ndist/schema.d.ts\ndist/schema.js\ndist/schema.js.map\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-assets-0.1.0-alpha.1.tgz\n",
       "stderr": ""
     },
     {
@@ -51,7 +51,7 @@
       "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs pack --pack-destination C:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke",
       "passed": true,
       "durationMs": 784,
-      "stdout": "package: @lk-robotics/design-system-3d-testing@0.1.0-alpha.1\nTarball Contents\ndist/contracts.d.ts\ndist/contracts.js\ndist/contracts.js.map\ndist/fixtures.d.ts\ndist/fixtures.js\ndist/fixtures.js.map\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/provenance.d.ts\ndist/provenance.js\ndist/provenance.js.map\nFIXTURE_LICENSE.md\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-testing-0.1.0-alpha.1.tgz\n",
+      "stdout": "package: @lk-design-system/design-system-3d-testing@0.1.0-alpha.1\nTarball Contents\ndist/contracts.d.ts\ndist/contracts.js\ndist/contracts.js.map\ndist/fixtures.d.ts\ndist/fixtures.js\ndist/fixtures.js.map\ndist/index.d.ts\ndist/index.js\ndist/index.js.map\ndist/provenance.d.ts\ndist/provenance.js\ndist/provenance.js.map\nFIXTURE_LICENSE.md\npackage.json\nREADME.md\nTarball Details\nC:\\Users\\seoul\\Documents\\LK Design System 3D\\artifacts\\package-smoke\\lk-robotics-design-system-3d-testing-0.1.0-alpha.1.tgz\n",
       "stderr": ""
     },
     {
@@ -59,7 +59,7 @@
       "command": "C:\\nvm4w\\nodejs\\node.exe C:\\Users\\seoul\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\pnpm\\bin\\pnpm.mjs install --offline --frozen-lockfile=false",
       "passed": true,
       "durationMs": 1459,
-      "stdout": "Progress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +4\n++++\nProgress: resolved 4, reused 4, downloaded 0, added 4, done\n\ndependencies:\n+ @lk-robotics/design-system-3d-assets 0.1.0-alpha.1\n+ @lk-robotics/design-system-3d-core 0.1.0-alpha.1\n+ @lk-robotics/design-system-3d-testing 0.1.0-alpha.1\n\ndevDependencies:\n+ typescript 5.9.3 (7.0.2 is available)\n\nDone in 1.3s using pnpm v11.9.0\n",
+      "stdout": "Progress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +4\n++++\nProgress: resolved 4, reused 4, downloaded 0, added 4, done\n\ndependencies:\n+ @lk-design-system/design-system-3d-assets 0.1.0-alpha.1\n+ @lk-design-system/design-system-3d-core 0.1.0-alpha.1\n+ @lk-design-system/design-system-3d-testing 0.1.0-alpha.1\n\ndevDependencies:\n+ typescript 5.9.3 (7.0.2 is available)\n\nDone in 1.3s using pnpm v11.9.0\n",
       "stderr": ""
     },
     {

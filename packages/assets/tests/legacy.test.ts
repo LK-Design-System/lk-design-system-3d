@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { frameId } from "@lk-robotics/lds-3d-core";
+import { frameId } from "@lk-design-system/lds-3d-core";
 
 import { inferLegacyAssetCoordinate } from "../src/legacy.js";
 

@@ -9,7 +9,7 @@ import {
   type MarkerLayerSnapshot,
   type MarkerSnapshot,
   type MeshMarkerSnapshot,
-} from "@lk-robotics/lds-3d-markers";
+} from "@lk-design-system/lds-3d-markers";
 
 import { Selectable, type SelectableRenderState } from "./primitives.js";
 import { useSceneRuntime } from "./runtime.js";

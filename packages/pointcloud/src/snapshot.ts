@@ -7,7 +7,7 @@ import {
   type ClockId,
   type FrameId,
   type Timestamp,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 export type PointCloudRevision = string | number;
 export type PointCloudBufferOwnership = "caller-retained";

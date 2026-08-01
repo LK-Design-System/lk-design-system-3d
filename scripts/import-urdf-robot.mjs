@@ -35,7 +35,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-import { parseAssetManifest, parseRobotKinematics } from "@lk-robotics/lds-3d-assets";
+import { parseAssetManifest, parseRobotKinematics } from "@lk-design-system/lds-3d-assets";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.dirname(SCRIPT_DIR);

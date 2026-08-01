@@ -58,7 +58,7 @@ jobs:
             npm.cmd pack --pack-destination "$env:GITHUB_WORKSPACE"
             Pop-Location
           }
-          Copy-Item .lds-package-source/vendor/lk-robotics-lds-robotics-ui-0.1.0-rc.2.tgz .
+          Copy-Item .lds-package-source/vendor/lk-design-system-lds-robotics-ui-0.1.0-rc.4.tgz .
 
       - name: Install dependencies
         shell: pwsh
@@ -73,15 +73,15 @@ jobs:
           $overrides = [ordered]@{}
           New-Item -ItemType Directory -Force apps/docs/vendor | Out-Null
           foreach ($package in 'core', 'product', 'theme') {
-            $tarball = Get-ChildItem -Filter "lk-robotics-lds-$package-*.tgz" | Select-Object -First 1
+            $tarball = Get-ChildItem -Filter "lk-design-system-lds-$package-*.tgz" | Select-Object -First 1
             if (-not $tarball) {
               throw "The public LDS $package package could not be packed."
             }
-            $manifest.dependencies."@lk-robotics/lds-$package" = "file:../../$($tarball.Name)"
+            $manifest.dependencies."@lk-design-system/lds-$package" = "file:../../$($tarball.Name)"
             Copy-Item $tarball.FullName "apps/docs/vendor/$($tarball.Name)" -Force
-            $overrides."@lk-robotics/lds-$package" = "file:./$($tarball.Name)"
+            $overrides."@lk-design-system/lds-$package" = "file:./$($tarball.Name)"
           }
-          $roboticsTarball = Get-ChildItem -Filter 'lk-robotics-lds-robotics-ui-*.tgz' | Select-Object -First 1
+          $roboticsTarball = Get-ChildItem -Filter 'lk-design-system-lds-robotics-ui-*.tgz' | Select-Object -First 1
           if (-not $roboticsTarball) {
             throw 'The public Robotics UI package could not be packed.'
           }

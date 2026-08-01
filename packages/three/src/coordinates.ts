@@ -1,4 +1,4 @@
-import type { Quat, Vec3 } from "@lk-robotics/lds-3d-core";
+import type { Quat, Vec3 } from "@lk-design-system/lds-3d-core";
 
 /**
  * LK core is right-handed, +X forward and +Z up. Three.js remains in its

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Stack } from "@lk-design-system/lds-core";
 import { DescriptionList } from "@lk-design-system/lds-product";
-import { SceneCanvas, VoxelLayer, type SceneCameraPose } from "@lk-robotics/lds-3d-r3f";
-import { bounds3, frameId } from "@lk-robotics/lds-3d-core";
+import { SceneCanvas, VoxelLayer, type SceneCameraPose } from "@lk-design-system/lds-3d-r3f";
+import { bounds3, frameId } from "@lk-design-system/lds-3d-core";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";
 import { primitiveReviewParameters } from "./primitives.stories.js";

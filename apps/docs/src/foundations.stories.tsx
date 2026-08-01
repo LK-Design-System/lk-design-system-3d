@@ -6,7 +6,7 @@ import {
   SHIFTED_ORIGIN_FIXTURE,
   createCoordinateContractReport,
   createTransformRoundTripReport,
-} from "@lk-robotics/lds-3d-testing";
+} from "@lk-design-system/lds-3d-testing";
 import {
   JsonInspector,
   TechnicalSection,

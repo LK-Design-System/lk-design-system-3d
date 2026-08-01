@@ -7,7 +7,7 @@ import {
   TransformGizmo,
   type ModelLoadState,
   type SceneCameraPose,
-} from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-r3f";
 import {
   createJointTrajectory,
   parseRobotKinematics,
@@ -17,7 +17,7 @@ import {
   trajectoryStartSeconds,
   type JointValues,
   type RobotKinematicsV1,
-} from "@lk-robotics/lds-3d-assets";
+} from "@lk-design-system/lds-3d-assets";
 import {
   advancePlayback,
   bounds3,
@@ -28,7 +28,7 @@ import {
   setPlaybackPlaying,
   setPlaybackRate,
   spatialNodeTransform,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { LdsFocusedViewerPage, type VisualCameraMode } from "./visual-alpha-ui.js";

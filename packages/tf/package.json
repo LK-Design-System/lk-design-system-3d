@@ -1,5 +1,5 @@
 {
-  "name": "@lk-robotics/lds-3d-tf",
+  "name": "@lk-design-system/lds-3d-tf",
   "version": "0.1.0-alpha.1",
   "description": "Renderer-neutral timestamped frame-tree contracts for LK Design System 3D.",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "api-report": "api-extractor run --local"
   },
   "dependencies": {
-    "@lk-robotics/lds-3d-core": "workspace:*"
+    "@lk-design-system/lds-3d-core": "workspace:*"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",

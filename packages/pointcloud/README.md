@@ -1,4 +1,4 @@
-# `@lk-robotics/lds-3d-pointcloud`
+# `@lk-design-system/lds-3d-pointcloud`
 
 Renderer-neutral, immutable-by-replacement point-cloud snapshot contracts for
 LK Design System 3D.

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Stack, StatusBadge } from "@lk-design-system/lds-core";
 import { DescriptionList } from "@lk-design-system/lds-product";
-import { MarkerLayer, PointCloudLayers, SceneCanvas, type SceneCameraPose } from "@lk-robotics/lds-3d-r3f";
+import { MarkerLayer, PointCloudLayers, SceneCanvas, type SceneCameraPose } from "@lk-design-system/lds-3d-r3f";
 import {
   appendFrameStreamSamples,
   createFrameStream,
@@ -9,7 +9,7 @@ import {
   lookupFrameTransform,
   pruneFrameStream,
   type FrameLookupResult,
-} from "@lk-robotics/lds-3d-tf";
+} from "@lk-design-system/lds-3d-tf";
 import {
   clockId,
   entityId,
@@ -20,8 +20,8 @@ import {
   timestamp,
   type RigidTransform3,
   type Timestamp,
-} from "@lk-robotics/lds-3d-core";
-import { createMarkerLayerSnapshot } from "@lk-robotics/lds-3d-markers";
+} from "@lk-design-system/lds-3d-core";
+import { createMarkerLayerSnapshot } from "@lk-design-system/lds-3d-markers";
 import { useEffect, useMemo, useState, type ComponentProps } from "react";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";

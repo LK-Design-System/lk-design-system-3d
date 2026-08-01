@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { AssetManifestV1 } from "@lk-robotics/lds-3d-assets";
-import tronManifestJson from "@lk-robotics/lds-3d-assets/robots/tron/tron.asset-manifest.json";
-import tronModelUrl from "@lk-robotics/lds-3d-assets/robots/tron/tron.glb?url";
+import type { AssetManifestV1 } from "@lk-design-system/lds-3d-assets";
+import tronManifestJson from "@lk-design-system/lds-3d-assets/robots/tron/tron.asset-manifest.json";
+import tronModelUrl from "@lk-design-system/lds-3d-assets/robots/tron/tron.glb?url";
 import {
   Button,
   Code,
@@ -33,14 +33,14 @@ import {
   type SceneRenderState,
   type SceneSelectionChange,
   type SceneVisualProfile,
-} from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-r3f";
 import {
   resolvePointCloudLayerSetRenderState,
   resolvePointCloudRenderState,
   type PointCloudLayerSetRenderState,
   type PointCloudRenderState,
   type PointCloudSnapshot,
-} from "@lk-robotics/lds-3d-pointcloud";
+} from "@lk-design-system/lds-3d-pointcloud";
 import {
   entityId,
   frameId,
@@ -57,7 +57,7 @@ import {
   type SpatialTransformChangeSet,
   type SpatialTransformMode,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import { useCallback, useState, type ReactNode } from "react";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";

@@ -17,13 +17,13 @@ import type {
   PathEntity,
   RobotEntity,
   Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   FrameMismatchError,
   assertValidBounds3,
   assertValidSpatialEditVolume,
   type SpatialEditVolume as SpatialEditVolumeContract,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import { CoreSpace } from "./CoreSpace.js";
 import { resolveGoalMarkerVisualState } from "./goal-marker.js";

@@ -3,8 +3,8 @@ import { Stack, StatusBadge } from "@lk-design-system/lds-core";
 import {
   createThreeSceneHost,
   type ThreeSceneHost,
-} from "@lk-robotics/lds-3d-three";
-import { entityId, frameId, quaternionFromYaw } from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-three";
+import { entityId, frameId, quaternionFromYaw } from "@lk-design-system/lds-3d-core";
 import { useEffect, useRef, useState } from "react";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";

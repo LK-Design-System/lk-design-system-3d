@@ -1,4 +1,4 @@
-# `@lk-robotics/lds-3d-assets`
+# `@lk-design-system/lds-3d-assets`
 
 Renderer-neutral glTF/GLB asset metadata, validation, coordinate normalization,
 loading, cancellation, progress, and single-owner lifecycle contracts.

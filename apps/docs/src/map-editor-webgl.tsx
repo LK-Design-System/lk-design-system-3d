@@ -1,20 +1,20 @@
-import tronModelUrl from "@lk-robotics/lds-3d-assets/robots/tron/tron.glb?url";
+import tronModelUrl from "@lk-design-system/lds-3d-assets/robots/tron/tron.glb?url";
 import type {
   EntityId,
   SpatialAssetNode,
   Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   SPATIAL_AUTHORING_AREA_EPSILON_SQUARE_METERS,
   SPATIAL_AUTHORING_LINEAR_EPSILON_METERS,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 import {
   GltfModel,
   Selectable,
   useSceneRuntime,
   type SelectableRenderState,
-} from "@lk-robotics/lds-3d-r3f";
-import { threeToCorePosition } from "@lk-robotics/lds-3d-r3f/coordinates";
+} from "@lk-design-system/lds-3d-r3f";
+import { threeToCorePosition } from "@lk-design-system/lds-3d-r3f/coordinates";
 import { useThree, type ThreeEvent } from "@react-three/fiber";
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { Mesh, type Intersection, type Raycaster } from "three";

@@ -24,7 +24,7 @@ import {
   type SpatialStructureNode,
   type SpatialTransformStepOptions,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import { mapEditorTronBounds } from "./map-editor-asset-catalog.js";
 

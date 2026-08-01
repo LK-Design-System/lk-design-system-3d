@@ -65,7 +65,7 @@ default starting point for a product composition.
    computes that layer's range without changing caller-owned position buffers.
    A marker layer begins with `createMarkerLayerSnapshot`: group markers that
    share one source frame and optional timestamp, resolve that frame into the
-   scene through `@lk-robotics/lds-3d-tf`, and pass the resulting
+   scene through `@lk-design-system/lds-3d-tf`, and pass the resulting
    `sourceToScene` transform explicitly. `MarkerLayer` requires `maxMarkers`,
    renders only `ready` layers, and reports hidden, empty, budget, unresolved,
    mismatch, future, stale, and clock-mismatch conditions without guessing an

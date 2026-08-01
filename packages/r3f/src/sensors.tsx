@@ -13,7 +13,7 @@ import {
   MeshBasicMaterial,
   MeshStandardMaterial,
 } from "three";
-import type { EntityId, FrameId, Quat, Vec3 } from "@lk-robotics/lds-3d-core";
+import type { EntityId, FrameId, Quat, Vec3 } from "@lk-design-system/lds-3d-core";
 
 /**
  * Sensor-visualization primitives.

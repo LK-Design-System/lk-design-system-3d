@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { assetId, bounds3, frameId, identityTransform } from "@lk-robotics/lds-3d-core";
+import { assetId, bounds3, frameId, identityTransform } from "@lk-design-system/lds-3d-core";
 
 import { createGltfAssetLoader } from "../src/gltf-loader.js";
 import { consumeAssetForR3F } from "../src/r3f-bridge.js";

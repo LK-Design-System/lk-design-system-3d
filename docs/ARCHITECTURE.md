@@ -102,18 +102,18 @@ CSS variable 이름을 public API로 받거나 Core token 값을 복제해 독�
 
 | 패키지 | 책임 | 주요 의존성 |
 |---|---|---|
-| `@lk-robotics/lds-3d-core` | frame, transform, pose, camera, entity, interaction, token type | 외부 3D/React 의존 없음 |
-| `@lk-robotics/lds-3d-assets` | asset manifest, loader 계약, 정규화, 검증 | `3d-core` |
-| `@lk-robotics/lds-3d-three` | Three scene host, primitive, asset registry, picking, material, dispose | `3d-core`, `3d-assets`, `three` peer |
-| `@lk-robotics/lds-3d-r3f` | Three 구현의 React binding과 hook/component | `3d-core`, `3d-three`, React/R3F peer |
-| `@lk-robotics/lds-3d-r3f-compat-v8` | 필요성이 승인될 때에만 만들 deprecated R3F 8 binding (현재 미구현) | `3d-core`, `3d-three`, React 18/R3F 8 peer |
-| `@lk-robotics/lds-3d-pointcloud` | point cloud buffer, colorization, LOD, streaming renderer 계약 | `3d-core`, renderer adapter |
-| `@lk-robotics/lds-3d-tf` | frame graph와 시간축 transform projection; ROS transport는 포함하지 않음 | `3d-core` |
-| `@lk-robotics/lds-3d-markers` | 범용 ROS Marker 계열, 대량 동적 marker와 projection adapter | `3d-core`, renderer adapter |
-| `@lk-robotics/lds-3d-rerun` | 공통 entity·transform·time을 Rerun archetype으로 투영 | `3d-core`, Rerun client |
-| `@lk-robotics/lds-3d-spatial` | Site, Building, Level hierarchy와 floor/wall 등 공간 primitive | `3d-core`, renderer adapter |
-| `@lk-robotics/lds-3d-authoring` | selection, gizmo, snapping과 serializable change 계약 | `3d-core`, `3d-spatial`, renderer adapter |
-| `@lk-robotics/lds-3d-testing` | 좌표 round-trip, asset, adapter contract fixture | `3d-core`, `3d-assets` |
+| `@lk-design-system/lds-3d-core` | frame, transform, pose, camera, entity, interaction, token type | 외부 3D/React 의존 없음 |
+| `@lk-design-system/lds-3d-assets` | asset manifest, loader 계약, 정규화, 검증 | `3d-core` |
+| `@lk-design-system/lds-3d-three` | Three scene host, primitive, asset registry, picking, material, dispose | `3d-core`, `3d-assets`, `three` peer |
+| `@lk-design-system/lds-3d-r3f` | Three 구현의 React binding과 hook/component | `3d-core`, `3d-three`, React/R3F peer |
+| `@lk-design-system/lds-3d-r3f-compat-v8` | 필요성이 승인될 때에만 만들 deprecated R3F 8 binding (현재 미구현) | `3d-core`, `3d-three`, React 18/R3F 8 peer |
+| `@lk-design-system/lds-3d-pointcloud` | point cloud buffer, colorization, LOD, streaming renderer 계약 | `3d-core`, renderer adapter |
+| `@lk-design-system/lds-3d-tf` | frame graph와 시간축 transform projection; ROS transport는 포함하지 않음 | `3d-core` |
+| `@lk-design-system/lds-3d-markers` | 범용 ROS Marker 계열, 대량 동적 marker와 projection adapter | `3d-core`, renderer adapter |
+| `@lk-design-system/lds-3d-rerun` | 공통 entity·transform·time을 Rerun archetype으로 투영 | `3d-core`, Rerun client |
+| `@lk-design-system/lds-3d-spatial` | Site, Building, Level hierarchy와 floor/wall 등 공간 primitive | `3d-core`, renderer adapter |
+| `@lk-design-system/lds-3d-authoring` | selection, gizmo, snapping과 serializable change 계약 | `3d-core`, `3d-spatial`, renderer adapter |
+| `@lk-design-system/lds-3d-testing` | 좌표 round-trip, asset, adapter contract fixture | `3d-core`, `3d-assets` |
 
 구현 순서는 P0의 `core`, `assets`, `three`, `r3f`, `testing`, P1의
 `pointcloud`, `tf`, `markers`, `rerun`, P2의 `spatial`, `authoring`으로

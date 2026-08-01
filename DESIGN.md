@@ -15,7 +15,7 @@
   - Current LDS3D baseline: `a781e0f1925285d635107f9e0abbe13674815a9e`,
     `lk-design-system-3d@0.1.0-alpha.1`, clean `main` at refresh time.
   - Current LDS baseline: `a38b9b12f74a7166b2c7c6baff9882f7d99ff58a`,
-    `@lk-robotics/lds-workspace@0.1.0-rc.0`, `main`; unrelated local
+    `@lk-design-system/lds-workspace@0.1.0-rc.0`, `main`; unrelated local
     communication-component edits were present and are not design evidence for
     this work.
   - Current Robotics UI baseline:

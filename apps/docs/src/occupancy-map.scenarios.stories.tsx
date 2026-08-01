@@ -8,7 +8,7 @@ import {
   PathRibbon,
   SceneCanvas,
   type OccupancyGridRenderState,
-} from "@lk-robotics/lds-3d-r3f";
+} from "@lk-design-system/lds-3d-r3f";
 import { useState } from "react";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";

@@ -3,7 +3,7 @@ import type {
   EntityId,
   SpatialStructureNode,
   Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import {
   MAP_EDITOR_TRON_MANIFEST,

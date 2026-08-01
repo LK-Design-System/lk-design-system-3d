@@ -9,7 +9,7 @@ import {
   type OccupancyGridCellPicker,
   type OccupancyGridSnapshot,
   type Vec3,
-} from "@lk-robotics/lds-3d-core";
+} from "@lk-design-system/lds-3d-core";
 
 import { threeToCorePosition } from "./coordinates.js";
 import {

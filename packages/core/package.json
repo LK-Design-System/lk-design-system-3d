@@ -1,5 +1,5 @@
 {
-  "name": "@lk-robotics/lds-3d-core",
+  "name": "@lk-design-system/lds-3d-core",
   "version": "0.1.0-alpha.1",
   "description": "Renderer-neutral coordinate, entity, camera, interaction, and lifecycle contracts for LK Design System 3D.",
   "license": "MIT",
