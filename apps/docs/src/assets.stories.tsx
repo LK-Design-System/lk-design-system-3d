@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
-import { Code, Grid, Stack, StatusBadge } from "@lk-robotics/lds-core";
-import { DescriptionList, Table } from "@lk-robotics/lds-product";
+import { Code, Grid, Stack, StatusBadge } from "@lk-design-system/lds-core";
+import { DescriptionList, Table } from "@lk-design-system/lds-product";
 import { createAssetReport } from "@lk-robotics/lds-3d-assets";
 import {
   INVALID_ASSET_MANIFEST_FIXTURES,

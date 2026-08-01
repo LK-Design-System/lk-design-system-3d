@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, FormField, SegmentedControl, Slider, StatusBadge } from "@lk-robotics/lds-core";
-import { DescriptionList } from "@lk-robotics/lds-product";
+import { Button, FormField, SegmentedControl, Slider, StatusBadge } from "@lk-design-system/lds-core";
+import { DescriptionList } from "@lk-design-system/lds-product";
 import {
   ArticulatedGltfModel,
   SceneCanvas,

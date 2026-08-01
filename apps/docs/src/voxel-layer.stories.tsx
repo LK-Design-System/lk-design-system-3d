@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Stack } from "@lk-robotics/lds-core";
-import { DescriptionList } from "@lk-robotics/lds-product";
+import { Stack } from "@lk-design-system/lds-core";
+import { DescriptionList } from "@lk-design-system/lds-product";
 import { SceneCanvas, VoxelLayer, type SceneCameraPose } from "@lk-robotics/lds-3d-r3f";
 import { bounds3, frameId } from "@lk-robotics/lds-3d-core";
 

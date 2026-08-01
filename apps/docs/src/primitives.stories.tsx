@@ -9,8 +9,8 @@ import {
   Select,
   Stack,
   StatusBadge,
-} from "@lk-robotics/lds-core";
-import { DescriptionList } from "@lk-robotics/lds-product";
+} from "@lk-design-system/lds-core";
+import { DescriptionList } from "@lk-design-system/lds-product";
 import {
   AmrRobot as AmrRobotPrimitive,
   EditVolume as EditVolumePrimitive,

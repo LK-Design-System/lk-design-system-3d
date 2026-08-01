@@ -78,13 +78,13 @@ calendar 일정이나 release gate가 충돌하면 이 문서가 우선한다. P
 이 문서의 앞선 `D-1에서 확인` 표현은 당시의 계획 가정이다. 현재 기준은 sibling
 LDS `main`의 clean revision
 `2894b7b7d0a572ca32d67e1ff4fbe98638114052`, public package
-`@lk-robotics/design-system-core@0.1.0`, 그리고 공식 `styles.css`다. `apps/docs`의
+`@lk-design-system/design-system-core@0.1.0`, 그리고 공식 `styles.css`다. `apps/docs`의
 local `link:`는 시각 검토용일 뿐 CI/배포 portability 증거는 아니다.
 
 2026-07-21 현재 실행 디자인 계약과 checkout/package 상태는 루트
 [`DESIGN.md`](../DESIGN.md)가 소유한다. `apps/docs`의 portable baseline은 공개
-`@lk-robotics/lds-core@0.1.0-rc.1`, `@lk-robotics/lds-product@0.1.0-rc.1`,
-`@lk-robotics/lds-robotics-ui@0.1.0-rc.2` pin이다. Pages는 public LDS source를
+`@lk-design-system/lds-core@0.1.0-rc.1`, `@lk-design-system/lds-product@0.1.0-rc.1`,
+`@lk-design-system/lds-robotics-ui@0.1.0-rc.2` pin이다. Pages는 public LDS source를
 고정 commit에서 직접 빌드하고 함께 추적된 Robotics UI artifact를 사용해 같은 package
 surface를 재현한다.
 
@@ -469,7 +469,7 @@ deprecation, mapping snapshot, Storybook visual diff와 migration note를 함께
 | --- | --- |
 | LDS checkout | `C:\Users\seoul\Documents\LK Design System` |
 | LDS Git 기준 | `2894b7b7d0a572ca32d67e1ff4fbe98638114052`, clean worktree |
-| LDS package | `@lk-robotics/design-system-core@0.1.0` |
+| LDS package | `@lk-design-system/design-system-core@0.1.0` |
 | LDS Storybook | `10.4.6`, `addon-docs` + `addon-a11y`, Base/Card/Navy/Dark backgrounds, background 기반 light/dark decorator, story sort, 공식 favicon |
 | LDS3D Storybook | `9.1.10` 유지. major migration은 별도 dependency 결정으로 분리하고, 호환되는 `addon-docs@9.1.10`과 동일한 공개 동작을 재구성 |
 
@@ -630,7 +630,7 @@ LDS Storybook의 addon과 decorator를 audit한 뒤 공유 preset을 소비할�
 
 이번 성능 조정은 LDS baseline을 바꾸지 않는다. 기준은 sibling LDS commit
 `2894b7b7d0a572ca32d67e1ff4fbe98638114052`,
-`@lk-robotics/design-system-core@0.1.0`, 공식 stylesheet와 public
+`@lk-design-system/design-system-core@0.1.0`, 공식 stylesheet와 public
 `Scene3DFrame` / `DockPanel` / `SelectionInspector` 조합이다. 읽기·키보드 순서는
 page identity → scene identity와 viewport controls → 실제 WebGL canvas → wide의
 persistent selection inspector이며, narrow에서는 같은 canvas 뒤에 LDS Drawer trigger와

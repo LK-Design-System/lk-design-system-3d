@@ -108,8 +108,8 @@ jobs:
           if (-not $roboticsTarball) {
             throw 'The public Robotics UI package could not be packed.'
           }
-          $manifest.dependencies.'@lk-robotics/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
-          $overrides.'@lk-robotics/lds-robotics-ui' = "file:./$($roboticsTarball.Name)"
+          $manifest.dependencies.'@lk-design-system/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
+          $overrides.'@lk-design-system/lds-robotics-ui' = "file:./$($roboticsTarball.Name)"
           $overrideYaml = "`noverrides:`n"
           foreach ($entry in $overrides.GetEnumerator()) {
             $overrideYaml += "  `"$($entry.Key)`": `"$($entry.Value)`"`n"

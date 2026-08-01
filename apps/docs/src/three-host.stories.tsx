@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Stack, StatusBadge } from "@lk-robotics/lds-core";
+import { Stack, StatusBadge } from "@lk-design-system/lds-core";
 import {
   createThreeSceneHost,
   type ThreeSceneHost,

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Code, Grid, Stack, StatusBadge } from "@lk-robotics/lds-core";
-import { DescriptionList } from "@lk-robotics/lds-product";
+import { Code, Grid, Stack, StatusBadge } from "@lk-design-system/lds-core";
+import { DescriptionList } from "@lk-design-system/lds-product";
 import {
   COORDINATE_AXES_FIXTURE,
   SHIFTED_ORIGIN_FIXTURE,

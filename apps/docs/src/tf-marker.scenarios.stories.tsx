@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Stack, StatusBadge } from "@lk-robotics/lds-core";
-import { DescriptionList } from "@lk-robotics/lds-product";
+import { Stack, StatusBadge } from "@lk-design-system/lds-core";
+import { DescriptionList } from "@lk-design-system/lds-product";
 import { MarkerLayer, PointCloudLayers, SceneCanvas, type SceneCameraPose } from "@lk-robotics/lds-3d-r3f";
 import {
   appendFrameStreamSamples,

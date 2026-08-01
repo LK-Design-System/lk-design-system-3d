@@ -218,7 +218,7 @@ reference this subsection instead of restating these rules.
 
 Baseline: the current sibling LDS checkout is commit
 `f0da24fbeac95a96c793851673aca9e2bc31cc60`, package
-`@lk-robotics/design-system-core@0.1.0`, with a dirty worktree. The closest
+`@lk-design-system/design-system-core@0.1.0`, with a dirty worktree. The closest
 public evidence is `Scene3DFrame`, `ViewportStatusBar`, `ViewerToolbar`, the
 public viewer stories, and the LDS StoryGuide decorator in Storybook `10.4.6`.
 This technical story uses those inspected public contracts, but LDS visual
@@ -251,7 +251,7 @@ ROS occupancy YAML lower-left origin are not redefined here; they follow the
 ## Point-cloud layer-set LDS composition audit
 
 Baseline: LDS commit `f0da24fbeac95a96c793851673aca9e2bc31cc60`, package
-`@lk-robotics/design-system-core@0.1.0`, dirty worktree. The closest public
+`@lk-design-system/design-system-core@0.1.0`, dirty worktree. The closest public
 contracts are `Scene3DFrame`, `ViewerFrame`, `ViewerToolbar`, `StatusBadge`,
 `DescriptionList`, `CanvasEditorShell`, `SelectionInspector`, and
 `ViewportStatusBar`. LDS Storybook `10.4.6` and LDS3D Storybook `9.1.10` both use
@@ -289,7 +289,7 @@ apply or extract data. The following acceptance boundary is fixed before the
 reusable primitives are implemented:
 
 The workflow-comprehension revision was re-audited on 2026-07-19 against the
-sibling LDS package `@lk-robotics/design-system-core@0.1.0`. The live sibling
+sibling LDS package `@lk-design-system/design-system-core@0.1.0`. The live sibling
 checkout is `f0da24fbeac95a96c793851673aca9e2bc31cc60` with a dirty worktree.
 The closest public contracts are `CanvasEditorShell`, `EditorToolbar`,
 `Scene3DFrame`, `SelectionInspector`, `FormField`, `NumberField`, `Button`,
@@ -409,7 +409,7 @@ dominant 2D map, revises product properties, and saves the active document.
 it does not turn the whole workflow into an LDS3D surface.
 
 The LDS baseline is commit `f0da24fbeac95a96c793851673aca9e2bc31cc60`,
-package `@lk-robotics/design-system-core@0.1.0`, with a dirty worktree. The closest public
+package `@lk-design-system/design-system-core@0.1.0`, with a dirty worktree. The closest public
 contracts and stories are `CanvasEditorShell`, `CanvasEditorCommandBar`,
 `EditorToolbar`, `HistoryToolbar`, `LayerPanel`, `SelectionInspector`,
 `ViewportStatusBar`, and the public LDS form/actions. Their existing editor
@@ -468,7 +468,7 @@ and screen composition remain product-owned.
 The LDS DOM audit began against sibling commit
 `f0da24fbeac95a96c793851673aca9e2bc31cc60` with a dirty worktree. The final
 read-only recheck used commit `679859bc8b5126bcff7146eaedd871bbe9e62891`,
-package `@lk-robotics/design-system-core@0.1.0`, with no tracked changes and one
+package `@lk-design-system/design-system-core@0.1.0`, with no tracked changes and one
 unrelated untracked reference artifact. The relevant public component
 implementations, type declarations, exports, Storybook configuration, and
 closest stories did not change between those commits. LDS Storybook remains

@@ -26,9 +26,9 @@ Primitive catalog는 `SceneCanvas`, `Selectable`, `AmrRobot`, `GoalMarker`,
 goal·path 상태, renderer loading·empty·error·retry, 실제 LDS composition도 각 소유
 group 아래에서 검토합니다. 기본 시각 방향은
 운영 상태 식별성과 LDS chrome 조합성이 더 높은 `Operational Neutral`입니다.
-문서 앱은 공개 LDS source에서 빌드한 `@lk-robotics/lds-core@0.1.0-rc.1`,
-`@lk-robotics/lds-product@0.1.0-rc.1`, 공개 source에 함께 추적된
-`@lk-robotics/lds-robotics-ui@0.1.0-rc.2` artifact와 공식 `styles.css`를 고정해 실제
+문서 앱은 공개 LDS source에서 빌드한 `@lk-design-system/lds-core@0.1.0-rc.1`,
+`@lk-design-system/lds-product@0.1.0-rc.1`, 공개 source에 함께 추적된
+`@lk-design-system/lds-robotics-ui@0.1.0-rc.2` artifact와 공식 `styles.css`를 고정해 실제
 public API로 사용합니다. `Scene3DFrame`, `SelectionInspector`, `Tree`,
 `SegmentedControl`, `ViewportStatusBar`와 `StatusBadge`가 DOM chrome을 소유하며,
 renderer package에는 LDS 의존성을 넣지 않습니다.

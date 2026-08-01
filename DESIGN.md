@@ -20,7 +20,7 @@
     this work.
   - Current Robotics UI baseline:
     `5fc67797fbad7dd137f5785288990d4b760bcde3`,
-    `@lk-robotics/lds-robotics-ui@0.1.0-rc.1`, pre-existing
+    `@lk-design-system/lds-robotics-ui@0.1.0-rc.1`, pre-existing
     `nav-expression-overhaul` branch.
   - Representative Storybook surfaces at port 6007 were reviewed at 1280x720
     and 390x844, including Operational Neutral, Diagnostic Technical, spatial

@@ -1,5 +1,5 @@
-import { Card, Code, Container, ScrollArea, Stack } from "@lk-robotics/lds-core";
-import { PageHeader } from "@lk-robotics/lds-product";
+import { Card, Code, Container, ScrollArea, Stack } from "@lk-design-system/lds-core";
+import { PageHeader } from "@lk-design-system/lds-product";
 import { useId, type PropsWithChildren, type ReactNode } from "react";
 
 export interface TechnicalStoryLayoutProps extends PropsWithChildren {

@@ -7,9 +7,9 @@ import {
   Stack,
   StatusBadge,
   StatusIndicator,
-} from "@lk-robotics/lds-core";
-import { Legend } from "@lk-robotics/lds-product";
-import { SegmentedControl } from "@lk-robotics/lds-core/components/selection/SegmentedControl";
+} from "@lk-design-system/lds-core";
+import { Legend } from "@lk-design-system/lds-product";
+import { SegmentedControl } from "@lk-design-system/lds-core/components/selection/SegmentedControl";
 import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import {
   GoalMarker,

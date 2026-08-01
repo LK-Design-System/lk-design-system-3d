@@ -107,6 +107,18 @@ importers:
 
   apps/docs:
     dependencies:
+      '@lk-design-system/lds-core':
+        specifier: 0.1.0-rc.4
+        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-product':
+        specifier: 0.1.0-rc.4
+        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-robotics-ui':
+        specifier: 0.1.0-rc.4
+        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-theme':
+        specifier: 0.1.0-rc.4
+        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-robotics/lds-3d-assets':
         specifier: workspace:*
         version: link:../../packages/assets
@@ -131,18 +143,6 @@ importers:
       '@lk-robotics/lds-3d-three':
         specifier: workspace:*
         version: link:../../packages/three
-      '@lk-robotics/lds-core':
-        specifier: 0.1.0-rc.1
-        version: 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-robotics/lds-product':
-        specifier: 0.1.0-rc.1
-        version: 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-robotics/lds-robotics-ui':
-        specifier: 0.1.0-rc.2
-        version: 0.1.0-rc.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-robotics/lds-theme':
-        specifier: 0.1.0-rc.1
-        version: 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-three/drei':
         specifier: 'catalog:'
         version: 10.7.7(@react-three/fiber@9.6.1(@types/react@19.1.16)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1))(@types/react@19.1.16)(@types/three@0.185.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1)
@@ -946,26 +946,26 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lk-robotics/lds-core@0.1.0-rc.1':
-    resolution: {integrity: sha512-v8BQihLGmMQmkrycdaUEGsmGN4DMquJGj+9ThO1oI+cpLvjPvS3MW5ON59h3LP32MCygbVINojsUZeLTehz2Ug==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-core/0.1.0-rc.1/4f183064b717053809aaf5cbce416489175bb82e}
+  '@lk-design-system/lds-core@0.1.0-rc.4':
+    resolution: {integrity: sha512-Kn4z9yfUhCa/E51ou6NMHTU4oRaGgQ3+cJFyNXzKKXL87DoNkUDd9dWzxtcn+MTpq+KRs+yzco110m/r08E9CQ==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-core/0.1.0-rc.4/e158e51d5094abdfc52a99ca5e792cac5fd08f2f}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-robotics/lds-product@0.1.0-rc.1':
-    resolution: {integrity: sha512-Gz+ZTBp4XXzoChQV00kGCaEiAevwO/uSW/3WmR4rPUaxJ38siMydHs7J50mEB+4NzaILwaYlnvyQt/UR5hSXCg==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-product/0.1.0-rc.1/fc8438c2ac9d2fa50558b9a05504f93e177e8315}
+  '@lk-design-system/lds-product@0.1.0-rc.4':
+    resolution: {integrity: sha512-0ZFYAaFoykMydFFQbabMvlV2nTjQ2CLFOntCqv56J4HAH8odheAfWdPNmKXbVh+k+AzDdg9BkFBGh6Ppv9eRLg==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-product/0.1.0-rc.4/0e9a5053e0d19889c95e669bf64ac8bc58e3320c}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-robotics/lds-robotics-ui@0.1.0-rc.2':
-    resolution: {integrity: sha512-hcWDQR5l1UtABB4ko7k0TjnfEpbak87yJkqf9fLdehX6rnIbSxjoN4zpwbC7yLSRzkKxJorG6mzXAmfysYrEpw==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-robotics-ui/0.1.0-rc.2/b7cd97cf92f8542fa45ab24b830f4c770bba9bdb}
+  '@lk-design-system/lds-robotics-ui@0.1.0-rc.4':
+    resolution: {integrity: sha512-Y2Yi+aIL94IeMxsRsNrtCYKuo20mJkMtN+/W123yVSzZlBCFdZdluobRf4uunA+3jo7SHajxJqxmBXAwES/KJA==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-robotics-ui/0.1.0-rc.4/f49bbb6ae77d689a8fc44f131eb0f309de378f12}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-robotics/lds-theme@0.1.0-rc.1':
-    resolution: {integrity: sha512-UNZkfWHZHv0VLmjpvg+cb47kOQtdj92kxyTy0id9KM0zXI5InlfFR9Nl9d3U1r0ZMZnFjhE6XLAhcEuX4IRPaw==, tarball: https://npm.pkg.github.com/download/@lk-robotics/lds-theme/0.1.0-rc.1/05aa65737135632e6e8d677069113e8c6fcef104}
+  '@lk-design-system/lds-theme@0.1.0-rc.4':
+    resolution: {integrity: sha512-5MbZdQSOVzsCB+oEQKOjcT8uYkOlikejnDtfub6M6NTLha2R4BNCROzhEv4W0r+ERoKL8p5zuqA6nAXY/op/fQ==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-theme/0.1.0-rc.4/9a4a3c1b3c424bb439094e42530a0f9d724b51df}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
@@ -1955,8 +1955,8 @@ packages:
       picomatch:
         optional: true
 
-  fflate@0.6.10:
-    resolution: {integrity: sha512-IQrh3lEPM93wVCEczc9SaAOvkmcoQn/G8Bo1e8ZPlY3X3bnAxWaBdvTdvM1hP62iZp0BXWDy4vTAy4fF0+Dlpg==}
+  fflate@0.6.11:
+    resolution: {integrity: sha512-3JyEFWGjFn7zHmoa9+zG1BmW7X2okcmAB+0Cnu9UFbVs/jCBnl2A8o065ZlXiw145K3eBM3uLuzrYXC0RK7eDg==}
 
   fflate@0.8.3:
     resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
@@ -2908,13 +2908,13 @@ packages:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
 
-  troika-three-text@0.52.4:
-    resolution: {integrity: sha512-V50EwcYGruV5rUZ9F4aNsrytGdKcXKALjEtQXIOBfhVoZU9VAqZNIoGQ3TMiooVqFAbR1w15T+f+8gkzoFzawg==}
+  troika-three-text@0.52.5:
+    resolution: {integrity: sha512-Ry3jRhic9pzcY4JduSvRRyDmVOSqEW19gT4vtK+aCiPNVcDlmkxvGG0YbFd36RTDq1wExOupXnvNF/j1oiHHDA==}
     peerDependencies:
       three: '>=0.125.0'
 
-  troika-three-utils@0.52.4:
-    resolution: {integrity: sha512-NORAStSVa/BDiG52Mfudk4j1FG4jC4ILutB3foPnfGbOeIs9+G5vZLa0pnmnaftZUGm4UwSoqEpWdqvC7zms3A==}
+  troika-three-utils@0.52.5:
+    resolution: {integrity: sha512-WsePbcX8RtfidRfsxK1eCZCjF81ZDzAKHH/evLs0hdV2wpoCb0vArGZHdzdOJrSS3k4zfdtbKDaBh8+phkrYnw==}
     peerDependencies:
       three: '>=0.125.0'
 
@@ -3770,27 +3770,27 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lk-robotics/lds-core@0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-core@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-robotics/lds-product@0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-product@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@lk-robotics/lds-core': 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-core': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-robotics/lds-robotics-ui@0.1.0-rc.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-robotics-ui@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@lk-robotics/lds-core': 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-robotics/lds-product': 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-core': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-product': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-robotics/lds-theme@0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-theme@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@lk-robotics/lds-core': 0.1.0-rc.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-core': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
@@ -3902,7 +3902,7 @@ snapshots:
       three: 0.185.1
       three-mesh-bvh: 0.8.3(three@0.185.1)
       three-stdlib: 2.36.1(three@0.185.1)
-      troika-three-text: 0.52.4(three@0.185.1)
+      troika-three-text: 0.52.5(three@0.185.1)
       tunnel-rat: 0.1.2(@types/react@19.1.16)(react@19.1.1)
       use-sync-external-store: 1.6.0(react@19.1.1)
       utility-types: 3.11.0
@@ -4875,7 +4875,7 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.5
 
-  fflate@0.6.10: {}
+  fflate@0.6.11: {}
 
   fflate@0.8.3: {}
 
@@ -5710,7 +5710,7 @@ snapshots:
       '@types/offscreencanvas': 2019.7.3
       '@types/webxr': 0.5.24
       draco3d: 1.5.7
-      fflate: 0.6.10
+      fflate: 0.6.11
       potpack: 1.0.2
       three: 0.185.1
 
@@ -5741,15 +5741,15 @@ snapshots:
 
   tree-kill@1.2.2: {}
 
-  troika-three-text@0.52.4(three@0.185.1):
+  troika-three-text@0.52.5(three@0.185.1):
     dependencies:
       bidi-js: 1.0.3
       three: 0.185.1
-      troika-three-utils: 0.52.4(three@0.185.1)
+      troika-three-utils: 0.52.5(three@0.185.1)
       troika-worker-utils: 0.52.0
       webgl-sdf-generator: 1.1.1
 
-  troika-three-utils@0.52.4(three@0.185.1):
+  troika-three-utils@0.52.5(three@0.185.1):
     dependencies:
       three: 0.185.1
 

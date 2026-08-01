@@ -235,7 +235,7 @@ plugin의 repository, release, version support owner는 구현 전에 별도 승
 2026-07-19 최종 read-only audit의 sibling LDS는
 `C:\Users\MSI\Documents\LK Design System` revision
 `a19d285651a98d3782f3cf306d8bfa51a366279c`, clean `main`, package
-`@lk-robotics/design-system-core@0.1.0`이다. 첫 audit snapshot
+`@lk-design-system/design-system-core@0.1.0`이다. 첫 audit snapshot
 `f8dd678f32c92798b05d7f97d84449dec916d3a4` 이후 변경은 LDS 문서에만 있었고 아래에
 mapping한 public component, type, prompt, story, Storybook 설정과 token에는 diff가
 없었다. 이 current snapshot은 root README가 기록한 재현 가능한 support pin을

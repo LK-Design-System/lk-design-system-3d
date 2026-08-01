@@ -1,16 +1,16 @@
-import { Button } from "@lk-robotics/lds-core/components/buttons/Button";
-import { StatusBadge } from "@lk-robotics/lds-core/components/content/StatusBadge";
-import { SelectionInspector } from "@lk-robotics/lds-product/components/editor/SelectionInspector";
-import { ViewportStatusBar } from "@lk-robotics/lds-product/components/editor/ViewportStatusBar";
-import { Icon } from "@lk-robotics/lds-core/components/icon/Icon";
-import { Container } from "@lk-robotics/lds-core/components/layout/Container";
-import { DockPanel } from "@lk-robotics/lds-product/components/layout/DockPanel";
-import { Drawer } from "@lk-robotics/lds-product/components/overlay/Drawer";
-import { Scene3DFrame } from "@lk-robotics/lds-product/components/viz/Scene3DFrame";
+import { Button } from "@lk-design-system/lds-core/components/buttons/Button";
+import { StatusBadge } from "@lk-design-system/lds-core/components/content/StatusBadge";
+import { SelectionInspector } from "@lk-design-system/lds-product/components/editor/SelectionInspector";
+import { ViewportStatusBar } from "@lk-design-system/lds-product/components/editor/ViewportStatusBar";
+import { Icon } from "@lk-design-system/lds-core/components/icon/Icon";
+import { Container } from "@lk-design-system/lds-core/components/layout/Container";
+import { DockPanel } from "@lk-design-system/lds-product/components/layout/DockPanel";
+import { Drawer } from "@lk-design-system/lds-product/components/overlay/Drawer";
+import { Scene3DFrame } from "@lk-design-system/lds-product/components/viz/Scene3DFrame";
 import {
   ViewerToolbar,
   ViewerToolbarButton,
-} from "@lk-robotics/lds-product/components/viz/ViewerToolbar";
+} from "@lk-design-system/lds-product/components/viz/ViewerToolbar";
 import {
   useEffect,
   useRef,

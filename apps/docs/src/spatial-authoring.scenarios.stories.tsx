@@ -10,9 +10,9 @@ import {
   Select,
   Stack,
   StatusBadge,
-} from "@lk-robotics/lds-core";
-import { NumberField, Tree } from "@lk-robotics/lds-product";
-import type { TreeHandle } from "@lk-robotics/lds-product/components/data/Tree";
+} from "@lk-design-system/lds-core";
+import { NumberField, Tree } from "@lk-design-system/lds-product";
+import type { TreeHandle } from "@lk-design-system/lds-product/components/data/Tree";
 import {
   CanvasEditorCommandBar,
   CanvasEditorShell,
@@ -23,7 +23,7 @@ import {
   ViewerToolbar,
   ViewerToolbarButton,
   ViewportStatusBar,
-} from "@lk-robotics/lds-product";
+} from "@lk-design-system/lds-product";
 import {
   GoalMarker,
   SceneCanvas,

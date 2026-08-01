@@ -1,9 +1,9 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
 import { createElement, type ComponentType, type CSSProperties } from "react";
-import "@lk-robotics/lds-core/styles.css";
-import "@lk-robotics/lds-theme/styles.css";
-import "@lk-robotics/lds-product/styles.css";
-import "@lk-robotics/lds-robotics-ui/styles.css";
+import "@lk-design-system/lds-core/styles.css";
+import "@lk-design-system/lds-theme/styles.css";
+import "@lk-design-system/lds-product/styles.css";
+import "@lk-design-system/lds-robotics-ui/styles.css";
 import "../src/styles.css";
 
 const DARK_BACKGROUND_NAMES = new Set(["dark", "navy", "inverse"]);

@@ -6,7 +6,7 @@ const forbiddenRendererImports = [
   "@react-three/fiber",
   "@react-three/drei",
   "react",
-  "@lk-robotics/design-system-core",
+  "@lk-design-system/design-system-core",
 ];
 
 export default tseslint.config(

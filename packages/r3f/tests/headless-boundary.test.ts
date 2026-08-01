@@ -27,12 +27,12 @@ describe("SceneCanvas headless application-chrome boundary", () => {
   });
 
   it("does not couple the renderer host to LDS DOM components", () => {
-    expect(sceneCanvasSource).not.toContain("@lk-robotics/design-system-core");
+    expect(sceneCanvasSource).not.toContain("@lk-design-system/design-system-core");
   });
 
   it("keeps the persistent orientation aid inside WebGL", () => {
     expect(sceneCanvasSource).toContain("<OrientationTriad />");
-    expect(orientationTriadSource).not.toContain("@lk-robotics/design-system-core");
+    expect(orientationTriadSource).not.toContain("@lk-design-system/design-system-core");
     expect(orientationTriadSource).not.toMatch(/<(?:div|button|span)\b/u);
     expect(orientationTriadSource).toContain('label="X"');
     expect(orientationTriadSource).toContain('label="Y"');
@@ -60,7 +60,7 @@ describe("SceneCanvas headless application-chrome boundary", () => {
   });
 
   it("keeps PointCloudLayer free of LDS chrome and product interaction", () => {
-    expect(pointCloudSource).not.toContain("@lk-robotics/design-system-core");
+    expect(pointCloudSource).not.toContain("@lk-design-system/design-system-core");
     expect(pointCloudSource).not.toMatch(/<button\b/u);
     expect(pointCloudSource).not.toMatch(/\bonClick=/u);
     expect(pointCloudSource).not.toContain("PointCloud2");
@@ -68,7 +68,7 @@ describe("SceneCanvas headless application-chrome boundary", () => {
   });
 
   it("keeps section and edit-volume primitives free of destructive workflow policy", () => {
-    expect(primitivesSource).not.toContain("@lk-robotics/design-system-core");
+    expect(primitivesSource).not.toContain("@lk-design-system/design-system-core");
     expect(primitivesSource).not.toMatch(/<button\b/u);
     expect(primitivesSource).not.toContain("applyPCDManualEdit");
     expect(primitivesSource).not.toContain("removed_points");
@@ -76,7 +76,7 @@ describe("SceneCanvas headless application-chrome boundary", () => {
   });
 
   it("keeps spatial structure and transform authoring free of LDS DOM and product persistence", () => {
-    expect(spatialStructureSource).not.toContain("@lk-robotics/design-system-core");
+    expect(spatialStructureSource).not.toContain("@lk-design-system/design-system-core");
     expect(spatialStructureSource).not.toMatch(/<button\b/u);
     expect(spatialStructureSource).not.toContain("SiteAuthoringDraft");
     expect(spatialStructureSource).not.toContain("saveDraft");
@@ -85,7 +85,7 @@ describe("SceneCanvas headless application-chrome boundary", () => {
   });
 
   it("keeps occupancy rendering free of PGM parsing, product editing, and LDS DOM", () => {
-    expect(occupancyGridSource).not.toContain("@lk-robotics/design-system-core");
+    expect(occupancyGridSource).not.toContain("@lk-design-system/design-system-core");
     expect(occupancyGridSource).not.toMatch(/<button\b/u);
     expect(occupancyGridSource).not.toContain("parsePgm");
     expect(occupancyGridSource).not.toContain("uploadMapFile");

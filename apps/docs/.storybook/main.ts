@@ -16,11 +16,11 @@ const config: StorybookConfig = {
       to: "/robots",
     },
     {
-      from: "../node_modules/@lk-robotics/lds-core/assets",
+      from: "../node_modules/@lk-design-system/lds-core/assets",
       to: "/assets",
     },
     {
-      from: "../node_modules/@lk-robotics/lds-product/assets",
+      from: "../node_modules/@lk-design-system/lds-product/assets",
       to: "/assets",
     },
   ],

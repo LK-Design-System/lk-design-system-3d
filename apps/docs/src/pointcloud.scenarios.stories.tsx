@@ -8,8 +8,8 @@ import {
   Icon,
   SegmentedControl,
   StatusBadge,
-} from "@lk-robotics/lds-core";
-import { DescriptionList, NumberField } from "@lk-robotics/lds-product";
+} from "@lk-design-system/lds-core";
+import { DescriptionList, NumberField } from "@lk-design-system/lds-product";
 import {
   CanvasEditorCommandBar,
   CanvasEditorShell,
@@ -19,7 +19,7 @@ import {
   ViewerToolbar,
   ViewerToolbarButton,
   ViewportStatusBar,
-} from "@lk-robotics/lds-product";
+} from "@lk-design-system/lds-product";
 import {
   EditVolume,
   PointCloudLayer,

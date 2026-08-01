@@ -11,7 +11,7 @@ module.exports = {
       severity: "error",
       from: { path: "^packages/assets/src" },
       to: {
-        path: "^(packages/(?!core)|apps)/|node_modules/(react|three|@react-three|@lk-robotics/design-system-core)",
+        path: "^(packages/(?!core)|apps)/|node_modules/(react|three|@react-three|@lk-design-system/design-system-core)",
       },
     },
     {
@@ -25,7 +25,7 @@ module.exports = {
       severity: "error",
       from: { path: "^packages/three/src" },
       to: {
-        path: "^packages/(?!core(?:/|$)|assets(?:/|$)|three(?:/|$))|^apps/|^node_modules/(?:react|@react-three|@rerun-io|@lk-robotics/design-system-core)",
+        path: "^packages/(?!core(?:/|$)|assets(?:/|$)|three(?:/|$))|^apps/|^node_modules/(?:react|@react-three|@rerun-io|@lk-design-system/design-system-core)",
       },
     },
     {
@@ -33,7 +33,7 @@ module.exports = {
       severity: "error",
       from: { path: "^packages/pointcloud/src" },
       to: {
-        path: "^packages/(?!core(?:/|$)|pointcloud(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-robotics/design-system-core)",
+        path: "^packages/(?!core(?:/|$)|pointcloud(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-design-system/design-system-core)",
       },
     },
     {
@@ -41,7 +41,7 @@ module.exports = {
       severity: "error",
       from: { path: "^packages/tf/src" },
       to: {
-        path: "^packages/(?!core(?:/|$)|tf(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-robotics/design-system-core)",
+        path: "^packages/(?!core(?:/|$)|tf(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-design-system/design-system-core)",
       },
     },
     {
@@ -49,7 +49,7 @@ module.exports = {
       severity: "error",
       from: { path: "^packages/markers/src" },
       to: {
-        path: "^packages/(?!core(?:/|$)|markers(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-robotics/design-system-core)",
+        path: "^packages/(?!core(?:/|$)|markers(?:/|$))|^apps/|^node_modules/(?:react|three|@react-three|@lk-design-system/design-system-core)",
       },
     },
     {
@@ -57,7 +57,7 @@ module.exports = {
       severity: "error",
       from: { path: "^packages/r3f/src" },
       to: {
-        path: "^packages/(?!core(?:/|$)|assets(?:/|$)|markers(?:/|$)|pointcloud(?:/|$)|three(?:/|$)|r3f(?:/|$))|^apps/|^node_modules/(?:@rerun-io|@lk-robotics/design-system-core)",
+        path: "^packages/(?!core(?:/|$)|assets(?:/|$)|markers(?:/|$)|pointcloud(?:/|$)|three(?:/|$)|r3f(?:/|$))|^apps/|^node_modules/(?:@rerun-io|@lk-design-system/design-system-core)",
       },
     },
     {

@@ -73,9 +73,9 @@ Missing LDS source evidence means `unverified`, never "close enough" or
   tokens in the docs/product composition layer and pass renderer-specific values
   across an explicit theme contract.
 - `core`, `assets`, `testing`, `three`, `r3f`, and other renderer packages must
-  not depend on any LDS DOM UI package: `@lk-robotics/lds-core`, `lds-theme`,
+  not depend on any LDS DOM UI package: `@lk-design-system/lds-core`, `lds-theme`,
   `lds-product`, `lds-robotics-ui`, or the legacy
-  `@lk-robotics/design-system-core` facade.
+  `@lk-design-system/design-system-core` facade.
 - Only a composition consumer such as `apps/docs` or a product application may
   depend on both LDS and LDS3D.
 - LDS must never depend on LDS3D. Preserve the one-way sibling relationship.

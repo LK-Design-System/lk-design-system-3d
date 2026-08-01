@@ -6,7 +6,7 @@
 | 기준일 | 2026-07-17 |
 | 대상 | 실제 WebGL Storybook의 동일 AMR 운영 장면 A/B |
 | 권고 | `Operational Neutral`을 기본값으로 구현하고 `Diagnostic Technical`을 같은 의미 계약을 쓰는 Advanced profile로 제공한다. |
-| LDS 기준 | 형제 저장소 `../LK Design System`, package `@lk-robotics/design-system-core@0.1.0`, commit `373dc6760efe25367b45a99cd7d6282bb42faaf4`의 public API와 공식 `styles.css`를 Visual Alpha Storybook에서 직접 소비한다. |
+| LDS 기준 | 형제 저장소 `../LK Design System`, package `@lk-design-system/design-system-core@0.1.0`, commit `373dc6760efe25367b45a99cd7d6282bb42faaf4`의 public API와 공식 `styles.css`를 Visual Alpha Storybook에서 직접 소비한다. |
 | 중요한 한계 | 실제 LDS code/package 통합은 완료했지만 Figma 기준 version 및 Control/Web Viz 사용자 비교 평가는 아직 G-D0 후속 검증이다. |
 
 ## 1. 이 문서가 결정하는 것
@@ -404,7 +404,7 @@ WebGL canvas, camera math, hover/picking, goal/path와 GLB instance만 소유한
 - [x] reduced-motion에서는 반복 pulse와 강제 camera flight를 제거한다.
 - [x] Operational Neutral을 기본 Story로, Diagnostic Technical을 Advanced Story로
       제공하며 두 profile의 fixture와 event contract는 동일하다.
-- [x] 실제 `@lk-robotics/design-system-core@0.1.0` 공개 component·CSS·semantic token을
+- [x] 실제 `@lk-design-system/design-system-core@0.1.0` 공개 component·CSS·semantic token을
       docs composition에서 소비하고 LDS3D canvas 책임과 분리한다.
 
 ## 10. V0 이후 검증
