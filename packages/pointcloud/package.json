@@ -1,6 +1,6 @@
 {
   "name": "@lk-design-system/lds-3d-pointcloud",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Renderer-neutral point-cloud snapshot and frame contracts for LK Design System 3D.",
   "license": "MIT",
   "type": "module",

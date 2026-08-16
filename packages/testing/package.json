@@ -1,6 +1,6 @@
 {
   "name": "@lk-design-system/lds-3d-testing",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Runner-neutral golden fixtures and contract checks for LK Design System 3D",
   "license": "MIT",
   "type": "module",
