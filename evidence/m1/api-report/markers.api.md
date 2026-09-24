@@ -25,7 +25,6 @@ export interface ArrowMarkerInput extends MarkerBaseInput {
 export interface ArrowMarkerSnapshot extends MarkerBaseSnapshot {
     // (undocumented)
     readonly kind: "arrow";
-    // (undocumented)
     readonly scale: Vec3;
 }
 
@@ -41,7 +40,6 @@ export interface LineStripMarkerInput extends MarkerBaseInput {
     readonly kind: "line-strip";
     // (undocumented)
     readonly points: readonly Vec3[];
-    // (undocumented)
     readonly width: number;
 }
 
@@ -51,7 +49,6 @@ export interface LineStripMarkerSnapshot extends MarkerBaseSnapshot {
     readonly kind: "line-strip";
     // (undocumented)
     readonly points: readonly Vec3[];
-    // (undocumented)
     readonly width: number;
 }
 
@@ -209,7 +206,6 @@ export interface MeshMarkerInput extends MarkerBaseInput {
     readonly asset: AssetId;
     // (undocumented)
     readonly kind: "mesh";
-    // (undocumented)
     readonly scale: Vec3;
     // (undocumented)
     readonly useEmbeddedMaterials?: boolean;
@@ -221,7 +217,6 @@ export interface MeshMarkerSnapshot extends MarkerBaseSnapshot {
     readonly asset: AssetId;
     // (undocumented)
     readonly kind: "mesh";
-    // (undocumented)
     readonly scale: Vec3;
     // (undocumented)
     readonly useEmbeddedMaterials: boolean;
@@ -233,7 +228,6 @@ export interface PointSetMarkerInput extends MarkerBaseInput {
     readonly kind: "points";
     // (undocumented)
     readonly points: readonly Vec3[];
-    // (undocumented)
     readonly size: number;
 }
 
@@ -243,15 +237,12 @@ export interface PointSetMarkerSnapshot extends MarkerBaseSnapshot {
     readonly kind: "points";
     // (undocumented)
     readonly points: readonly Vec3[];
-    // (undocumented)
     readonly size: number;
 }
 
 // @public (undocumented)
 export interface PoseMarkerInput extends MarkerBaseInput {
-    // (undocumented)
     readonly axisLength: number;
-    // (undocumented)
     readonly axisRadius?: number;
     // (undocumented)
     readonly kind: "pose";
@@ -259,9 +250,7 @@ export interface PoseMarkerInput extends MarkerBaseInput {
 
 // @public (undocumented)
 export interface PoseMarkerSnapshot extends MarkerBaseSnapshot {
-    // (undocumented)
     readonly axisLength: number;
-    // (undocumented)
     readonly axisRadius: number;
     // (undocumented)
     readonly kind: "pose";
@@ -272,7 +261,6 @@ export function resolveMarkerLayerRenderState(layerInput: MarkerLayerSnapshot, s
 
 // @public (undocumented)
 export interface TextMarkerInput extends MarkerBaseInput {
-    // (undocumented)
     readonly height: number;
     // (undocumented)
     readonly kind: "text";
@@ -282,7 +270,6 @@ export interface TextMarkerInput extends MarkerBaseInput {
 
 // @public (undocumented)
 export interface TextMarkerSnapshot extends MarkerBaseSnapshot {
-    // (undocumented)
     readonly height: number;
     // (undocumented)
     readonly kind: "text";
@@ -294,7 +281,6 @@ export interface TextMarkerSnapshot extends MarkerBaseSnapshot {
 export interface VolumeMarkerInput extends MarkerBaseInput {
     // (undocumented)
     readonly kind: "volume";
-    // (undocumented)
     readonly scale: Vec3;
     // (undocumented)
     readonly shape: VolumeMarkerShape;
@@ -307,7 +293,6 @@ export type VolumeMarkerShape = "box" | "sphere" | "cylinder";
 export interface VolumeMarkerSnapshot extends MarkerBaseSnapshot {
     // (undocumented)
     readonly kind: "volume";
-    // (undocumented)
     readonly scale: Vec3;
     // (undocumented)
     readonly shape: VolumeMarkerShape;

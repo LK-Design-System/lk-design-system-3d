@@ -4,7 +4,7 @@
 
 ## 진입 경로
 
-- React 제품은 **`@lk-design-system/lds-3d-r3f`**(`SceneCanvas` + 공간 프리미티브)를 설치하고, 경계를 넘는 모든 값은 `lds-3d-core` 타입(`frameId`, `Pose3`, `Bounds3`, `EntityId`)으로 만든다. peer: React ≥19.1.1, @react-three/fiber ^9.6, three ≥0.185.1.
+- React 제품은 **`@lk-design-system/lds-3d-r3f`**(`SceneCanvas` + 공간 프리미티브)를 설치하고, 경계를 넘는 모든 값은 `lds-3d-core` 타입(`frameId`, `Pose3`, `Bounds3`, `EntityId`)으로 만든다. peer 범위는 `@lk-design-system/lds-3d-r3f`의 `package.json` `peerDependencies`가 정본이다(여기에 옮겨 적지 않는다).
 - `lds-3d-three`는 어댑터 구현이다 — 제품이 직접 다루지 않는다. 비-React 제품만 그 루트 API를 쓰며, 루트 API는 의도적으로 `THREE.Scene`/`Object3D`/`WebGLRenderer`를 노출하지 않는다.
 - 능력별 추가: `pointcloud`(포인트클라우드 스냅샷), `tf`(타임스탬프 프레임 트리), `markers`(마커 스냅샷), `assets`(매니페스트·로봇 GLB·키네마틱스), `testing`(소비자 CI용 계약 픽스처).
 - 시나리오 헬퍼(`AmrOperationalScene` 등)는 데모 고정물이지 기본 조립 출발점이 아니다 — 가장 작은 의미 원자부터 조립한다.
@@ -25,7 +25,8 @@
 
 ## 테마 — LDS 토큰 값을 복사하지 않는다
 
-- LDS semantic 토큰의 해석은 **조립 레이어**에서 하고, 값을 `SceneCanvas`의 `theme`/`themeCustomization`(scene token 계약: `scene.background`, `grid.*`, `axis.*`, `selection.active`, `path.default`, `goal.default`, `warning`)으로 넘긴다. CSS 변수 이름을 3D에 넘기거나 토큰 값을 렌더러 코드에 굽지 않는다.
+- LDS semantic 토큰의 해석은 **조립 레이어**에서 하고, 값을 `SceneCanvas`의 `theme`/`themeCustomization`(scene token 계약: `scene.background`, `grid.*`, `axis.*`, `selection.active`, `path.default`, `goal.default`, `warning`)으로 넘긴다. CSS 변수 이름을 3D에 넘기거나 토큰 값을 렌더러 코드에 굽지 않는다. 기본 팔레트는 `lds-3d-core`의 `OPERATIONAL_SCENE_TOKENS`/`DIAGNOSTIC_SCENE_TOKENS`이고 three·r3f 두 호스트가 같은 값을 읽는다(경로=실행 청록, 목표=의도 보라). r3f 재질 `live`/`intent`/`selection`/`warning`은 이 scene token에서 파생되므로 scene token 하나만 덮어쓰면 된다. 장면 범례도 같은 테마(`resolveSceneTheme(profile).materials`)에서 색을 읽는다 — LDS status 토큰으로 범례를 칠하면 장면과 어긋난다.
+- 로봇 상태는 LDS Robotics `RobotPoseState` 어휘(`moving`/`idle`/`paused`/`fault`/`offline`/`unknown`)로 넘긴다. `AmrRobot`은 색과 함께 형상 단서(일시정지 막대·X·고리·꺼진 상태등·반투명 본체)로 상태를 보인다. `live`/`warning`/`error`는 옛 철자로 계속 받는다.
 - 상태는 색만으로 전달하지 않는다 — 기하·패턴·글리프·외곽선·레이블 + LDS DOM 요약을 병행한다. 축 정체성은 색과 함께 X/Y/Z 문자.
 
 ## 성능·수명주기
@@ -37,7 +38,7 @@
 ## 상호작용·접근성
 
 - hover는 일시적, selection은 지속적 — **hover가 치명 정보의 유일한 공개 수단이면 안 된다.**
-- 인터랙티브 `SceneCanvas`는 `ariaLabel` 필수, 탭 정지 1개, 문서화된 카메라 키(`Home`/`T`/`F`/화살표 orbit/`Shift`+화살표 pan/`±` zoom). 모든 포인터 드래그(배치·기즈모)는 LDS `NumberField` 등의 숫자·키보드 대안 필수 (WCAG 2.2 Dragging Movements).
+- 인터랙티브 `SceneCanvas`에는 장면별 `ariaLabel`을 반드시 준다(생략하면 모든 캔버스가 같은 기본 이름 "Interactive 3D scene"을 받아 보조기술에서 구분되지 않는다 — 코드가 막지는 않으므로 규칙으로 지킨다), 탭 정지 1개, 문서화된 카메라 키(`Home`/`T`/`F`/화살표 orbit/`Shift`+화살표 pan/`±` zoom). 모든 포인터 드래그(배치·기즈모)는 LDS `NumberField` 등의 숫자·키보드 대안 필수 (WCAG 2.2 Dragging Movements).
 - 캔버스 선택은 DOM 요약/트리에 미러링한다 — 요약은 실제 WebGL 기하·깊이·피킹을 **보완**하지 대체하지 않는다.
 
 ## 자산

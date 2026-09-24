@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
@@ -34,25 +34,49 @@ await Promise.all([
   mkdir(fixtureDirectory, { recursive: true }),
 ]);
 
-await Promise.all([
-  writeFile(
-    path.join(coordinateDirectory, "coordinate-contract.json"),
-    `${JSON.stringify(coordinateReport, null, 2)}\n`,
-  ),
-  writeFile(
-    path.join(assetDirectory, "validation.json"),
-    `${JSON.stringify(assetReport, null, 2)}\n`,
-  ),
-  writeFile(
-    path.join(fixtureDirectory, "fixture-provenance.json"),
-    `${JSON.stringify(provenanceReport, null, 2)}\n`,
-  ),
-]);
-
 const storybookReport = await checkStorybookContract(root);
-await writeFile(
-  path.join(root, "evidence", "storybook-static.json"),
-  `${JSON.stringify({ generatedAt: new Date().toISOString(), ...storybookReport }, null, 2)}\n`,
+const outputs = [
+  [path.join(coordinateDirectory, "coordinate-contract.json"), coordinateReport],
+  [path.join(assetDirectory, "validation.json"), assetReport],
+  [path.join(fixtureDirectory, "fixture-provenance.json"), provenanceReport],
+  [
+    path.join(root, "evidence", "storybook-static.json"),
+    { generatedAt: new Date().toISOString(), ...storybookReport },
+  ],
+];
+
+// --check compares the committed evidence with a fresh run instead of writing.
+// CI used to regenerate and move on, so committed evidence could fall behind
+// the code (storybook-static.json listed 31 stories while the contract had
+// 40) and nothing noticed. generatedAt is the only field allowed to differ.
+if (process.argv.includes("--check")) {
+  const withoutTimestamp = (value) => JSON.stringify({ ...value, generatedAt: undefined });
+  const stale = [];
+  for (const [file, report] of outputs) {
+    let committed;
+    try {
+      committed = JSON.parse(await readFile(file, "utf8"));
+    } catch {
+      stale.push(`${path.relative(root, file)} (missing)`);
+      continue;
+    }
+    if (withoutTimestamp(committed) !== withoutTimestamp(report)) {
+      stale.push(path.relative(root, file));
+    }
+  }
+  if (stale.length > 0) {
+    console.error(
+      "Committed evidence is stale; run `pnpm evidence` after the final build and commit:",
+    );
+    for (const file of stale) console.error(`- ${file}`);
+    process.exit(1);
+  }
+  console.log("Committed evidence matches a fresh run (timestamps aside).");
+  process.exit(0);
+}
+
+await Promise.all(
+  outputs.map(([file, report]) => writeFile(file, `${JSON.stringify(report, null, 2)}\n`)),
 );
 
 const failures = [

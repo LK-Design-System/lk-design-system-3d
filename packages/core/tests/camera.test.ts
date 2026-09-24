@@ -104,3 +104,19 @@ describe("pure camera solvers", () => {
     ).toThrow(/paddingRatio/u);
   });
 });
+
+describe("top camera fit", () => {
+  it("contains a floor's X and Y extents on a wide canvas", () => {
+    // Flat 18 × 12 m floor on a wide canvas. The generic fit measured
+    // screen-vertical against Z, so the floor's Y extent fell off screen.
+    const floor = bounds3(frameId("map"), [-9, -6, 0], [9, 6, 0.1]);
+    const aspect = 2.2;
+    const state = computeTopCameraState({ target: floor, viewportAspect: aspect });
+    if (state.projection.kind !== "perspective") throw new Error("expected perspective");
+    const tanHalf = Math.tan(state.projection.verticalFovRadians / 2);
+    const toTopFace = state.position[2] - 0.1;
+    expect(toTopFace * tanHalf).toBeGreaterThanOrEqual(6);
+    expect(toTopFace * tanHalf * aspect).toBeGreaterThanOrEqual(9);
+    expect(state.up).toEqual([0, 1, 0]);
+  });
+});

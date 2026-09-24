@@ -8,7 +8,7 @@
 | [../DESIGN.md](../DESIGN.md) | 현재 UI/UX·접근성·반응형·컴포넌트 소유권의 실행 디자인 계약 |
 | [ADR-0001-SIBLING-REPOSITORY.md](ADR-0001-SIBLING-REPOSITORY.md) | 공식 형제 플랫폼 결정과 대안 |
 | [ADR-0002-DUAL-PATH-MAP-AUTHORING.md](ADR-0002-DUAL-PATH-MAP-AUTHORING.md) | Native Builder와 외부 장면 import가 공유할 맵 저작·교환 방향 |
-| [HANDOFF-2026-07-19.md](HANDOFF-2026-07-19.md) | 다른 PC에서 현재 전체 worktree checkpoint를 이어가기 위한 상태·재개 순서·미완료 항목 |
+| [HANDOFF-2026-07-19.md](HANDOFF-2026-07-19.md) | (종료된 기록) 2026-07-19 worktree checkpoint의 재개 순서 — 브랜치는 `a781e0f`로 `main`에 합쳐짐 |
 | [PRODUCT_EVIDENCE.md](PRODUCT_EVIDENCE.md) | 실제 LK 제품에서 확인한 3D 구현 근거 |
 | [DESIGN_AND_LDS_INTEGRATION_PLAN.md](DESIGN_AND_LDS_INTEGRATION_PLAN.md) | 디자인 baseline, LDS audit, 통합 일정과 디자인 품질 gate의 상위 계획 |
 | [VISUAL_ALPHA_REFERENCE_RESEARCH.md](VISUAL_ALPHA_REFERENCE_RESEARCH.md) | 산업용 3D 레퍼런스, 동일 AMR 장면 A/B 기준과 Visual Alpha 기본 방향 결정 |

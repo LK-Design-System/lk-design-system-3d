@@ -122,6 +122,8 @@ jobs:
 
       - name: Lint
         run: |
+          pnpm check:workflow-pins
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           pnpm exec eslint .
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           pnpm boundary
@@ -148,8 +150,10 @@ jobs:
       - name: Run package consumer smoke test
         run: pnpm package-smoke
 
-      - name: Regenerate evidence
-        run: pnpm evidence
+      # Compare, do not regenerate: the committed evidence must describe this
+      # build. Regenerating and moving on let it fall behind the code unnoticed.
+      - name: Check committed evidence
+        run: pnpm evidence:check
 
       - name: Restore release manifests
         run: |

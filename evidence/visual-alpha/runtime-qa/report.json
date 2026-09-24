@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T17:58:41.685Z",
+  "generatedAt": "2026-09-24T03:45:35.562Z",
   "passed": true,
   "checks": {
     "actualWebGlCanvas": true,
@@ -50,7 +50,10 @@
     "headingLevels": [
       "H1",
       "H2",
-      "H3"
+      "H3",
+      "H3",
+      "H4",
+      "H4"
     ],
     "inspectorInsideWorkspace": true,
     "inspectorOverlaysViewport": true,
@@ -68,27 +71,27 @@
     "legacyCustomChromeCount": 0,
     "ldsPrimaryToken": "#3878B3",
     "glbResources": [
-      "http://127.0.0.1:54082/visual-alpha/amr.glb",
-      "http://127.0.0.1:54082/visual-alpha/rack.glb",
-      "http://127.0.0.1:54082/visual-alpha/pallet.glb",
-      "http://127.0.0.1:54082/visual-alpha/cargo-bin.glb",
-      "http://127.0.0.1:54082/visual-alpha/charging-station.glb",
-      "http://127.0.0.1:54082/visual-alpha/safety-cone.glb"
+      "http://127.0.0.1:60369/visual-alpha/amr.glb",
+      "http://127.0.0.1:60369/visual-alpha/rack.glb",
+      "http://127.0.0.1:60369/visual-alpha/pallet.glb",
+      "http://127.0.0.1:60369/visual-alpha/cargo-bin.glb",
+      "http://127.0.0.1:60369/visual-alpha/charging-station.glb",
+      "http://127.0.0.1:60369/visual-alpha/safety-cone.glb"
     ],
     "inspectorMatches": true,
     "foundationSvgSubstituteCount": 0
   },
   "interaction": {
-    "hoverLabel": "랙 R-01",
+    "hoverLabel": "랙 R-03",
     "hoverPoint": [
-      740,
-      298
+      491,
+      398
     ],
-    "inspectorText": "선택한 공간 객체\n랙 R-01\n랙\n대기\n공간 식별 정보\n객체 ID\nrack/r-01\n위치\n-2.50 · 4.25 · 0.00 m",
-    "pointerEventCount": 1,
+    "inspectorText": "선택한 공간 객체\n랙 R-03\n랙\n대기\n공간 식별 정보\n객체 ID\nrack/r-03\n위치\n-2.50 · -4.25 · 0.00 m",
+    "pointerEventCount": 3,
     "selectionPoint": [
-      740,
-      298
+      491,
+      398
     ]
   },
   "diagnostic": {
@@ -366,54 +369,54 @@
     "drawerOpened": true,
     "drawerReopenedAfterRoundTrip": false,
     "capture320": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
-      "bytes": 77590,
-      "sha256": "9d690b4dc9e020255eb453f855f9271c72ee2eea69d1074126a9d7122836938a"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
+      "bytes": 80435,
+      "sha256": "4247b65b686b667936c91a0a8f0cc1b688392e4335c8658a05eca55c7ac616de"
     }
   },
   "captures": {
     "home": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-home.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\operational-neutral.png",
-      "bytes": 216651,
-      "sha256": "c6b427aaad8ba4c5f52df850bdf2717fc8b453f05b3fa3eb603c94bf1afc3e2b"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\camera-home.png",
+      "mirrorFile": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\operational-neutral.png",
+      "bytes": 213895,
+      "sha256": "8e50eae296d4c309fbcd28d5e2d2f47a84e6df69da2349d0110fa4c4b0991ab1"
     },
     "top": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-top.png",
-      "bytes": 99601,
-      "sha256": "4195fbc452b866afb73d9786762b8b0d3c9575945cf2ca52c641d0177df37130"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\camera-top.png",
+      "bytes": 110254,
+      "sha256": "f1cfcf13091e7e2fcbdfbf3804eb1e40c5f70bc82236894c35b6d7d240a094dc"
     },
     "focus": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\camera-focus.png",
-      "bytes": 123837,
-      "sha256": "376b5d89201e0207c665738a7186ed281c45e1e5f70c569b3c23c48dc9056d3b"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\camera-focus.png",
+      "bytes": 129324,
+      "sha256": "ba699674a349df9af72a00af88b1ec52b45e64276717d085bc8a29bb05bacc9e"
     },
     "diagnostic": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\diagnostic-technical.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\diagnostic-technical.png",
-      "bytes": 285054,
-      "sha256": "2e8f32e0b4050e2c0290739b42de1d65ede232fbdac7bf052e919ba800d366d8"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\diagnostic-technical.png",
+      "mirrorFile": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\diagnostic-technical.png",
+      "bytes": 283075,
+      "sha256": "976135f984e1252b8a1d608fa3caa6306ef53b9d75741d8edde9863021e5c422"
     },
     "assetCatalog": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\asset-catalog.png",
-      "mirrorFile": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\asset-catalog.png",
-      "bytes": 151962,
-      "sha256": "388c1353f9205f5a89628cb104210f41f820e458d14c031ae5b7d541724f6fda"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\asset-catalog.png",
+      "mirrorFile": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\asset-catalog.png",
+      "bytes": 149694,
+      "sha256": "6bedfa51bbdc56a485b4857e2cb86f933d31f1853c4b5cc6d58414a7c17b7ccc"
     },
     "goalPath": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\goal-path-states.png",
-      "bytes": 118364,
-      "sha256": "3c00b6f265cda4b78cead64ed389d9cd42e85c3257180c47880dca5cde0002aa"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\goal-path-states.png",
+      "bytes": 134236,
+      "sha256": "4d736cbd26aebf4322f8dfbc5bd2e25055b34cb1fc67be7c1e7fbdd7650494c4"
     },
     "recovered": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\renderer-recovered.png",
-      "bytes": 181921,
-      "sha256": "ba7b0d5a0dde4ef9559e5de1b43a2b680852e83c5af02cd6d057c3a7d455372f"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\renderer-recovered.png",
+      "bytes": 184503,
+      "sha256": "0fa76e399ab2896257e818407d52e274ac7c8c41afea8ec9b08fde70791d9ad4"
     },
     "responsive320": {
-      "file": "C:\\Users\\seoul\\Documents\\lds_ws\\LK Design System 3D\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
-      "bytes": 77590,
-      "sha256": "9d690b4dc9e020255eb453f855f9271c72ee2eea69d1074126a9d7122836938a"
+      "file": "C:\\Users\\seoul\\Documents\\lk-workspace\\shared\\lk-design-system-3d\\evidence\\visual-alpha\\runtime-qa\\responsive-320.png",
+      "bytes": 80435,
+      "sha256": "4247b65b686b667936c91a0a8f0cc1b688392e4335c8658a05eca55c7ac616de"
     }
   }
 }

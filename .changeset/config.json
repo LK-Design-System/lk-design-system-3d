@@ -8,6 +8,8 @@
       "@lk-design-system/lds-3d-assets",
       "@lk-design-system/lds-3d-testing",
       "@lk-design-system/lds-3d-pointcloud",
+      "@lk-design-system/lds-3d-tf",
+      "@lk-design-system/lds-3d-markers",
       "@lk-design-system/lds-3d-three",
       "@lk-design-system/lds-3d-r3f"
     ]

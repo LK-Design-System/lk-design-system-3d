@@ -81,12 +81,12 @@ LDS `main`의 clean revision
 `@lk-design-system/design-system-core@0.1.0`, 그리고 공식 `styles.css`다. `apps/docs`의
 local `link:`는 시각 검토용일 뿐 CI/배포 portability 증거는 아니다.
 
-2026-07-21 현재 실행 디자인 계약과 checkout/package 상태는 루트
-[`DESIGN.md`](../DESIGN.md)가 소유한다. `apps/docs`의 portable baseline은 공개
-`@lk-design-system/lds-core@0.1.0-rc.1`, `@lk-design-system/lds-product@0.1.0-rc.1`,
-`@lk-design-system/lds-robotics-ui@0.1.0-rc.2` pin이다. Pages는 public LDS source를
-고정 commit에서 직접 빌드하고 함께 추적된 Robotics UI artifact를 사용해 같은 package
-surface를 재현한다.
+실행 디자인 계약은 루트 [`DESIGN.md`](../DESIGN.md)가 소유한다. `apps/docs`의 portable
+baseline은 `apps/docs/package.json`의 LDS `lds-core`·`lds-theme`·`lds-product` 정확 pin이고,
+`check:lds-style`이 LDS 계약과 대조한다(여기에 버전을 옮겨 적지 않는다). CI와 Pages는
+public LDS source를 두 워크플로에 같은 고정 commit으로 받아 직접 빌드한다.
+2D 지도용 `lds-robotics-ui`는 2026-09-24부터 문서 앱이 의존하지 않는다 — 스타일시트만
+import했고, 그 토큰을 읽는 곳이 없었다.
 
 `Scene3DFrame`의 public contract와 `variant="embedded"`를 실제 source와 선언에서
 확인했다. 부모 surface(`CanvasEditorShell`, `Card`)가 border/radius/overflow를
@@ -473,13 +473,13 @@ deprecation, mapping snapshot, Storybook visual diff와 migration note를 함께
 | LDS Storybook | `10.4.6`, `addon-docs` + `addon-a11y`, Base/Card/Navy/Dark backgrounds, background 기반 light/dark decorator, story sort, 공식 favicon |
 | LDS3D Storybook | `9.1.10` 유지. major migration은 별도 dependency 결정으로 분리하고, 호환되는 `addon-docs@9.1.10`과 동일한 공개 동작을 재구성 |
 
-Audience-facing IA도 함께 감사했다. 현재 `Foundations`, `Fixtures`, `Assets`,
-`Visual Alpha`의 flat top-level과 정확한 14개 story ID/URL은 README와
-`scripts/check-storybook.mjs`가 검증하는 기존 review contract다. 이번 변경에서
-`LDS 3D/...` namespace로 일괄 rename하면 공개 ID와 URL을 함께 바꾸는 scope
-escalation이 되므로 현 구조를 provisional compatibility IA로 유지한다. 이는 새 story의
-precedent가 아니며, namespace 전환은 사용자 승인, ID migration/redirect 정책과 함께
-별도 작업으로 결정한다.
+Audience-facing IA도 함께 감사했다. 당시에는 `Foundations`, `Fixtures`, `Assets`,
+`Visual Alpha`의 flat top-level이었고, 그 뒤 모든 title을 `LDS 3D/...` namespace로
+옮겼다. 이미 공유된 story ID/URL(`foundations--*`, `fixtures--*`, `assets--*`,
+`visual-alpha--*`, `*-foundation--lds-integration`)은 그대로 두고 새 title 아래에 둔다 —
+그래서 일부 ID가 title과 어긋나는 것은 의도된 호환이다. 옛 경로는
+`apps/docs/.storybook/public/story-id-redirects.mjs`가 넘겨주고, 기대 ID 목록의 정본은
+`scripts/storybook-contract.mjs`의 `expectedStoryIds`다(현재 40개).
 
 Visual Alpha는 command, undo/save, layer tree, 편집 tool mode가 없는 read-only
 focused viewer다. 따라서 `CanvasEditorShell`을 사용하지 않고 다음 anatomy를

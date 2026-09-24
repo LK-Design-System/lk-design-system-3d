@@ -3,8 +3,9 @@
 LK ROBOTICS 제품이 공통으로 사용하는 3D 좌표, 카메라, 자산, 장면 표현과
 렌더러 수명주기 계약을 관리하는 **공식 범용 3D 플랫폼 형제 저장소**입니다.
 
-플랫폼 구축은 `Official Go`로 확정되었습니다. 현재 `Foundation Alpha.1`과
-`Visual Alpha V0`의 로컬 후보까지 구현됐으며 패키지는 아직 안정 버전이 아닙니다.
+플랫폼 구축은 `Official Go`로 확정되었습니다. 여덟 패키지가 `0.1.0-alpha.2`로 GitHub
+Packages에 배포됐으며(버전의 정본은 각 `packages/*/package.json`) 아직 안정 버전이
+아닙니다. 아래 `Foundation Alpha.1 + Visual Alpha V0`는 그 기능 범위의 이름입니다.
 Control Full과 Web Viz의 첫 적용은
 플랫폼 존속 여부를 판단하는 파일럿이 아니라 필수 마이그레이션의 첫 배포
 wave입니다.
@@ -21,15 +22,16 @@ Storybook은 `Foundations → Assets → Primitives → States → Scenes → LD
 page에서 실제 WebGL로 검토하고, 상태·장면·LDS 조합은 별도 scenario page에 둡니다.
 Primitive catalog는 `SceneCanvas`, `Selectable`, `AmrRobot`, `GoalMarker`,
 `PathRibbon`, `PointCloudLayer(s)`, `MarkerLayer`, `SectionBox`, `EditVolume`,
-`SpatialStructure`, `TransformGizmo`, `SceneStateMarker`, `GltfModel`의
+`SpatialStructure`, `TransformGizmo`, `SceneStateMarker`, `OccupancyGridSurface`,
+`CameraFrustum`, `VoxelLayer`, `GltfModel`의
 사용·상태·상호작용을 각각 검토합니다. AMR operations, 실제 GLB 6종 asset review,
 goal·path 상태, renderer loading·empty·error·retry, 실제 LDS composition도 각 소유
 group 아래에서 검토합니다. 기본 시각 방향은
 운영 상태 식별성과 LDS chrome 조합성이 더 높은 `Operational Neutral`입니다.
-문서 앱은 공개 LDS source에서 빌드한 `@lk-design-system/lds-core@0.1.0-rc.1`,
-`@lk-design-system/lds-product@0.1.0-rc.1`, 공개 source에 함께 추적된
-`@lk-design-system/lds-robotics-ui@0.1.0-rc.2` artifact와 공식 `styles.css`를 고정해 실제
-public API로 사용합니다. `Scene3DFrame`, `SelectionInspector`, `Tree`,
+문서 앱은 LDS `lds-core`·`lds-theme`·`lds-product`와 공식 `styles.css`를 정확한 버전으로
+고정해 실제 public API로 사용합니다. 고정 버전의 정본은 `apps/docs/package.json`이고,
+LDS conformance(`check:lds-style`)가 LDS 계약과 대조합니다 — 여기에 버전을 옮겨 적지
+않습니다. 2D 지도용 `lds-robotics-ui`는 쓰지 않으므로 의존하지 않습니다. `Scene3DFrame`, `SelectionInspector`, `Tree`,
 `SegmentedControl`, `ViewportStatusBar`와 `StatusBadge`가 DOM chrome을 소유하며,
 renderer package에는 LDS 의존성을 넣지 않습니다.
 
@@ -81,8 +83,8 @@ LK Design System 3D를 별도 저장소와 독립 release cadence를 가진 공�
 - 제품별 fork 대신 같은 package release와 명시적 adapter를 사용합니다.
 
 현재 reference smoke stack은 React 19.1.1, React Three Fiber 9.6.1,
-Three.js 0.185.1입니다. `3d-three`와 `3d-r3f`의 선언 peer range는
-`three >=0.185.1 <1`이지만, 이는 모든 범위의 소비자 검증을 뜻하지 않습니다.
+Three.js 0.185.1입니다. `lds-3d-three`와 `lds-3d-r3f`의 선언 peer range(정본은 각
+`package.json`의 `peerDependencies`)는 `three >=0.185.1 <1`이지만, 이는 모든 범위의 소비자 검증을 뜻하지 않습니다.
 Control Full의 R3F 8 조합용 compatibility binding은 아직 구현·검증되지 않았으며,
 실제 제품 연결이 승인될 때에만 별도 deprecated package로 결정합니다.
 

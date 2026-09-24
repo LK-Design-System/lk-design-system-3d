@@ -309,7 +309,31 @@ export function computeHomeCameraState(input: CameraSolveInput): CameraState {
 
 /** Computes a deterministic top-down camera in the target's explicit core frame. */
 export function computeTopCameraState(input: CameraSolveInput): CameraState {
-  return cameraStateForTarget(input, [0, 0, 1], [0, 1, 0]);
+  const state = cameraStateForTarget(input, [0, 0, 1], [0, 1, 0]);
+  if (!("min" in input.target) || state.projection.kind !== "perspective") return state;
+  // Looking straight down with +Y up, the screen's vertical axis is world Y
+  // and its horizontal axis world X — not Z and the XY diagonal, which is what
+  // the generic fit assumes. On a wide canvas that under-fitted Y: an 18×12 m
+  // floor at aspect 1.85 got 5.8 m of half-height for 6 m of floor, and tall
+  // content near the edges (closer to the camera) spilled further. Fit X and
+  // Y to their own screen axes, measured from the top face of the bounds.
+  const bounds = input.target;
+  const halfX = (bounds.max[0] - bounds.min[0]) / 2;
+  const halfY = (bounds.max[1] - bounds.min[1]) / 2;
+  const halfZ = (bounds.max[2] - bounds.min[2]) / 2;
+  const tanHalf = Math.tan(state.projection.verticalFovRadians / 2);
+  const padding = input.paddingRatio ?? DEFAULT_PADDING_RATIO;
+  const planar =
+    Math.max(
+      Math.max(halfY, MINIMUM_TARGET_RADIUS_METERS) / tanHalf,
+      Math.max(halfX, MINIMUM_TARGET_RADIUS_METERS) / (tanHalf * state.projection.aspect),
+    ) *
+    (1 + padding);
+  const distance = Math.max(planar + halfZ, state.position[2] - state.target[2]);
+  return createCameraState({
+    ...state,
+    position: [state.target[0], state.target[1], state.target[2] + distance],
+  });
 }
 
 /** Fits an explicit bounds or point target while preserving the active view direction. */

@@ -170,7 +170,11 @@ on-demand frame loop와 resource reuse를 권고한다.
   pretending that translucent points can provide an unambiguous depth surface.
 - Layer eligibility is frame-and-budget validation only. `acceptedPointCount`
   is a planned adapter input, not measured GPU upload, draw, or hardware state.
-- [PointCloud runtime QA evidence](../evidence/pointcloud-runtime-qa.json)
+- [PointCloud runtime QA evidence](../evidence/pointcloud-runtime-qa.json) — a dated,
+  hand-recorded physical-GPU run (2026-07-17); no script regenerates it and
+  `pnpm evidence:check` does not cover it. Its story IDs predate the
+  `LDS 3D/...` rename (the atom page is now
+  `lds-3d-primitives-point-cloud-layer--overview`).
   records the physical-GPU WebGL review, narrow composition, rejection states,
   and context restore. It is functional evidence, not a throughput claim.
 - `SceneCanvas.frame`과 snapshot frame이 다르거나 explicit `maxPoints`를

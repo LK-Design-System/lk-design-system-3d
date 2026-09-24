@@ -12,13 +12,17 @@
     `docs/PRODUCT_EVIDENCE.md`, `docs/DESIGN_AND_LDS_INTEGRATION_PLAN.md`,
     `docs/VISUAL_ALPHA_REFERENCE_RESEARCH.md`, and
     `docs/SPATIAL_PRIMITIVES_GUIDE.md`.
-  - Current LDS3D baseline: `a781e0f1925285d635107f9e0abbe13674815a9e`,
+  - Baselines as reviewed on 2026-07-21 (historical — the current package
+    versions are in each `package.json`, the current LDS pins in
+    `apps/docs/package.json`, checked by `check:lds-style`):
+  - LDS3D baseline at review: `a781e0f1925285d635107f9e0abbe13674815a9e`,
     `lk-design-system-3d@0.1.0-alpha.1`, clean `main` at refresh time.
-  - Current LDS baseline: `a38b9b12f74a7166b2c7c6baff9882f7d99ff58a`,
+  - LDS baseline at review: `a38b9b12f74a7166b2c7c6baff9882f7d99ff58a`,
     `@lk-design-system/lds-workspace@0.1.0-rc.0`, `main`; unrelated local
     communication-component edits were present and are not design evidence for
     this work.
-  - Current Robotics UI baseline:
+  - Robotics UI baseline at review (no longer a docs-app dependency since
+    2026-09-24; see README):
     `5fc67797fbad7dd137f5785288990d4b760bcde3`,
     `@lk-design-system/lds-robotics-ui@0.1.0-rc.1`, pre-existing
     `nav-expression-overhaul` branch.

@@ -21,7 +21,7 @@ LK Design System 3D는 로봇·지도·시설·포인트클라우드를 화면�
 다음 원칙은 선택적 승격 조건이 아니라 모든 구현과 제품 롤아웃에 적용하는 필수 규칙이다.
 
 1. **Platform First:** 두 제품과 향후 제품의 신규 공통 3D 기반 기능은 제품 내부 유틸리티보다 이 플랫폼에 먼저 구현한다.
-2. **Single Contract:** 좌표, asset, camera, picking, entity 의미는 `3d-core` 계약을 단일 source of truth로 사용한다.
+2. **Single Contract:** 좌표, asset, camera, picking, entity 의미는 `lds-3d-core` 계약을 단일 source of truth로 사용한다.
 3. **One Release:** 제품별 fork를 허용하지 않으며, Control Full과 Web Viz는 동일한 공식 package release를 소비한다.
 4. **Incremental Migration:** 기존 화면은 계층별로 이관하되, 파일럿과 canary는 플랫폼 존속 여부가 아니라 동작·성능·마이그레이션 방법을 검증한다.
 5. **Adapter Isolation:** renderer와 제품별 차이는 adapter 또는 제품 composition에 격리하고 core에 제품별 조건문을 추가하지 않는다.
@@ -103,17 +103,17 @@ CSS variable 이름을 public API로 받거나 Core token 값을 복제해 독�
 | 패키지 | 책임 | 주요 의존성 |
 |---|---|---|
 | `@lk-design-system/lds-3d-core` | frame, transform, pose, camera, entity, interaction, token type | 외부 3D/React 의존 없음 |
-| `@lk-design-system/lds-3d-assets` | asset manifest, loader 계약, 정규화, 검증 | `3d-core` |
-| `@lk-design-system/lds-3d-three` | Three scene host, primitive, asset registry, picking, material, dispose | `3d-core`, `3d-assets`, `three` peer |
-| `@lk-design-system/lds-3d-r3f` | Three 구현의 React binding과 hook/component | `3d-core`, `3d-three`, React/R3F peer |
-| `@lk-design-system/lds-3d-r3f-compat-v8` | 필요성이 승인될 때에만 만들 deprecated R3F 8 binding (현재 미구현) | `3d-core`, `3d-three`, React 18/R3F 8 peer |
-| `@lk-design-system/lds-3d-pointcloud` | point cloud buffer, colorization, LOD, streaming renderer 계약 | `3d-core`, renderer adapter |
-| `@lk-design-system/lds-3d-tf` | frame graph와 시간축 transform projection; ROS transport는 포함하지 않음 | `3d-core` |
-| `@lk-design-system/lds-3d-markers` | 범용 ROS Marker 계열, 대량 동적 marker와 projection adapter | `3d-core`, renderer adapter |
-| `@lk-design-system/lds-3d-rerun` | 공통 entity·transform·time을 Rerun archetype으로 투영 | `3d-core`, Rerun client |
-| `@lk-design-system/lds-3d-spatial` | Site, Building, Level hierarchy와 floor/wall 등 공간 primitive | `3d-core`, renderer adapter |
-| `@lk-design-system/lds-3d-authoring` | selection, gizmo, snapping과 serializable change 계약 | `3d-core`, `3d-spatial`, renderer adapter |
-| `@lk-design-system/lds-3d-testing` | 좌표 round-trip, asset, adapter contract fixture | `3d-core`, `3d-assets` |
+| `@lk-design-system/lds-3d-assets` | asset manifest, loader 계약, 정규화, 검증 | `lds-3d-core` |
+| `@lk-design-system/lds-3d-three` | Three scene host, primitive, asset registry, picking, material, dispose | `lds-3d-core`, `lds-3d-assets`, `three` peer |
+| `@lk-design-system/lds-3d-r3f` | Three 구현의 React binding과 hook/component | `lds-3d-core`, `lds-3d-assets`, `lds-3d-three`, `lds-3d-markers`, `lds-3d-pointcloud`, React/R3F peer |
+| `@lk-design-system/lds-3d-r3f-compat-v8` | 필요성이 승인될 때에만 만들 deprecated R3F 8 binding (현재 미구현) | `lds-3d-core`, `lds-3d-three`, React 18/R3F 8 peer |
+| `@lk-design-system/lds-3d-pointcloud` | point cloud buffer, colorization, LOD, streaming renderer 계약 | `lds-3d-core` (렌더링은 `lds-3d-r3f`가 이 계약을 소비) |
+| `@lk-design-system/lds-3d-tf` | frame graph와 시간축 transform projection; ROS transport는 포함하지 않음 | `lds-3d-core` |
+| `@lk-design-system/lds-3d-markers` | 범용 ROS Marker 계열, 대량 동적 marker와 projection adapter | `lds-3d-core` (렌더링은 `lds-3d-r3f`가 이 계약을 소비) |
+| `@lk-design-system/lds-3d-rerun` | 공통 entity·transform·time을 Rerun archetype으로 투영 | `lds-3d-core`, Rerun client |
+| `@lk-design-system/lds-3d-spatial` | Site, Building, Level hierarchy와 floor/wall 등 공간 primitive | `lds-3d-core`, renderer adapter |
+| `@lk-design-system/lds-3d-authoring` | selection, gizmo, snapping과 serializable change 계약 | `lds-3d-core`, `lds-3d-spatial`, renderer adapter |
+| `@lk-design-system/lds-3d-testing` | 좌표 round-trip, asset, adapter contract fixture | `lds-3d-core`, `lds-3d-assets` |
 
 구현 순서는 P0의 `core`, `assets`, `three`, `r3f`, `testing`, P1의
 `pointcloud`, `tf`, `markers`, `rerun`, P2의 `spatial`, `authoring`으로
@@ -121,8 +121,9 @@ CSS variable 이름을 public API로 받거나 Core token 값을 복제해 독�
 단계에서는 API 형태와 제품 이관 순서만 조정한다. 모든 renderer와 선택
 기능을 끌어오는 단일 거대 entry package는 만들지 않는다.
 
-이 표는 목표 package 경계다. 현재 `spatial`과 `authoring` foundation 일부는
-`3d-core`의 공개 root에 임시로 존재하며 별도 package directory와 map exchange
+이 표는 목표 package 경계다. 구현된 패키지의 의존 칸은 실제 `package.json`과
+`dependency-cruiser.cjs` 규칙을 따른다. 현재 `spatial`과 `authoring` foundation 일부는
+`lds-3d-core`의 공개 root에 임시로 존재하며 별도 package directory와 map exchange
 public subpath는 아직 없다. `LK Map Document`와 optional engine adapter의 정확한
 package/export는 ADR-0002의 contract 단계와 별도 API review 전에는 구현 완료로
 간주하지 않는다.
@@ -147,16 +148,16 @@ flowchart TD
 다음 역방향 의존은 금지한다.
 
 - LK Design System Core → LK Design System 3D
-- `3d-core` → React, DOM, Three.js, R3F, Rerun
-- `3d-rerun` → Three.js 또는 R3F
+- `lds-3d-core` → React, DOM, Three.js, R3F, Rerun
+- `lds-3d-rerun` → Three.js 또는 R3F
 - 공통 패키지 → 제품의 store, API, route, 업무 type
 - 제품 상태에 `THREE.Object3D`, renderer handle 등 구현 객체 저장
-- 제품 → `3d-three/r3f-bridge`; 이 adapter-only subpath는 `3d-r3f`
+- 제품 → `3d-three/r3f-bridge`; 이 adapter-only subpath는 `lds-3d-r3f`
   implementation만 import
 
 ## 6. Renderer adapter 전략
 
-`3d-core`의 entity, coordinate, camera, interaction 계약이 source of truth다. adapter는 이 의미를 각 renderer 방식으로 표현한다.
+`lds-3d-core`의 entity, coordinate, camera, interaction 계약이 source of truth다. adapter는 이 의미를 각 renderer 방식으로 표현한다.
 
 ### Three.js
 
@@ -175,7 +176,7 @@ flowchart TD
 ### 표준 런타임 버전
 
 - 현재 reference target은 **React 19.1.1, React Three Fiber 9.6.1, Three.js 0.185.1**다.
-- `3d-three`와 `3d-r3f`의 Three peer 선언은 `>=0.185.1 <1`이며, reference
+- `lds-3d-three`와 `lds-3d-r3f`의 Three peer 선언은 `>=0.185.1 <1`이며, reference
   implementation·CI·성능 기준선은 0.185.1에서만 검증한다.
 - `lkrobotics-control-full`의 R3F 8 compatibility adapter는 실제 consumer
   smoke가 필요성을 입증하고 별도 ADR이 승인될 때에만 만든다. 만들어질 경우
@@ -188,7 +189,7 @@ flowchart TD
 - 관측, 기록, 재생, 원격 진단을 위한 projection adapter다.
 - 공통 entity ID, transform, timestamp, class를 Rerun archetype으로 변환한다.
 - 편집, gizmo, browser picking을 반드시 제공할 필요는 없다.
-- Three scene object를 변환하는 방식이 아니라 `3d-core`의 원본 의미 데이터에서 직접 기록한다.
+- Three scene object를 변환하는 방식이 아니라 `lds-3d-core`의 원본 의미 데이터에서 직접 기록한다.
 
 각 adapter는 capability(`picking`, `editing`, `pointCloud`, `timeline`, `webgpu` 등)를 명시한다. 제품은 capability가 없을 때의 UI와 기능 저하를 결정한다. renderer 간 픽셀 동일성은 목표가 아니며, 좌표·entity 의미·상호작용 결과의 일치가 목표다.
 
@@ -320,7 +321,7 @@ binding은 weak이며 rename/reparent 뒤 자동 삭제하지 않고 remap을 �
 
 ### P0 — Platform Foundation
 
-- `3d-core`, `3d-assets`, `3d-three`, `3d-r3f`, `3d-testing`을 공식 package로 구현하고 배포한다.
+- `lds-3d-core`, `lds-3d-assets`, `lds-3d-three`, `lds-3d-r3f`, `lds-3d-testing`을 공식 package로 구현하고 배포한다.
 - 두 제품의 좌표 변환, camera, asset, picking 사용처와 현재 bundle, load time, frame time, memory를 기준선으로 기록한다.
 - 대표 map, robot pose, path, GLB를 익명화 golden fixture로 고정하고 좌표 round-trip, asset 검증, adapter contract를 CI 필수 조건으로 만든다.
 - camera rig, picking/selection과 renderer lifecycle을 reference implementation으로 제공한다.
@@ -332,7 +333,7 @@ binding은 weak이며 rename/reparent 뒤 자동 삭제하지 않고 remap을 �
 
 ### P1 — Robotics Visualization
 
-- `3d-pointcloud`, `3d-tf`, `3d-markers`, `3d-rerun` adapter를 공식 지원 범위로 구현한다.
+- `lds-3d-pointcloud`, `lds-3d-tf`, `lds-3d-markers`, `lds-3d-rerun` adapter를 공식 지원 범위로 구현한다.
 - PointCloud의 buffer lifecycle, colorization, LOD, streaming과 WebGL/WebGPU capability를 표준화한다.
 - TF frame graph, timestamp, interpolation 계약을 구현하되 ROS/WebSocket transport는 제품 경계에 유지한다.
 - P0 Robot·Path·Goal·Landmark 위에 범용 ROS Marker shape, 대량 동적 update와
@@ -342,9 +343,9 @@ binding은 weak이며 rename/reparent 뒤 자동 삭제하지 않고 remap을 �
 
 ### P2 — Spatial Authoring Foundation
 
-- `3d-spatial`에 Site, Building, Level hierarchy와 floor/wall 등 공통 spatial
+- `lds-3d-spatial`에 Site, Building, Level hierarchy와 floor/wall 등 공통 spatial
   primitive의 frame, bounds와 renderer projection을 구현한다.
-- `3d-authoring`에 selection, gizmo, snapping과 serializable change
+- `lds-3d-authoring`에 selection, gizmo, snapping과 serializable change
   contract를 구현한다.
 - Native Builder와 External Scene Import가 공유할 versioned map document,
   source binding, stable ID, extension/migration과 derived provenance 계약을 먼저
