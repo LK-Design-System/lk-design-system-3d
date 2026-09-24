@@ -1,6 +1,6 @@
 # 궁릉 3D 근거 기반 보완 계획
 
-- Status: Draft (제안 — 착수 순서와 결정 항목은 승인 전)
+- Status: Draft — 결정 4건 확정(2026-09-25), 착수 전
 - Created: 2026-09-25
 - Owner surface: LDS3D 공개 원자와 camera·interaction·theme 계약
 - 근거 제품: `lkrobotics-control-gungneung` `origin/feat/3d-map`
@@ -46,8 +46,8 @@
 3. **제품 스택 상향** — 궁릉이 React 19·R3F 9·three 0.185로 올린다. 제품 팀 결정이며
    LDS3D가 요구할 수 없다.
 
-1은 2·3과 독립적이므로 바로 진행하고, 2와 3 중 하나는 사용자·제품 팀 결정으로 남긴다
-(아래 "결정 필요").
+**결정(2026-09-25): 1로 간다.** 계산은 core 순수 함수로 먼저 내고, 궁릉은 그 함수만
+쓴다. R3F 컴포넌트 도입 경로(2 또는 3)는 core 공급 이후 다시 정한다.
 
 ## 보완 항목
 
@@ -120,9 +120,12 @@
   - `FleetFreshnessState` `current | delayed | stale | unknown`
   - `RobotPoseMarker.localization`(2D 불확실성)
 - 제안: `AmrRobot`에 `poseFreshness`와 `localization` prop을 추가하고 Robotics 어휘를
-  그대로 쓴다(2D·3D 동일 의미). 신선도 판정 함수는 값 기준과 시간 기준을 모두 지원한다:
-  core `evaluatePoseFreshness(samples, { movingState, stillForMs, toleranceMeters,
-  staleAfterMs })`. 이 판정은 2D 마커도 필요하므로 Robotics와 소유 위치를 합의한다.
+  그대로 쓴다(2D·3D 동일 의미).
+- **결정(2026-09-25): 신선도 판정은 Robotics UI가 소유한다.** 값 기준(같은 좌표
+  재발행)과 시간 기준을 모두 지원하는 판정 함수는 `NavigationCoordinateSystem`의 신선도
+  계약 옆에 둔다. LDS3D는 판정 결과만 prop으로 받아 표시하고 판정 로직을 복제하지 않는다.
+  renderer 패키지는 Robotics UI에 의존하지 않으므로 상태 이름을 같은 문자열 유니언으로
+  맞추고, 조합 레이어가 결과를 전달한다.
 - 범위 밖: 로봇 상태(WALK 등) 매핑, 마커 PNG.
 - 수용 기준: 같은 값 재발행 입력에서 stale 판정, 시각 표현은 색만이 아니라 형태로도
   구분(접근성).
@@ -153,8 +156,10 @@
     (`getComputedStyle`로 CSS 변수를 읽어 `themeCustomization`으로 전달).
     renderer 패키지는 LDS에 의존하지 않는다(AGENTS.md 의존 경계).
   - `data-theme` 변경 시 테마를 다시 계산하는 패턴을 스토리로 고정.
-- 결정 필요: 이 슬롯에 들어갈 **값**은 공유 토큰 결정이다. LDS 쪽에 3D 전용 semantic
-  token을 둘지, 기존 semantic 역할을 매핑할지는 design owner 승인 사항이다.
+- **결정(2026-09-25): 새 토큰 없이 기존 semantic 역할을 매핑한다.** 선택·경로·라벨·
+  상태처럼 UI와 의미가 같은 슬롯은 resolver가 기존 역할(primary, status, line, label 등)을
+  읽어 채운다. 지형·식생·하늘처럼 대응하는 UI 역할이 없는 자연색은 LDS3D 테마 기본값으로
+  둔다. LDS 토큰 추가나 값 변경은 없다.
 
 ### G7. 레이어 상태와 렌더러 복구
 
@@ -192,24 +197,23 @@
 
 | 단계 | 내용 | 궁릉 적용 가능 시점 |
 | --- | --- | --- |
-| W1 | G2·G1 계산부, G4 신선도 판정을 core 순수 함수로 | core만 쓰면 즉시 |
+| W1 | G2·G1 계산부를 core 순수 함수로. G4 판정 함수는 Robotics UI 별도 작업 | core만 쓰면 즉시 |
 | W2 | G1·G2 r3f 바인딩(`CameraRig` follow, constraints), G5 `PathRibbon` 확장 | 스택 결정 후 |
 | W3 | G3 라벨, G7 레이어 상태·복구 | 스택 결정 후 |
-| W4 | G6 테마 슬롯과 resolver 예시 (값은 design owner 승인 후) | 스택 결정 후 |
+| W4 | G6 테마 슬롯과 기존 역할 매핑 resolver 예시 | 스택 결정 후 |
 | 후순위 | G8 | 두 번째 근거 확보 시 |
 
 각 단계는 기존 공개 API 규칙을 따른다: api-report baseline, package-smoke, 스토리 계약
 (`scripts/storybook-contract.mjs`), 새 공개 원자는 owner 페이지와 리뷰 계약.
 
-## 결정 필요
+## 결정 (2026-09-25)
 
-1. **스택 경로** — `lds-3d-r3f-compat-v8` 착수, 궁릉 스택 상향, 또는 당분간 core 함수만
-   공급 중 무엇으로 갈지.
-2. **위치 신선도 소유** — `evaluatePoseFreshness`를 LDS3D core에 둘지, 2D 마커와 함께
-   Robotics UI에 둘지.
-3. **3D 테마 값** — LDS에 3D 전용 semantic token을 만들지, 기존 역할을 매핑할지.
-4. **궁릉 통보** — 궁릉은 다른 팀 저장소다. adoption report와 WebGL hex 불일치(G6)를
-   알릴지, 알린다면 문구는 사용자 승인 후.
+| 항목 | 결정 | 남은 것 |
+| --- | --- | --- |
+| 스택 경로 | core 순수 함수 먼저 공급 | R3F 컴포넌트 도입 경로(compat-v8 또는 제품 스택 상향)는 core 공급 이후 재결정 |
+| 위치 신선도 소유 | Robotics UI | Robotics 쪽 판정 함수 설계와 짝 릴리스(별도 작업) |
+| 3D 테마 값 | 기존 semantic 역할 매핑, 자연색은 LDS3D 기본값 | 슬롯별 매핑표 확정 |
+| 궁릉 통보 | 지금은 하지 않음 | G6 테마 계약이 생기면 대안과 함께 알릴지 다시 묻는다. 궁릉은 다른 팀 저장소라 문구는 사용자 승인 후 |
 
 ## 근거 기록
 
