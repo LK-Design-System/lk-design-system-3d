@@ -19,3 +19,8 @@ catalog:
   tsup: 8.5.1
   typescript: 5.9.3
   vitest: 3.2.4
+
+minimumReleaseAgeExclude:
+  - '@lk-design-system/lds-core@0.4.0'
+  - '@lk-design-system/lds-product@0.4.0'
+  - '@lk-design-system/lds-theme@0.4.0'

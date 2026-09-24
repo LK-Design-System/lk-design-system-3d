@@ -132,14 +132,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/three
       '@lk-design-system/lds-core':
-        specifier: 0.2.9
-        version: 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: 0.4.0
+        version: 0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-design-system/lds-product':
-        specifier: 0.2.9
-        version: 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: 0.4.0
+        version: 0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-design-system/lds-theme':
-        specifier: 0.2.9
-        version: 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: 0.4.0
+        version: 0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-three/drei':
         specifier: 'catalog:'
         version: 10.7.7(@react-three/fiber@9.6.1(@types/react@19.1.16)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1))(@types/react@19.1.16)(@types/three@0.185.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1)
@@ -943,20 +943,20 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lk-design-system/lds-core@0.2.9':
-    resolution: {integrity: sha512-xtRu52FnP1U9CJgpAtArTWqI9PZmOluB5W7ufGmn7/Ka9iGAC/CVanlLXPOPQ3Y7p7dNE6XmSVjWNKB4vaNLFA==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-core/0.2.9/9cec89547d3edf6cacd1d110d769ff9015f1fbea}
+  '@lk-design-system/lds-core@0.4.0':
+    resolution: {integrity: sha512-7/Zo6oKKCK1ByJg9TqD+m/F0Dt52wmNJfrLz4JiJ2yrv9O9jicJRZNrRmBOBo3t3mFOeBnPElzn16PnNvFqr/A==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-core/0.4.0/9768c6847bbef0df2dfdc9430ec454d2ae190b38}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-design-system/lds-product@0.2.9':
-    resolution: {integrity: sha512-nGcdjkZ+aa2pT5adG3BPw53P+s/YvUy03NEQYNuTcBQc+TCngEv+wMZimJ4G4PJGFsmY5yegt1LeVg/gHiZsHg==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-product/0.2.9/23831a9268d4a242743eced31a994dd7f02d6bf9}
+  '@lk-design-system/lds-product@0.4.0':
+    resolution: {integrity: sha512-YTD3vzIn4u9kUUW5IJUe2ODcGFv/TZokS6shD1wL9W0BI11/G48MHFH4XxbXrIii972s9SZoN9ODUOs2tmRJrw==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-product/0.4.0/a78825035147f46bfa277263baab3adea38bce78}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-design-system/lds-theme@0.2.9':
-    resolution: {integrity: sha512-YRdXiOqXpkMjvvqTNY2ynyNFMH/pUi+uL58LVTh04IjUfeGa8/vNX5Tr/QT9TAos+YniwDMKMAHay1iRICBVNw==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-theme/0.2.9/7d26eeb883b17a7c6a36cbba52e45bea304cfee9}
+  '@lk-design-system/lds-theme@0.4.0':
+    resolution: {integrity: sha512-QR30yAxm5vOegrAPJWEbQ/dyLnhAkSO2EHYUfQ7/kn6weZY+JE/bajgLrkPeRCRRAbedOrVL56/g4j54HYCVVg==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-theme/0.4.0/43437a88272b2f29dfdebbc429c58131b82d3b0b}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
@@ -3762,20 +3762,20 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lk-design-system/lds-core@0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-core@0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-design-system/lds-product@0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-product@0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@lk-design-system/lds-core': 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-core': 0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-design-system/lds-theme@0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-theme@0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@lk-design-system/lds-core': 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-core': 0.4.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
