@@ -18,6 +18,7 @@
 | [TECHNICAL_REFERENCES.md](TECHNICAL_REFERENCES.md) | ROS, glTF, Three.js와 renderer 공식 기술 기준 |
 | [SPATIAL_PRIMITIVES_GUIDE.md](SPATIAL_PRIMITIVES_GUIDE.md) | 공개 WebGL 원자, LDS DOM 경계, Storybook 검토 순서와 사용 지침 |
 | [EXPANSION_ROADMAP.md](EXPANSION_ROADMAP.md) | articulation 스택 이후 승인된 확장 순서: 시간축 재생 → URDF 임포터 → IK → 센서 폭 |
+| [GUNGNEUNG_3D_GAP_PLAN.md](GUNGNEUNG_3D_GAP_PLAN.md) | (Draft) 궁릉 관제 디지털 트윈 근거로 본 보완 계획: 따라보기 카메라, 이동 범위, 라벨, 위치 신뢰도, 테마 |
 
 질문별 source of truth는 다음과 같다.
 
