@@ -79,7 +79,7 @@ function RobotTopView(): React.ReactNode {
           orient="auto"
           markerUnits="userSpaceOnUse"
         >
-          <path d="M 0 1 L 10 6 L 0 11 Z" fill="var(--color-semantic-status-negative)" />
+          <path d="M 0 1 L 10 6 L 0 11 Z" fill="var(--color-semantic-status-negative-foreground)" />
         </marker>
         <marker
           id="axis-y-arrow"
@@ -90,7 +90,7 @@ function RobotTopView(): React.ReactNode {
           orient="auto"
           markerUnits="userSpaceOnUse"
         >
-          <path d="M 0 1 L 10 6 L 0 11 Z" fill="var(--color-semantic-status-positive)" />
+          <path d="M 0 1 L 10 6 L 0 11 Z" fill="var(--color-semantic-status-positive-foreground)" />
         </marker>
       </defs>
 
@@ -120,7 +120,7 @@ function RobotTopView(): React.ReactNode {
         y1={originY}
         x2="570"
         y2={originY}
-        stroke="var(--color-semantic-status-negative)"
+        stroke="var(--color-semantic-status-negative-foreground)"
         strokeWidth="3"
         markerEnd="url(#axis-x-arrow)"
       />
@@ -129,7 +129,7 @@ function RobotTopView(): React.ReactNode {
         y1="286"
         x2={originX}
         y2="34"
-        stroke="var(--color-semantic-status-positive)"
+        stroke="var(--color-semantic-status-positive-foreground)"
         strokeWidth="3"
         markerEnd="url(#axis-y-arrow)"
       />

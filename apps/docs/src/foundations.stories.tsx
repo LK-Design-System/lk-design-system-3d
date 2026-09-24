@@ -42,10 +42,10 @@ function AxisDiagram(): React.ReactNode {
       </desc>
       <defs>
         <marker id="arrow-x" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-          <path d="M 0 0 L 8 4 L 0 8 z" fill="var(--color-semantic-status-negative)" />
+          <path d="M 0 0 L 8 4 L 0 8 z" fill="var(--color-semantic-status-negative-foreground)" />
         </marker>
         <marker id="arrow-y" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-          <path d="M 0 0 L 8 4 L 0 8 z" fill="var(--color-semantic-status-positive)" />
+          <path d="M 0 0 L 8 4 L 0 8 z" fill="var(--color-semantic-status-positive-foreground)" />
         </marker>
         <marker id="arrow-z" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
           <path d="M 0 0 L 8 4 L 0 8 z" fill="var(--color-semantic-primary-normal)" />
@@ -77,7 +77,7 @@ function AxisDiagram(): React.ReactNode {
         y1="235"
         x2="540"
         y2="235"
-        stroke="var(--color-semantic-status-negative)"
+        stroke="var(--color-semantic-status-negative-foreground)"
         strokeWidth="6"
         markerEnd="url(#arrow-x)"
       />
@@ -86,7 +86,7 @@ function AxisDiagram(): React.ReactNode {
         y1="235"
         x2="165"
         y2="150"
-        stroke="var(--color-semantic-status-positive)"
+        stroke="var(--color-semantic-status-positive-foreground)"
         strokeWidth="6"
         markerEnd="url(#arrow-y)"
       />
