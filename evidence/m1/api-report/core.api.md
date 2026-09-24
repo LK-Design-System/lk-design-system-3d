@@ -8,7 +8,13 @@
 export function advancePlayback(state: PlaybackState, wallDeltaSeconds: number): PlaybackState;
 
 // @public
+export function aggregateSceneLayerStatus(layers: readonly SceneLayerEntry[]): SceneLayerSummary;
+
+// @public
 export function appendSpatialPointDraftPoint(session: SpatialPointDraftSession, point?: Vec3 | undefined): SpatialPointDraftUpdate;
+
+// @public
+export function applyCameraConstraints(state: CameraState, constraints: CameraConstraints, groundHeightAt?: GroundHeightSampler): CameraConstraintResult;
 
 // @public (undocumented)
 export function assertUnitQuaternion(value: unknown, label?: string): asserts value is Quat;
@@ -182,12 +188,48 @@ export type Brand<TValue, TName extends string> = TValue & {
 export type CameraCancellationReason = "superseded" | "explicit" | "rollback" | "disposed";
 
 // @public (undocumented)
+export interface CameraConstraintResult {
+    readonly applied: readonly CameraConstraintRule[];
+    // (undocumented)
+    readonly state: CameraState;
+}
+
+// @public (undocumented)
+export type CameraConstraintRule = "target-polygon" | "target-ground" | "distance" | "polar" | "position-polygon" | "position-ground";
+
+// @public (undocumented)
+export interface CameraConstraints {
+    readonly groundClearanceMeters?: number;
+    // (undocumented)
+    readonly maxDistanceMeters?: number;
+    // (undocumented)
+    readonly minDistanceMeters?: number;
+    // (undocumented)
+    readonly polarLimit?: CameraPolarLimit;
+    readonly positionPolygon?: Polygon2;
+    readonly targetGroundClearanceMeters?: number;
+    readonly targetPolygon?: Polygon2;
+}
+
+// @public (undocumented)
 export type CameraOperationResult = {
     readonly status: "completed";
 } | {
     readonly status: "cancelled";
     readonly reason: CameraCancellationReason;
 };
+
+// @public
+export interface CameraPolarLimit {
+    // (undocumented)
+    readonly farDistanceMeters: number;
+    // (undocumented)
+    readonly farMaxPolarRadians: number;
+    // (undocumented)
+    readonly nearDistanceMeters: number;
+    // (undocumented)
+    readonly nearMaxPolarRadians: number;
+}
 
 // @public (undocumented)
 export type CameraProjection = {
@@ -257,7 +299,19 @@ export interface CameraState {
 }
 
 // @public
+export function cameraTransitionProgress(elapsedMs: number, durationMs: number, prefersReducedMotion: boolean): number;
+
+// @public
 export function cancelSpatialPointDraft(session: SpatialPointDraftSession): SpatialPointDraftCancelResult;
+
+// @public
+export function clampPointToPolygon2(x: number, y: number, polygon: Polygon2): readonly [number, number];
+
+// @public
+export function clipCameraBoom(state: CameraState, obstacleDistanceMeters: number | undefined, options?: {
+    readonly marginMeters?: number;
+    readonly minDistanceMeters?: number;
+}): CameraState;
 
 // @public (undocumented)
 export type ClockId = Brand<string, "ClockId">;
@@ -265,11 +319,17 @@ export type ClockId = Brand<string, "ClockId">;
 // @public (undocumented)
 export const clockId: (value: string) => ClockId;
 
+// @public
+export function closestPointOnPolygon2(x: number, y: number, polygon: Polygon2): readonly [number, number];
+
 // @public (undocumented)
 export function composeTransforms(sourceToMiddle: RigidTransform3, middleToTarget: RigidTransform3): RigidTransform3;
 
 // @public
 export function computeFocusCameraState(input: CameraSolveInput): CameraState;
+
+// @public
+export function computeFollowCameraState(input: FollowCameraInput): CameraState;
 
 // @public
 export function computeHomeCameraState(input: CameraSolveInput): CameraState;
@@ -344,6 +404,9 @@ export function createSpatialEditSphere(input: {
     readonly radiusMeters: number;
 }): SpatialEditSphere;
 
+// @public (undocumented)
+export function createSpatialGrid2(items: readonly SpatialGridItem[], cellSizeMeters: number): SpatialGrid2;
+
 // @public
 export function createSpatialStructure(frame: FrameId, nodes: readonly SpatialStructureNode[]): SpatialStructure;
 
@@ -373,6 +436,9 @@ export const DEFAULT_SPATIAL_TRANSFORM_SNAP: SpatialTransformSnap;
 // @public (undocumented)
 export const DIAGNOSTIC_SCENE_TOKENS: SceneThemeValues;
 
+// @public
+export function easeInOutQuintic(t: number): number;
+
 // @public (undocumented)
 export type EntityId = Brand<string, "EntityId">;
 
@@ -393,6 +459,41 @@ export function finishSpatialScaleDrag(session: SpatialScaleDragSession, lastPre
 
 // @public
 export function finishSpatialTranslationDrag(session: SpatialTranslationDragSession, lastPreview: SpatialTransformChangeSet, phase: Exclude<SpatialTransformChangePhase, "preview">): SpatialTransformChangeSet;
+
+// @public
+export function fitDistanceForRadius(radiusMeters: number, verticalFovRadians: number, aspect: number, paddingRatio?: number): number;
+
+// @public
+export const FOLLOW_CAMERA_DEFAULTS: Readonly<{
+    distanceMeters: 6;
+    heightMeters: 3;
+    lookAtHeightMeters: 1;
+    eyeHeightMeters: 1.2;
+    lookAheadMeters: 10;
+}>;
+
+// @public
+export const FOLLOW_CAMERA_TRANSITION_MS = 800;
+
+// @public (undocumented)
+export interface FollowCameraInput {
+    readonly distanceMeters?: number;
+    readonly eyeHeightMeters?: number;
+    // (undocumented)
+    readonly frame: FrameId;
+    readonly headingRadians: number;
+    readonly heightMeters?: number;
+    readonly lookAheadMeters?: number;
+    readonly lookAtHeightMeters?: number;
+    // (undocumented)
+    readonly mode: FollowCameraMode;
+    // (undocumented)
+    readonly projection: CameraProjection;
+    readonly subjectPosition: Vec3;
+}
+
+// @public
+export type FollowCameraMode = "third-person" | "first-person";
 
 // @public (undocumented)
 export interface FramedDirection3 {
@@ -444,6 +545,21 @@ export interface GoalEntity {
     readonly radiusMeters?: number;
 }
 
+// @public
+export interface GroundBounds2 {
+    // (undocumented)
+    readonly maxX: number;
+    // (undocumented)
+    readonly maxY: number;
+    // (undocumented)
+    readonly minX: number;
+    // (undocumented)
+    readonly minY: number;
+}
+
+// @public
+export type GroundHeightSampler = (x: number, y: number) => number;
+
 // @public (undocumented)
 export function hasRendererCapability(capabilities: RendererCapabilities, capability: RendererCapabilityId): boolean;
 
@@ -462,10 +578,16 @@ export class IdentifierValidationError extends TypeError {
 export function identityTransform(frame: FrameId): RigidTransform3;
 
 // @public
+export function interpolateCameraState(from: CameraState, to: CameraState, t: number): CameraState;
+
+// @public
 export function intersectRayWithPlane(ray: Ray3, plane: Plane3): FramedPoint3 | undefined;
 
 // @public (undocumented)
 export function invertTransform(value: RigidTransform3): RigidTransform3;
+
+// @public
+export function isPointInPolygon2(x: number, y: number, polygon: Polygon2): boolean;
 
 // @public (undocumented)
 export interface LandmarkEntity {
@@ -486,6 +608,9 @@ export type LayerId = Brand<string, "LayerId">;
 
 // @public (undocumented)
 export const layerId: (value: string) => LayerId;
+
+// @public
+export function layoutScreenLabels(candidates: readonly ScreenLabelCandidate[], options: ScreenLabelLayoutOptions): ScreenLabelLayout;
 
 // @public (undocumented)
 export type LinearRgba = readonly [number, number, number, number];
@@ -512,6 +637,9 @@ number,
 number,
 number
 ];
+
+// @public
+export function maxPolarAngleAt(limit: CameraPolarLimit, distanceMeters: number): number;
 
 // @public (undocumented)
 export function normalizeQuaternion(value: Quat): Quat;
@@ -764,6 +892,9 @@ export class PlaybackValidationError extends RangeError {
     readonly name = "PlaybackValidationError";
 }
 
+// @public
+export type Polygon2 = readonly (readonly [number, number])[];
+
 // @public (undocumented)
 export interface Pose3 {
     // (undocumented)
@@ -878,6 +1009,47 @@ export interface RobotEntity {
 }
 
 // @public (undocumented)
+export interface SceneLayerEntry {
+    // (undocumented)
+    readonly id: string;
+    readonly required?: boolean;
+    // (undocumented)
+    readonly status: SceneLayerStatus;
+}
+
+// @public
+export type SceneLayerStatus = {
+    readonly kind: "disabled";
+} | {
+    readonly kind: "loading";
+    readonly progress?: number;
+} | {
+    readonly kind: "ready";
+} | {
+    readonly kind: "error";
+    readonly message: string;
+    readonly recoverable?: boolean;
+};
+
+// @public (undocumented)
+export type SceneLayerSummary = {
+    readonly kind: "loading";
+    readonly loading: readonly string[];
+    readonly progress?: number;
+    readonly degraded: readonly string[];
+} | {
+    readonly kind: "ready";
+    readonly degraded: readonly string[];
+} | {
+    readonly kind: "error";
+    readonly failed: readonly string[];
+    readonly message: string;
+    readonly recoverable: boolean;
+} | {
+    readonly kind: "empty";
+};
+
+// @public (undocumented)
 export type SceneThemeOverrides = Readonly<Partial<Record<SceneTokenName, string>>>;
 
 // @public (undocumented)
@@ -885,6 +1057,67 @@ export type SceneThemeValues = Readonly<Record<SceneTokenName, string>>;
 
 // @public
 export type SceneTokenName = "scene.background" | "grid.major" | "grid.minor" | "axis.x" | "axis.y" | "axis.z" | "selection.active" | "path.default" | "goal.default" | "warning";
+
+// @public (undocumented)
+export type ScreenLabelAnchor = "center" | "bottom";
+
+// @public
+export interface ScreenLabelCandidate {
+    readonly anchor: {
+        readonly x: number;
+        readonly y: number;
+    } | null;
+    readonly distanceMeters: number;
+    // (undocumented)
+    readonly heightPx: number;
+    // (undocumented)
+    readonly id: string;
+    readonly maxDistanceMeters?: number;
+    readonly priority: number;
+    // (undocumented)
+    readonly selected?: boolean;
+    // (undocumented)
+    readonly widthPx: number;
+}
+
+// @public (undocumented)
+export type ScreenLabelHiddenReason = "behind" | "offscreen" | "distance" | "collision" | "limit";
+
+// @public (undocumented)
+export interface ScreenLabelLayout {
+    // (undocumented)
+    readonly hidden: readonly {
+        readonly id: string;
+        readonly reason: ScreenLabelHiddenReason;
+    }[];
+    // (undocumented)
+    readonly visible: readonly ScreenLabelPlacement[];
+}
+
+// @public (undocumented)
+export interface ScreenLabelLayoutOptions {
+    readonly anchor?: ScreenLabelAnchor;
+    readonly maxVisible?: number;
+    readonly paddingPx?: number;
+    // (undocumented)
+    readonly viewport: {
+        readonly width: number;
+        readonly height: number;
+    };
+}
+
+// @public (undocumented)
+export interface ScreenLabelPlacement {
+    // (undocumented)
+    readonly heightPx: number;
+    // (undocumented)
+    readonly id: string;
+    // (undocumented)
+    readonly widthPx: number;
+    readonly x: number;
+    // (undocumented)
+    readonly y: number;
+}
 
 // @public (undocumented)
 export function seekPlayback(state: PlaybackState, seconds: number): PlaybackState;
@@ -1064,6 +1297,24 @@ export interface SpatialGoalPoseHeadingPreview {
     // (undocumented)
     readonly origin: Vec3;
     readonly yawRadians?: number;
+}
+
+// @public (undocumented)
+export interface SpatialGrid2 {
+    // (undocumented)
+    readonly cellSizeMeters: number;
+    queryBounds(bounds: GroundBounds2): readonly string[];
+    querySegment(x0: number, y0: number, x1: number, y1: number): readonly string[];
+    // (undocumented)
+    readonly size: number;
+}
+
+// @public (undocumented)
+export interface SpatialGridItem {
+    // (undocumented)
+    readonly bounds: GroundBounds2;
+    // (undocumented)
+    readonly id: string;
 }
 
 // @public (undocumented)

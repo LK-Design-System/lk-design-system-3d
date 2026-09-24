@@ -10,3 +10,8 @@ export * from "./occupancy-grid.js";
 export * from "./spatial-editing.js";
 export * from "./spatial-structure.js";
 export * from "./spatial-authoring.js";
+export * from "./camera-constraints.js";
+export * from "./camera-follow.js";
+export * from "./labels.js";
+export * from "./layers.js";
+export * from "./spatial-index.js";
