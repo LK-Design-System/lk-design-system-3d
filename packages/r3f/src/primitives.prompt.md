@@ -48,10 +48,27 @@ outline, or material as well as tone. Ambient motion is optional and respects
 `prefers-reduced-motion`. Set `animated={false}` for a static or demand-rendered
 review unless motion itself is the behavior being reviewed.
 
+## Pose trust, draped paths and labels (2026-09)
+
+- `AmrRobot.poseFreshness` uses the Robotics vocabulary (fresh, stale,
+  expired, future). The product decides it; do not infer freshness in the
+  renderer. `localization.radiusMeters` draws the uncertainty disc.
+- `PathRibbon.groundHeightAt` drapes the ribbon on terrain; `minScreenWidthPx`
+  keeps it legible at distance. Do not bake terrain heights into path points to
+  fake this.
+- Map labels: `SceneLabelProjector` inside the canvas, `SceneLabelOverlay` in
+  the `SceneCanvas` overlay slot. Interactive labels come from `renderLabel`
+  with an LDS component, never a raw renderer button.
+- Theme: `lines`, `labels` and `nature` slots. Map LDS roles into them in the
+  composition layer (apps/docs/src/lds-scene-theme.ts); natural surfaces keep
+  the LDS3D defaults.
+
 ## Storybook
 
 The real-WebGL atom stories are under `LDS 3D/Primitives`:
 
+- `SceneLabels`
+- `SceneLayer`
 - `Selectable`
 - `AmrRobot`
 - `GoalMarker`

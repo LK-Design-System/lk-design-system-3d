@@ -106,6 +106,13 @@ export interface SceneLayerRegistry {
   readonly summary: SceneLayerSummary;
   /** Pass to `SceneLayer.onStatusChange`. */
   readonly report: (id: string, status: SceneLayerStatus) => void;
+  /**
+   * Marks failed layers as loading again. Call it together with bumping the
+   * layers' `retryKey`: while a required layer is in error the scene is in
+   * error too, and a host that hides its children then could never remount the
+   * layer to report recovery.
+   */
+  readonly retry: (ids?: readonly string[]) => void;
 }
 
 /**
@@ -120,6 +127,18 @@ export function useSceneLayerRegistry(
   const report = useCallback((id: string, status: SceneLayerStatus): void => {
     setStatuses((current) => (current[id] === status ? current : { ...current, [id]: status }));
   }, []);
+  const retry = useCallback((ids?: readonly string[]): void => {
+    setStatuses((current) => {
+      let changed = false;
+      const next: Record<string, SceneLayerStatus> = { ...current };
+      for (const [id, status] of Object.entries(current)) {
+        if (status.kind !== "error" || (ids !== undefined && !ids.includes(id))) continue;
+        next[id] = LOADING;
+        changed = true;
+      }
+      return changed ? next : current;
+    });
+  }, []);
   const required = options.required;
   const disabled = options.disabled;
   const entries = useMemo<readonly SceneLayerEntry[]>(
@@ -132,5 +151,5 @@ export function useSceneLayerRegistry(
     [disabled, layerIds, required, statuses],
   );
   const summary = useMemo(() => aggregateSceneLayerStatus(entries), [entries]);
-  return useMemo(() => ({ entries, summary, report }), [entries, report, summary]);
+  return useMemo(() => ({ entries, summary, report, retry }), [entries, report, retry, summary]);
 }

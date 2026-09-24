@@ -23,12 +23,15 @@ import {
   SectionBox as SectionBoxPrimitive,
   Selectable,
   SpatialStructure as SpatialStructurePrimitive,
+  resolveSceneNatureTokens,
   useSceneRuntime,
   type ModelLoadState,
+  type RobotPoseFreshness,
   type RobotVisualStatus,
   type SceneCameraMode,
   type SceneCameraPose,
   type SceneEnvironmentProps,
+  type SceneFollowSubject,
   type SceneHoverChange,
   type SceneRenderState,
   type SceneSelectionChange,
@@ -48,6 +51,7 @@ import {
   createSpatialTransformChangeSet,
   stepSpatialNodeTransform,
   type Bounds3,
+  type CameraConstraints,
   type EntityId,
   type GoalEntity,
   type PathEntity,
@@ -58,7 +62,8 @@ import {
   type SpatialTransformMode,
   type Vec3,
 } from "@lk-design-system/lds-3d-core";
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { PlaneGeometry } from "three";
 
 import { TechnicalSection, TechnicalStoryLayout } from "./components.js";
 import {
@@ -171,6 +176,8 @@ interface PrimitiveCanvasProps {
   readonly renderState?: SceneRenderState;
   readonly selectedEntityId?: EntityId | null;
   readonly showStatusOverlay?: boolean;
+  readonly followSubject?: SceneFollowSubject;
+  readonly cameraConstraints?: CameraConstraints;
 }
 
 /** Story-only host: it preserves the renderer's real WebGL boundary and supplies a stable review budget. */
@@ -189,6 +196,8 @@ function PrimitiveCanvas({
   renderState,
   selectedEntityId,
   showStatusOverlay = false,
+  followSubject,
+  cameraConstraints,
 }: PrimitiveCanvasProps): ReactNode {
   return (
     <SceneCanvasPrimitive
@@ -210,6 +219,8 @@ function PrimitiveCanvas({
       {...(onSelectionChange === undefined ? {} : { onSelectionChange })}
       {...(renderState === undefined ? {} : { renderState })}
       {...(selectedEntityId === undefined ? {} : { selectedEntityId })}
+      {...(followSubject === undefined ? {} : { followSubject })}
+      {...(cameraConstraints === undefined ? {} : { cameraConstraints })}
       showStatusOverlay={showStatusOverlay}
     >
       {children}
@@ -325,8 +336,31 @@ function SelectionProbe({ entityId, label, position }: SelectionProbeProps): Rea
   );
 }
 
+// The review robot's pose, handed to the follow camera as its subject.
+const PRIMARY_FOLLOW_SUBJECT: SceneFollowSubject = {
+  position: PRIMARY_ROBOT.pose.position,
+  headingRadians: Math.PI / 7,
+  distanceMeters: 4.5,
+  heightMeters: 2.2,
+};
+
+// The eye stays inside the reviewed floor and never closer than 2 m or
+// farther than 30 m from its target.
+const PRIMITIVE_CAMERA_CONSTRAINTS: CameraConstraints = {
+  positionPolygon: [
+    [-14, -14],
+    [14, -14],
+    [14, 14],
+    [-14, 14],
+  ],
+  minDistanceMeters: 2,
+  maxDistanceMeters: 30,
+  groundClearanceMeters: 0.8,
+};
+
 export function SceneCanvasExperience(): ReactNode {
   const [cameraMode, setCameraMode] = useState<ReviewCameraMode>("home");
+  const [followMode, setFollowMode] = useState<"third-person" | "first-person">("third-person");
   return (
     <TechnicalStoryLayout
       eyebrow="LDS 3D / 프리미티브"
@@ -345,6 +379,7 @@ export function SceneCanvasExperience(): ReactNode {
               { value: "home", label: "기본" },
               { value: "top", label: "상단" },
               { value: "focus", label: "초점" },
+              { value: "follow", label: "따라보기" },
               { value: "free", label: "자유" },
             ]}
             size="sm"
@@ -352,10 +387,25 @@ export function SceneCanvasExperience(): ReactNode {
             value={cameraMode}
             onChange={(value) => setCameraMode(value as ReviewCameraMode)}
           />
+          {cameraMode === "follow" ? (
+            <SegmentedControl
+              aria-label="따라보기 방식"
+              options={[
+                { value: "third-person", label: "3인칭" },
+                { value: "first-person", label: "1인칭" },
+              ]}
+              size="sm"
+              style={{ alignSelf: "flex-start" }}
+              value={followMode}
+              onChange={(value) => setFollowMode(value as "third-person" | "first-person")}
+            />
+          ) : null}
           <PrimitiveCanvas
             ariaLabel="SceneCanvas와 CameraRig 프리미티브 데모"
+            cameraConstraints={PRIMITIVE_CAMERA_CONSTRAINTS}
             cameraMode={cameraMode}
             environment={{ showAxes: true }}
+            followSubject={{ ...PRIMARY_FOLLOW_SUBJECT, mode: followMode }}
             onCameraModeChange={setCameraMode}
           >
             <AmrRobotPrimitive entity={PRIMARY_ROBOT} status="moving" />
@@ -370,6 +420,14 @@ export function SceneCanvasExperience(): ReactNode {
               { term: "프레임 루프", description: <Code>demand</Code> },
               { term: "검토 DPR 재정의", description: <Code>1</Code> },
               { term: "그림자 맵", description: <Code>1024px</Code> },
+              {
+                term: "따라보기",
+                description: "0.8초 전환 후 대상의 렌더 위치를 그대로 따름 · 모션 줄이기면 즉시",
+              },
+              {
+                term: "이동 범위",
+                description: "눈 위치 28 m 사각형 안 · 대상과 2–30 m · 지면 위 0.8 m",
+              },
             ]}
           />
           <PrimitiveReviewEvidence storyId="lds-3d-primitives--scene-canvas" />
@@ -547,6 +605,42 @@ const TRON_REVIEW_BOUNDS: Bounds3 = {
   max: TRON_MANIFEST.boundsInCoreMeters.max,
 };
 
+interface RobotFreshnessVariant {
+  readonly entity: RobotEntity;
+  readonly freshness: RobotPoseFreshness;
+  readonly localizationRadiusMeters?: number;
+}
+
+// The same moving robot at three trust levels; the product judges freshness.
+const ROBOT_FRESHNESS_VARIANTS: readonly RobotFreshnessVariant[] = [
+  {
+    entity: {
+      kind: "robot",
+      id: entityId("primitive/amr-fresh"),
+      pose: { frame: PRIMITIVE_FRAME, position: [-2.6, 0, 0], orientation: quaternionFromYaw(0) },
+    },
+    freshness: "fresh",
+    localizationRadiusMeters: 0.35,
+  },
+  {
+    entity: {
+      kind: "robot",
+      id: entityId("primitive/amr-stale"),
+      pose: { frame: PRIMITIVE_FRAME, position: [0, 0, 0], orientation: quaternionFromYaw(0) },
+    },
+    freshness: "stale",
+    localizationRadiusMeters: 0.9,
+  },
+  {
+    entity: {
+      kind: "robot",
+      id: entityId("primitive/amr-expired"),
+      pose: { frame: PRIMITIVE_FRAME, position: [2.6, 0, 0], orientation: quaternionFromYaw(0) },
+    },
+    freshness: "expired",
+  },
+];
+
 export function AmrRobotExperience(): ReactNode {
   const [selected, setSelected] = useState<EntityId | null>(ROBOT_VARIANTS[1]?.entity.id ?? null);
   const [tronLoadState, setTronLoadState] = useState<ModelLoadState>("loading");
@@ -579,6 +673,38 @@ export function AmrRobotExperience(): ReactNode {
             ]}
           />
           <PrimitiveReviewEvidence storyId="lds-3d-primitives-amr-robot--overview" />
+        </Stack>
+      </TechnicalSection>
+      <TechnicalSection
+        title="위치 신뢰도"
+        description="같은 이동 중 로봇을 세 신뢰도로 표시합니다. 신뢰도는 제품이 판정해 poseFreshness로 넘기며, 어휘는 LDS Robotics의 fresh·stale·expired·future와 같습니다. 멈춘 위치는 본체가 옅어지고 상태등이 꺼지며 바닥에 점선 고리가 생겨 색 없이도 구분됩니다. 반투명 원은 위치 추정 오차입니다."
+      >
+        <Stack gap="var(--space-4)">
+          <PrimitiveCanvas
+            ariaLabel="AMR 위치 신뢰도 변형"
+            homePose={{ position: [0.6, -6.2, 4.4], target: [0, 0, 0.3], up: [0, 0, 1] }}
+          >
+            {ROBOT_FRESHNESS_VARIANTS.map(({ entity, freshness, localizationRadiusMeters }) => (
+              <AmrRobotPrimitive
+                key={entity.id}
+                entity={entity}
+                poseFreshness={freshness}
+                status="moving"
+                {...(localizationRadiusMeters === undefined
+                  ? {}
+                  : { localization: { radiusMeters: localizationRadiusMeters } })}
+              />
+            ))}
+          </PrimitiveCanvas>
+          <DescriptionList
+            columns={2}
+            items={[
+              { term: "왼쪽", description: "fresh · 오차 0.35 m" },
+              { term: "가운데", description: "stale · 마지막으로 받은 위치 · 오차 0.9 m" },
+              { term: "오른쪽", description: "expired · 더 옅은 본체" },
+              { term: "판정", description: "제품 소유 · LDS3D는 표시만" },
+            ]}
+          />
         </Stack>
       </TechnicalSection>
       <TechnicalSection
@@ -786,6 +912,56 @@ const PATH_VARIANTS: readonly PathVariant[] = [
   },
 ];
 
+// A smooth review hill: 0.9 m at the origin, fading within about 3 m.
+function reviewHillHeight(x: number, y: number): number {
+  return 0.9 * Math.exp(-(x * x + y * y) / 6);
+}
+
+function ReviewHill(): ReactNode {
+  const { theme } = useSceneRuntime();
+  const geometry = useMemo(() => {
+    const plane = new PlaneGeometry(12, 7, 72, 42);
+    const positions = plane.attributes.position;
+    if (positions !== undefined) {
+      for (let index = 0; index < positions.count; index += 1) {
+        positions.setZ(index, reviewHillHeight(positions.getX(index), positions.getY(index)));
+      }
+    }
+    plane.computeVertexNormals();
+    return plane;
+  }, []);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  return (
+    <mesh geometry={geometry} receiveShadow>
+      <meshStandardMaterial color={resolveSceneNatureTokens(theme).terrain} roughness={0.9} />
+    </mesh>
+  );
+}
+
+const DRAPE_PATH: PathEntity = {
+  kind: "path",
+  id: entityId("primitive/path-draped"),
+  frame: PRIMITIVE_FRAME,
+  points: [
+    [-5, -1.2, 0],
+    [0, -0.4, 0],
+    [5, 0.9, 0],
+  ],
+  widthMeters: 0.22,
+};
+
+const FLAT_PATH: PathEntity = {
+  kind: "path",
+  id: entityId("primitive/path-flat"),
+  frame: PRIMITIVE_FRAME,
+  points: [
+    [-5, 1.6, 0],
+    [0, 1.1, 0],
+    [5, 2.4, 0],
+  ],
+  widthMeters: 0.22,
+};
+
 export function PathRibbonExperience(): ReactNode {
   const [selected, setSelected] = useState<EntityId | null>(PATH_VARIANTS[1]?.entity.id ?? null);
   return (
@@ -823,6 +999,31 @@ export function PathRibbonExperience(): ReactNode {
             ]}
           />
           <PrimitiveReviewEvidence storyId="lds-3d-primitives-path-ribbon--overview" />
+        </Stack>
+      </TechnicalSection>
+      <TechnicalSection
+        title="지형 따라가기"
+        description="groundHeightAt을 주면 경로를 1 m 간격으로 다시 나눠 각 점을 지면 높이에 앉힙니다. 아래 실제 경로는 언덕을 따라가고, 위 계획 경로는 높이 정보 없이 평면에 떠서 언덕을 뚫습니다. minScreenWidthPx는 카메라가 멀어져도 리본이 6px보다 가늘어지지 않게 합니다."
+      >
+        <Stack gap="var(--space-4)">
+          <PrimitiveCanvas ariaLabel="지형을 따라가는 경로 리본">
+            <ReviewHill />
+            <PathRibbonPrimitive
+              animated={false}
+              entity={DRAPE_PATH}
+              groundHeightAt={reviewHillHeight}
+              minScreenWidthPx={6}
+              variant="actual"
+            />
+            <PathRibbonPrimitive animated={false} entity={FLAT_PATH} variant="planned" />
+          </PrimitiveCanvas>
+          <DescriptionList
+            columns={2}
+            items={[
+              { term: "아래 경로", description: "groundHeightAt · 1 m 재표본 · 최소 6px" },
+              { term: "위 경로", description: "입력 높이 그대로 · 비교용" },
+            ]}
+          />
         </Stack>
       </TechnicalSection>
     </TechnicalStoryLayout>

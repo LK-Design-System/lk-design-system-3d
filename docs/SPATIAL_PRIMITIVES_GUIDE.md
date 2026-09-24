@@ -33,6 +33,8 @@ of truth for a new atom.
 | `ArticulatedGltfModel`                            | A `GltfModel` whose link nodes follow a validated robot kinematics manifest and normalized joint values (radians)                                                                | Motor-tick conversion, joint transport, commands, or a trajectory workflow                                                          | `lds-3d-lds-integration-so-arm-joint-viewer--lds-integration` (reviewed in the SO-ARM scenario; no separate primitive page) |
 | `CameraFrustum`                                   | A renderer-owned wireframe derived from validated intrinsics (fovY, aspect, near, far); optical axis local +X                                                                   | Image transport, sensor subscription, or a camera control                                                                            | `lds-3d-primitives-camera-frustum--overview`     |
 | `VoxelLayer`                                      | Instanced voxels for caller-voxelized centers within an explicit `maxVoxels` budget                                                                                             | Occupancy decisions, downsampling, silent truncation, or voxel editing                                                               | `lds-3d-primitives-voxel-layer--overview`        |
+| `SceneLabelProjector` / `SceneLabelOverlay`       | Screen-space place and robot names: per-frame projection, priority, collision and distance culling in the renderer, DOM text in the `SceneCanvas` overlay slot                      | Interactive chips drawn by the renderer (pass `renderLabel` with an LDS component), product place registries, or label copy         | `lds-3d-primitives-scene-labels--overview`       |
+| `SceneLayer` + `useSceneLayerRegistry`            | Isolating one scene layer so it reports loading, ready or error, and rolling layers into one scene state (required failures fail the scene, optional failures degrade it)          | Product retry policy, transport status, or a DOM error page; recovery actions stay LDS controls owned by the caller                  | `lds-3d-primitives-scene-layer--overview`        |
 
 `AmrOperationalScene` and `VisualAlphaModel` are deliberate fixture assemblies.
 They are appropriate for the Visual Alpha scenario and asset evidence, not the
@@ -92,6 +94,38 @@ default starting point for a product composition.
 5. Assemble representative atoms into a scenario only after their own stories
    and contracts are independently reviewable.
 
+### Camera follow, constraints and theme resolution
+
+- `SceneCanvas` camera mode `follow` tracks `followSubject`: third person
+  trails the subject, first person rides at eye height and looks ahead. Pass
+  the rendered (smoothed) pose. Entry uses a 0.8 s quintic transition and jumps
+  under reduced motion; after that the camera copies the subject every frame.
+  `followObstacles` pulls the eye in front of objects flagged
+  `userData.lds3dCameraObstacle`, the same "pull camera forward" strategy as
+  the [Cinemachine Deoccluder](https://docs.unity3d.com/Packages/com.unity.cinemachine@3.1/manual/CinemachineDeoccluder.html).
+  LDS3D does not fade occluding geometry, because that mutates caller-owned
+  materials.
+- `cameraConstraints` (core `applyCameraConstraints`) keeps the eye and
+  target inside ground polygons, within a distance range, above sampled ground,
+  and under a tilt limit that tightens with distance. The distance limits also
+  drive the orbit controls. The model follows
+  [CesiumJS ScreenSpaceCameraController](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html)
+  (`minimumZoomDistance`, `maximumZoomDistance`, terrain collision) and
+  three.js OrbitControls polar limits; the polygons, clearances and the
+  distance-dependent tilt come from the Gungneung digital twin
+  ([GUNGNEUNG_3D_GAP_PLAN.md](GUNGNEUNG_3D_GAP_PLAN.md)).
+- Label placement follows the map-symbol model: higher priority places first
+  and a colliding lower-priority label is hidden, as in the
+  [MapLibre style spec](https://maplibre.org/maplibre-style-spec/layers/)
+  `symbol-sort-key` and `text-allow-overlap: false`. A selected label always
+  places first and ignores its distance limit.
+- Theme colours reach the renderer only through `themeCustomization`. The
+  docs app resolver `apps/docs/src/lds-scene-theme.ts` reads LDS roles
+  (label, surface, line, primary, negative foreground, `--font-sans`) through
+  `var()` on a probe element and re-resolves when `data-theme` or the OS
+  scheme changes. Natural surfaces (sky, terrain, vegetation) have no LDS role
+  and keep the LDS3D `nature` defaults.
+
 ## Interaction and accessibility contract
 
 - Canvas hover is transient; selection is persistent. Do not make hover the
@@ -117,7 +151,12 @@ default starting point for a product composition.
 Spatial state is not color-only.
 
 - `AmrRobot` changes status geometry/material treatment and adds selected or
-  hover rings when appropriate.
+  hover rings when appropriate. `poseFreshness` (the LDS Robotics vocabulary:
+  `fresh`, `stale`, `expired`, `future`) marks an untrusted pose with a faded
+  body, the beacon off and a dashed last-known ring on the ground, so the cue
+  does not rely on colour. The product judges freshness, including a stream
+  that republishes identical coordinates with new timestamps. `localization`
+  draws a translucent uncertainty disc.
 - `GoalMarker` assigns one invariant geometry channel to each meaning:
   physical radius uses a solid or segmented ring; orientation always uses the
   same full arrow at the ring edge; invalidity adds a central cross; and hover
@@ -135,6 +174,10 @@ Spatial state is not color-only.
   use dash and gap lengths of `3x` and `1.5x` the path width; blocked paths add
   two raised barriers oriented perpendicular to the local curve tangent. Hover
   and selection add a wider underlay without replacing status colour or pattern.
+  `groundHeightAt` resamples the path every `drapeSpacingMeters` (default 1 m)
+  and seats each sample on the terrain; `minScreenWidthPx` widens a far-away
+  ribbon in quarter-octave steps so it stays legible without rebuilding geometry
+  every frame.
   [ROS 2 RViz `LINE_STRIP`](https://docs.ros.org/en/jazzy/Tutorials/Intermediate/RViz/Marker-Display-types/Marker-Display-types.html#line-strip-line-strip-4)
   changed the base geometry from a volumetric tube to a point-sequence path
   with one explicit width. The

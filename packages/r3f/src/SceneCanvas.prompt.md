@@ -61,6 +61,22 @@ world surface on top of the host's own `SceneEnvironment`.
   override the selected quality profile when a scene has measured evidence for
   a different budget.
 
+## Follow, constraints and layers (2026-09)
+
+- `cameraMode="follow"` tracks `followSubject` (the rendered pose, third or
+  first person). Entry is a 0.8 s eased transition; reduced motion jumps.
+  After entry the eye copies the subject every frame, so the product's own
+  smoothing is the only smoothing. `followObstacles` pulls the eye in front of
+  objects flagged `userData.lds3dCameraObstacle`; occluders are not faded.
+- `cameraConstraints` + `groundHeightAt` apply core `applyCameraConstraints`
+  after every camera update. Site polygons and clearances stay in the product.
+- `onContextLost` / `onContextRestored` report WebGL context loss so the caller
+  can show a paused state with LDS status components. Wrap independent layers
+  in `SceneLayer` and roll them up with `useSceneLayerRegistry`; only a required
+  layer failure should become `renderState.kind === "error"`.
+- Evidence: Gungneung `feat/3d-map` bc83977d (docs/GUNGNEUNG_3D_GAP_PLAN.md);
+  category references in docs/SPATIAL_PRIMITIVES_GUIDE.md.
+
 ## Review
 
 Review `LDS 3D/Primitives/SceneCanvas & CameraRig` before changing host or

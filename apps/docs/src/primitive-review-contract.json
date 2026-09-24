@@ -24,7 +24,7 @@
       "stages": {
         "overview": "하나의 헤드리스 호스트가 CoreSpace 좌표 기준, CameraRig, 하나의 SceneEnvironment를 소유하며 앱 크롬은 R3F 밖에 둡니다.",
         "usage": "실제 캔버스는 SceneCanvas 하나를 마운트하고 공개 호스트 API로 환경을 설정합니다.",
-        "variants-states": "같은 호스트 관리 바닥과 그리드에서 진단 축을 켜고 기본, 상단, 초점 카메라 모드를 확인합니다.",
+        "variants-states": "같은 호스트 관리 바닥과 그리드에서 진단 축을 켜고 기본, 상단, 초점 카메라 모드를 확인합니다. 따라보기 모드는 followSubject를 3인칭·1인칭으로 따르며, cameraConstraints가 눈 위치 영역·거리·지면 여유를 지킵니다.",
         "interaction": "LDS SegmentedControl은 호스트 콜백으로 카메라 모드를 요청하며 렌더러는 카메라 버튼을 만들지 않습니다.",
         "accessibility-motion": "캔버스에 접근 가능한 이름이 있고 현재 카메라 상태를 DOM에 노출하며 정적 검토는 주변 목표 모션 없이 요청 기반 렌더링을 사용합니다.",
         "responsive": "Storybook 캔버스를 넓은 폭에서 320 CSS px까지 줄여도 호스트는 하나의 전체 너비 캔버스를 유지하며 페이지 레이아웃이나 인스펙터 크롬을 소유하지 않습니다.",
@@ -56,7 +56,7 @@
       "stages": {
         "overview": "AmrRobot은 의미를 갖는 대체 AMR 시각 요소이며 작업 카드, 명령 표면, 자산 레지스트리가 아닙니다.",
         "usage": "실제 캔버스는 프레임이 지정된 RobotEntity 입력을 AmrRobot으로 직접 렌더링합니다.",
-        "variants-states": "대기, 실시간, 주의, 오류는 서로 다른 공간 재질과 형상으로 표현하고 지속 선택은 별도로 표시합니다.",
+        "variants-states": "대기, 실시간, 주의, 오류는 서로 다른 공간 재질과 형상으로 표현하고 지속 선택은 별도로 표시합니다. 위치 신뢰도(fresh·stale·expired·future)는 옅은 본체·꺼진 상태등·점선 고리로, 위치 오차는 바닥 원으로 표시합니다.",
         "interaction": "로봇 클릭은 공통 선택 계약만 갱신합니다.",
         "accessibility-motion": "이름이 있는 캔버스에 DOM 선택 객체 요약이 있으며 이 대체 시각 요소는 검토 중 자율 모션을 사용하지 않습니다.",
         "responsive": "제한된 너비에서 로봇 형상은 하나의 호스트 캔버스와 함께 조절되고 객체 세부 정보는 호출자 소유 DOM 관심사로 남습니다.",
@@ -88,7 +88,7 @@
       "stages": {
         "overview": "PathRibbon은 기본적으로 수동 경로 형상이며 경로 편집기 워크플로와 탐색 목록은 이 프리미티브에 포함하지 않습니다.",
         "usage": "실제 캔버스는 프레임이 지정된 PathEntity 점을 선택이 명시적으로 활성화된 PathRibbon으로 직접 렌더링합니다.",
-        "variants-states": "실제 경로는 연속 평면 리본, 실행 중 경로는 연속 리본과 접선 방향의 낮은 3D 화살표, 계획 경로는 폭 비례 분절 리본, 차단 경로는 연속 오류 리본과 접선 수직 장벽으로 구분됩니다.",
+        "variants-states": "실제 경로는 연속 평면 리본, 실행 중 경로는 연속 리본과 접선 방향의 낮은 3D 화살표, 계획 경로는 폭 비례 분절 리본, 차단 경로는 연속 오류 리본과 접선 수직 장벽으로 구분됩니다. groundHeightAt을 주면 리본이 지형을 따라가고, minScreenWidthPx가 먼 거리에서도 최소 화면 폭을 지킵니다.",
         "interaction": "이 검토에서는 선택을 명시적으로 켜며 상태 색상과 패턴을 덮지 않는 별도 외곽선 및 공통 선택 식별자만 갱신합니다.",
         "accessibility-motion": "이름이 있는 캔버스에 DOM 선택 경로 요약이 있고 animated가 false이므로 실행 진행 커서가 결정론적이며 모션 감소에 안전합니다.",
         "responsive": "제한된 너비에서도 리본은 하나의 캔버스 안 공간 형상으로 남고 경로 메타데이터는 인접 LDS DOM 레이어가 소유합니다.",
@@ -240,6 +240,39 @@
         "accessibility-motion": "이름이 있는 캔버스 안의 정적 표현으로 자체 모션이 없으며 불투명도는 caller가 제어합니다.",
         "responsive": "제한된 너비에서도 인스턴스는 호스트 캔버스 경계 안에 남고 페이지 레이아웃은 LDS가 소유합니다.",
         "scenario": "lds-3d-scenes-sensor-overlays--overview가 세그멘테이션·프러스텀과의 단일 프레임 정합을 검증합니다."
+      }
+    },
+    "lds-3d-primitives-scene-labels--overview": {
+      "actualWebgl": true,
+      "atoms": [
+        "SceneLabelProjector",
+        "SceneLabelOverlay"
+      ],
+      "scenarioStoryId": "visual-alpha--operational-neutral",
+      "stages": {
+        "overview": "SceneLabelProjector는 기준점을 매 프레임 화면에 투영해 배치만 계산하고, SceneLabelOverlay가 SceneCanvas overlay 슬롯에 DOM 라벨을 그립니다.",
+        "usage": "캔버스 안에 SceneLabelProjector를 두고 onLayout 결과를 overlay 슬롯의 SceneLabelOverlay에 넘깁니다. 라벨 스타일은 테마 labels 슬롯을 따릅니다.",
+        "variants-states": "선택한 라벨이 먼저, 그다음 우선순위, 가까운 순서로 자리를 차지하고 겹침·화면 밖·최대 거리·카메라 뒤 라벨은 이유와 함께 숨깁니다.",
+        "interaction": "기본 라벨은 조작할 수 없는 글자 칩입니다. 조작이 필요하면 renderLabel로 LDS 컴포넌트를 그리며 렌더러는 원시 버튼을 만들지 않습니다.",
+        "accessibility-motion": "라벨은 실제 DOM 글자라 확대와 화면 낭독기에 그대로 노출되고, 카메라가 움직일 때만 위치를 다시 계산합니다.",
+        "responsive": "캔버스 크기가 바뀌면 투영과 배치를 다시 계산하며 좁은 폭에서는 겹침 규칙으로 낮은 우선순위 라벨부터 숨깁니다.",
+        "scenario": "visual-alpha--operational-neutral 같은 운영 장면에서 장소·로봇 이름을 LDS 인스펙터와 함께 보여 줄 때 씁니다."
+      }
+    },
+    "lds-3d-primitives-scene-layer--overview": {
+      "actualWebgl": true,
+      "atoms": [
+        "SceneLayer"
+      ],
+      "scenarioStoryId": "lds-3d-states-renderer-lifecycle--overview",
+      "stages": {
+        "overview": "SceneLayer는 레이어 하나를 격리해 loading·ready·error를 보고하고, 실패한 레이어만 비워 나머지 장면을 계속 그립니다.",
+        "usage": "레이어마다 SceneLayer로 감싸고 useSceneLayerRegistry의 report를 onStatusChange에 넘깁니다. 합친 장면 상태는 core aggregateSceneLayerStatus 규칙을 따릅니다.",
+        "variants-states": "선택 레이어 실패는 장면을 준비됨으로 두고 일부 실패로 알리며, 필수 레이어 실패만 장면 오류가 됩니다. 켜진 레이어가 없으면 빈 상태입니다.",
+        "interaction": "재시도는 retryKey를 올려 실패한 레이어를 다시 마운트합니다. 재시도 버튼은 호출자 소유 LDS Button입니다.",
+        "accessibility-motion": "상태는 LDS StatusBadge와 SceneCanvas 상태 오버레이로 글자와 함께 알리고, WebGL 컨텍스트 손실은 onContextLost로 호출자에게 전달합니다.",
+        "responsive": "레이어 상태 요약은 캔버스 밖 DOM에 있어 폭과 무관하게 읽히고, 캔버스는 하나의 호스트로 조절됩니다.",
+        "scenario": "lds-3d-states-renderer-lifecycle--overview의 장면 수명주기와 함께, 레이어 단위 부분 실패를 장면 전체 실패와 구분합니다."
       }
     }
   }

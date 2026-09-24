@@ -102,6 +102,7 @@ export function CameraRig({
 }: CameraRigProps) {
   const { camera, frameloop, get, gl, invalidate, scene, set, size } = useThree();
   const followStart = useRef<FollowTransitionStart | null>(null);
+  const followSubjectMode = followSubject?.mode ?? "third-person";
   const raycaster = useMemo(() => new Raycaster(), []);
   // Fit bounds to the canvas actually on screen (core camera solver).
   const viewportAspect = size.height > 0 ? size.width / size.height : 0;
@@ -208,7 +209,9 @@ export function CameraRig({
     };
     transitionActive.current = true;
     requestDemandFrame(true);
-  }, [camera, mode, requestDemandFrame]);
+    // Switching between third and first person is a camera move too, so it
+    // restarts the eased transition instead of jumping.
+  }, [camera, followSubjectMode, mode, requestDemandFrame]);
 
   useEffect(() => {
     const controls = controlsRef.current;

@@ -26,6 +26,8 @@ export const expectedStoryIds = [
   "lds-3d-primitives-gltf-model--overview",
   "lds-3d-primitives-camera-frustum--overview",
   "lds-3d-primitives-voxel-layer--overview",
+  "lds-3d-primitives-scene-labels--overview",
+  "lds-3d-primitives-scene-layer--overview",
   "lds-3d-scenes-sensor-overlays--overview",
   "lds-3d-scenes-point-cloud-foundation--lds-integration",
   "lds-3d-lds-integration-so-arm-joint-viewer--lds-integration",
@@ -78,6 +80,9 @@ export const requiredPrimitiveAtoms = Object.freeze(
     "SpatialStructure",
     "TransformGizmo",
     "SceneStateMarker",
+    "SceneLabelProjector",
+    "SceneLabelOverlay",
+    "SceneLayer",
     "GltfModel",
   ].sort(),
 );

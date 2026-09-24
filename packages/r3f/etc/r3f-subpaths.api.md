@@ -1092,6 +1092,7 @@ interface SceneLayerRegistry {
     // (undocumented)
     readonly entries: readonly SceneLayerEntry[];
     readonly report: (id: string, status: SceneLayerStatus) => void;
+    readonly retry: (ids?: readonly string[]) => void;
     // (undocumented)
     readonly summary: SceneLayerSummary;
 }

@@ -1,6 +1,6 @@
 # 궁릉 3D 근거 기반 보완 계획
 
-- Status: Draft — 결정 4건 확정(2026-09-25), 착수 전
+- Status: Active — 결정 4건 확정, W1~W4와 G8 일부 구현(2026-09-25, 로컬 커밋). 남은 일은 "구현 현황" 참고
 - Created: 2026-09-25
 - Owner surface: LDS3D 공개 원자와 camera·interaction·theme 계약
 - 근거 제품: `lkrobotics-control-gungneung` `origin/feat/3d-map`
@@ -195,13 +195,32 @@
 
 ## 단계
 
-| 단계 | 내용 | 궁릉 적용 가능 시점 |
-| --- | --- | --- |
-| W1 | G2·G1 계산부를 core 순수 함수로. G4 판정 함수는 Robotics UI 별도 작업 | core만 쓰면 즉시 |
-| W2 | G1·G2 r3f 바인딩(`CameraRig` follow, constraints), G5 `PathRibbon` 확장 | 스택 결정 후 |
-| W3 | G3 라벨, G7 레이어 상태·복구 | 스택 결정 후 |
-| W4 | G6 테마 슬롯과 기존 역할 매핑 resolver 예시 | 스택 결정 후 |
-| 후순위 | G8 | 두 번째 근거 확보 시 |
+| 단계 | 내용 | 궁릉 적용 가능 시점 | 상태 |
+| --- | --- | --- | --- |
+| W1 | G2·G1 계산부를 core 순수 함수로. G4 판정 함수는 Robotics UI 별도 작업 | core만 쓰면 즉시 | 구현 (`4e36457`) |
+| W2 | G1·G2 r3f 바인딩(`CameraRig` follow, constraints), G5 `PathRibbon` 확장 | 스택 결정 후 | 구현 (`22028e4`) |
+| W3 | G3 라벨, G7 레이어 상태·복구 | 스택 결정 후 | 구현 (`22028e4`) |
+| W4 | G6 테마 슬롯과 기존 역할 매핑 resolver 예시 | 스택 결정 후 | 구현 (`22028e4`, resolver는 docs 커밋) |
+| 후순위 | G8 | 두 번째 근거 확보 시 | 공간 인덱스만 구현. impostor·LOD는 보류 |
+
+### 구현 현황 (2026-09-25)
+
+- core: `applyCameraConstraints`, `computeFollowCameraState`, `interpolateCameraState`,
+  `clipCameraBoom`, `layoutScreenLabels`, `aggregateSceneLayerStatus`, `createSpatialGrid2`.
+- r3f: `follow` 카메라 모드와 `followSubject`·`followObstacles`·`cameraConstraints`,
+  `SceneLabelProjector`/`SceneLabelOverlay`, `SceneLayer`/`useSceneLayerRegistry`,
+  `onContextLost`/`onContextRestored`, `AmrRobot.poseFreshness`/`localization`,
+  `PathRibbon.groundHeightAt`/`minScreenWidthPx`, 테마 `lines`/`labels`/`nature` 슬롯.
+- docs: `SceneLabels`·`SceneLayer` 페이지, SceneCanvas 따라보기·이동 범위,
+  AmrRobot 위치 신뢰도, PathRibbon 지형 따라가기, `lds-scene-theme.ts` resolver.
+- 의도적으로 하지 않은 것: 가리는 물체 반투명 처리(호출자 재질을 바꾸게 됨), impostor·LOD.
+- 남은 일:
+  - G4 판정 함수(값 기준 + 시간 기준)는 Robotics UI 소유로 결정됐다. 2026-09-25에는
+    다른 세션이 Robotics를 수정 중이라 착수하지 않았다.
+  - LDS 저장소 `LDS3D_EXTERNAL_SURFACE.json`의 상위 토큰 목록 갱신(LDS 0.4.1 이전으로
+    `-foreground` 두 이름). LDS core 소유라 해당 세션에 요청했다.
+  - R3F 컴포넌트를 궁릉에 들이는 경로(compat-v8 또는 제품 스택 상향) 재결정.
+  - 원격 push와 릴리스(0.1.0-alpha.3)는 사용자 승인 후.
 
 각 단계는 기존 공개 API 규칙을 따른다: api-report baseline, package-smoke, 스토리 계약
 (`scripts/storybook-contract.mjs`), 새 공개 원자는 owner 페이지와 리뷰 계약.

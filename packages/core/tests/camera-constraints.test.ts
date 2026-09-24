@@ -106,8 +106,11 @@ describe("applyCameraConstraints", () => {
     const result = applyCameraConstraints(camera([0, -500, 20], [0, 0, 0]), { polarLimit: limit });
     expect(result.applied).toContain("polar");
     const { position, target } = result.state;
-    const offset = [position[0] - target[0], position[1] - target[1], position[2] - target[2]];
-    const distance = Math.hypot(offset[0], offset[1], offset[2]);
+    const distance = Math.hypot(
+      position[0] - target[0],
+      position[1] - target[1],
+      position[2] - target[2],
+    );
     expect(distance).toBeCloseTo(Math.hypot(500, 20), 6);
     const polar = Math.acos((position[2] - target[2]) / distance);
     expect(polar).toBeCloseTo(maxPolarAngleAt(limit, distance), 9);
