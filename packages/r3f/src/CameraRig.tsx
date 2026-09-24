@@ -50,7 +50,9 @@ export function CameraRig({
   onManualControl,
   onSettled,
 }: CameraRigProps) {
-  const { camera, frameloop, get, gl, invalidate, set } = useThree();
+  const { camera, frameloop, get, gl, invalidate, set, size } = useThree();
+  // Fit bounds to the canvas actually on screen (core camera solver).
+  const viewportAspect = size.height > 0 ? size.width / size.height : 0;
   const prefersReducedMotion = usePrefersReducedMotion();
   const controlsRef = useRef<OrbitControls | null>(null);
   const processedKeyboardSequence = useRef<number | undefined>(undefined);
@@ -73,9 +75,10 @@ export function CameraRig({
       ...(focusBounds === undefined ? {} : { focusBounds }),
       ...(topTarget === undefined ? {} : { topTarget }),
       ...(topBounds === undefined ? {} : { topBounds }),
+      ...(viewportAspect > 0 && Number.isFinite(viewportAspect) ? { viewportAspect } : {}),
     };
     return resolveCameraPose(mode, options);
-  }, [focusBounds, focusTarget, homePose, mode, topBounds, topTarget]);
+  }, [focusBounds, focusTarget, homePose, mode, topBounds, topTarget, viewportAspect]);
   const desiredPosition = useMemo(
     () => asVector3(coreToThreePosition(desired.position)),
     [desired.position],

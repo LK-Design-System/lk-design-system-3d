@@ -176,13 +176,17 @@ export function PointCloudLayer({
   maxPoints,
   pointSize = DEFAULT_POINT_CLOUD_POINT_SIZE,
   colorMode = "source",
-  fallbackColor = DEFAULT_POINT_CLOUD_COLOR,
+  fallbackColor: fallbackColorProp,
   heightRange,
   clipBounds,
   opacity = 1,
   onRenderStateChange,
 }: PointCloudLayerProps) {
   const runtime = useSceneRuntime();
+  // The theme's point-cloud colour; DEFAULT_POINT_CLOUD_COLOR is the value the
+  // diagnostic profile carries and the last resort for a custom theme.
+  const fallbackColor =
+    fallbackColorProp ?? runtime.theme.materials.pointCloud ?? DEFAULT_POINT_CLOUD_COLOR;
   assertMaterialOptions(pointSize, opacity);
   assertColorOptions(heightRange);
   assertClipBounds(clipBounds, runtime.frame);
@@ -240,11 +244,12 @@ export function PointCloudLayers({
           pointSize,
           opacity,
           colorMode,
-          fallbackColor: entry.fallbackColor ?? DEFAULT_POINT_CLOUD_COLOR,
+          fallbackColor:
+            entry.fallbackColor ?? runtime.theme.materials.pointCloud ?? DEFAULT_POINT_CLOUD_COLOR,
           ...(entry.heightRange === undefined ? {} : { heightRange: entry.heightRange }),
         });
       }),
-    [layers],
+    [layers, runtime.theme.materials.pointCloud],
   );
   const layerSet = useMemo(
     () => createPointCloudLayerSet({ layers: normalizedLayers.map((entry) => entry.layer) }),

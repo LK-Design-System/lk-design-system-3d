@@ -20,6 +20,8 @@ import {
   type PickRequest,
   type RendererCapabilities,
   type RendererStatus,
+  DEFAULT_SCENE_LIGHTING,
+  resolveSceneTokens,
   type SceneThemeOverrides,
   type SceneThemeValues,
   type SpatialEvent,
@@ -104,25 +106,14 @@ interface PendingCameraOperation {
   readonly resolve: (result: CameraOperationResult) => void;
 }
 
-const DEFAULT_THEME: SceneThemeValues = Object.freeze({
-  "scene.background": "#eef2f5",
-  "grid.major": "#7890a1",
-  "grid.minor": "#bac7d0",
-  "axis.x": "#d74e45",
-  "axis.y": "#37a36b",
-  "axis.z": "#3a83cf",
-  "selection.active": "#2678d6",
-  "path.default": "#5d57d9",
-  "goal.default": "#137f79",
-  warning: "#b36c05",
-});
-
 const CAPABILITIES: RendererCapabilities = Object.freeze({
   supported: Object.freeze(["rendering", "picking", "selection"] as const),
 });
 
+// The core defaults, not a host-private palette (which had path and goal
+// swapped against the r3f host and the reference research).
 function materializeTheme(overrides: SceneThemeOverrides | undefined): SceneThemeValues {
-  return Object.freeze({ ...DEFAULT_THEME, ...overrides });
+  return resolveSceneTokens(overrides);
 }
 
 function assertViewportSize(width: number, height: number, dpr: number): void {
@@ -257,8 +248,8 @@ export function createThreeSceneHost(options: ThreeSceneHostOptions): ThreeScene
     CORE_TO_THREE_BASIS_QUATERNION[3],
   );
   scene.add(coreRoot);
-  scene.add(new AmbientLight("#ffffff", 1.25));
-  const keyLight = new DirectionalLight("#ffffff", 2.1);
+  scene.add(new AmbientLight("#ffffff", DEFAULT_SCENE_LIGHTING.ambientIntensity));
+  const keyLight = new DirectionalLight("#ffffff", DEFAULT_SCENE_LIGHTING.keyIntensity);
   keyLight.position.set(5, 8, 6);
   scene.add(keyLight);
 

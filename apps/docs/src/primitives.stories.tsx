@@ -358,7 +358,7 @@ export function SceneCanvasExperience(): ReactNode {
             environment={{ showAxes: true }}
             onCameraModeChange={setCameraMode}
           >
-            <AmrRobotPrimitive entity={PRIMARY_ROBOT} status="live" />
+            <AmrRobotPrimitive entity={PRIMARY_ROBOT} status="moving" />
             <GoalMarkerPrimitive animated={false} entity={PRIMARY_GOAL} variant="valid" />
           </PrimitiveCanvas>
           <DescriptionList
@@ -447,50 +447,80 @@ interface RobotVariant {
   readonly status: RobotVisualStatus;
 }
 
+// The six LDS Robotics RobotPoseState values, each with its non-colour cue
+// (lit/dark beacon, pause bars, X, ring, ghosted body).
 const ROBOT_VARIANTS: readonly RobotVariant[] = [
   {
     entity: {
       kind: "robot",
+      id: entityId("primitive/amr-moving"),
+      pose: {
+        frame: PRIMITIVE_FRAME,
+        position: [-2.4, 1.6, 0],
+        orientation: quaternionFromYaw(Math.PI / 8),
+      },
+    },
+    status: "moving",
+  },
+  {
+    entity: {
+      kind: "robot",
       id: entityId("primitive/amr-idle"),
-      pose: { frame: PRIMITIVE_FRAME, position: [-3.6, 1.5, 0], orientation: quaternionFromYaw(0) },
+      pose: {
+        frame: PRIMITIVE_FRAME,
+        position: [0, 1.6, 0],
+        orientation: quaternionFromYaw(0),
+      },
     },
     status: "idle",
   },
   {
     entity: {
       kind: "robot",
-      id: entityId("primitive/amr-live"),
+      id: entityId("primitive/amr-paused"),
       pose: {
         frame: PRIMITIVE_FRAME,
-        position: [-1.2, 1.5, 0],
-        orientation: quaternionFromYaw(Math.PI / 8),
-      },
-    },
-    status: "live",
-  },
-  {
-    entity: {
-      kind: "robot",
-      id: entityId("primitive/amr-warning"),
-      pose: {
-        frame: PRIMITIVE_FRAME,
-        position: [1.2, 1.5, 0],
+        position: [2.4, 1.6, 0],
         orientation: quaternionFromYaw(-Math.PI / 8),
       },
     },
-    status: "warning",
+    status: "paused",
   },
   {
     entity: {
       kind: "robot",
-      id: entityId("primitive/amr-error"),
+      id: entityId("primitive/amr-fault"),
       pose: {
         frame: PRIMITIVE_FRAME,
-        position: [3.6, 1.5, 0],
+        position: [-2.4, -1.2, 0],
         orientation: quaternionFromYaw(Math.PI),
       },
     },
-    status: "error",
+    status: "fault",
+  },
+  {
+    entity: {
+      kind: "robot",
+      id: entityId("primitive/amr-offline"),
+      pose: {
+        frame: PRIMITIVE_FRAME,
+        position: [0, -1.2, 0],
+        orientation: quaternionFromYaw(Math.PI / 2),
+      },
+    },
+    status: "offline",
+  },
+  {
+    entity: {
+      kind: "robot",
+      id: entityId("primitive/amr-unknown"),
+      pose: {
+        frame: PRIMITIVE_FRAME,
+        position: [2.4, -1.2, 0],
+        orientation: quaternionFromYaw(-Math.PI / 2),
+      },
+    },
+    status: "unknown",
   },
 ];
 
@@ -529,7 +559,7 @@ export function AmrRobotExperience(): ReactNode {
     >
       <TechnicalSection
         title="로봇 상태 변형"
-        description="대기, 실시간, 주의, 오류 상태는 형상과 발광 재질 변화로 구분됩니다. AMR을 클릭해 지속 선택 표현을 확인하세요."
+        description="LDS Robotics와 같은 여섯 상태(이동·대기·일시정지·장애·오프라인·미확인)를 색만이 아니라 형상으로도 구분합니다. 이동은 켜진 상태등, 대기는 꺼진 상태등, 일시정지는 막대 두 개, 장애는 X, 미확인은 고리, 오프라인은 반투명 본체입니다. AMR을 클릭해 지속 선택 표현을 확인하세요."
       >
         <Stack gap="var(--space-4)">
           <PrimitiveCanvas
@@ -544,7 +574,7 @@ export function AmrRobotExperience(): ReactNode {
           <DescriptionList
             columns={2}
             items={[
-              { term: "변형", description: "대기 · 실시간 · 주의 · 오류" },
+              { term: "변형", description: "이동 · 대기 · 일시정지 · 장애 · 오프라인 · 미확인" },
               { term: "선택", description: <Code>{selectedCopy(selected)}</Code> },
             ]}
           />
@@ -575,7 +605,7 @@ export function AmrRobotExperience(): ReactNode {
                   url={TRON_MODEL_URL}
                 />
               }
-              status="live"
+              status="moving"
             />
           </PrimitiveCanvas>
           <DescriptionList
@@ -854,7 +884,7 @@ export function RuntimeStatesExperience(): ReactNode {
             renderState={toRenderState(state)}
             showStatusOverlay
           >
-            <AmrRobotPrimitive entity={PRIMARY_ROBOT} status="live" />
+            <AmrRobotPrimitive entity={PRIMARY_ROBOT} status="moving" />
           </PrimitiveCanvas>
           <Stack direction="row" gap="var(--space-3)" align="center" wrap>
             <StatusBadge

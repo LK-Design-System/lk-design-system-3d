@@ -19,6 +19,8 @@ import type {
   Vec3,
 } from "@lk-design-system/lds-3d-core";
 import {
+  DEFAULT_GOAL_RADIUS_METERS,
+  DEFAULT_PATH_WIDTH_METERS,
   FrameMismatchError,
   assertValidBounds3,
   assertValidSpatialEditVolume,
@@ -438,7 +440,83 @@ export function SceneEnvironment({
   );
 }
 
-export type RobotVisualStatus = "idle" | "live" | "warning" | "error";
+/**
+ * Robot state, in the LDS Robotics RobotPoseState vocabulary so a robot reads
+ * the same in the 2D map marker and in 3D: moving, idle, paused, fault,
+ * offline, unknown. `live`, `warning` and `error` are the pre-alpha.3
+ * spellings of moving, paused and fault, still accepted.
+ */
+export type RobotVisualStatus =
+  | "moving"
+  | "idle"
+  | "paused"
+  | "fault"
+  | "offline"
+  | "unknown"
+  | "live"
+  | "warning"
+  | "error";
+
+export type CanonicalRobotVisualStatus = Exclude<RobotVisualStatus, "live" | "warning" | "error">;
+
+const LEGACY_ROBOT_STATUS: Readonly<Record<string, CanonicalRobotVisualStatus>> = Object.freeze({
+  live: "moving",
+  warning: "paused",
+  error: "fault",
+});
+
+export function canonicalRobotStatus(status: RobotVisualStatus): CanonicalRobotVisualStatus {
+  return LEGACY_ROBOT_STATUS[status] ?? (status as CanonicalRobotVisualStatus);
+}
+
+/**
+ * The non-colour cue for each state (AGENTS.md: state must not rely on colour
+ * alone): a glyph floated above the robot, and for offline a ghosted body with
+ * the beacon off. moving and idle differ by the lit versus dark beacon.
+ */
+function RobotStatusGlyph({
+  status,
+  color,
+}: {
+  readonly status: CanonicalRobotVisualStatus;
+  readonly color: string;
+}) {
+  const bar = (key: string, x: number, rotation = 0) => (
+    <mesh key={key} position={[x, 0, 0]} rotation={[0, rotation, 0]}>
+      <boxGeometry args={[0.07, 0.07, 0.3]} />
+      <meshBasicMaterial color={color} />
+    </mesh>
+  );
+  if (status === "paused") {
+    return (
+      <group name="lkds3d:robot-status:paused" position={[0, 0, 1.02]}>
+        {bar("left", -0.08)}
+        {bar("right", 0.08)}
+      </group>
+    );
+  }
+  if (status === "fault") {
+    return (
+      <group name="lkds3d:robot-status:fault" position={[0, 0, 1.02]}>
+        {bar("a", 0, Math.PI / 4)}
+        {bar("b", 0, -Math.PI / 4)}
+      </group>
+    );
+  }
+  if (status === "unknown") {
+    return (
+      <mesh
+        name="lkds3d:robot-status:unknown"
+        position={[0, 0, 1.02]}
+        rotation={[Math.PI / 2, 0, 0]}
+      >
+        <torusGeometry args={[0.12, 0.03, 8, 32]} />
+        <meshBasicMaterial color={color} />
+      </mesh>
+    );
+  }
+  return null;
+}
 
 export interface AmrRobotProps {
   readonly entity: RobotEntity;
@@ -456,16 +534,20 @@ function Wheel({ position, color }: { readonly position: Vec3; readonly color: s
   );
 }
 
-export function AmrRobot({ entity, status = "live", model, label }: AmrRobotProps) {
+export function AmrRobot({ entity, status: statusProp = "moving", model, label }: AmrRobotProps) {
   const { theme } = useSceneRuntime();
+  const status = canonicalRobotStatus(statusProp);
   const statusColor =
-    status === "error"
+    status === "fault"
       ? theme.materials.error
-      : status === "warning"
+      : status === "paused" || status === "unknown"
         ? theme.materials.warning
-        : status === "idle"
+        : status === "idle" || status === "offline"
           ? theme.materials.assetStructure
           : theme.materials.live;
+  // offline: the last-known pose of a robot we cannot hear — ghosted, beacon off.
+  const offline = status === "offline";
+  const beaconLit = status !== "idle" && !offline;
 
   return (
     <Selectable
@@ -479,10 +561,14 @@ export function AmrRobot({ entity, status = "live", model, label }: AmrRobotProp
             <group name={label ?? "AMR"}>
               <mesh castShadow position={[0, 0, 0.31]} receiveShadow>
                 <boxGeometry args={[1.15, 0.76, 0.32]} />
+                {/* Hover no longer repaints the body in the live colour — it
+                    read as "moving". The selection ring below is the cue. */}
                 <meshStandardMaterial
-                  color={hovered ? theme.materials.live : theme.materials.assetBody}
+                  color={theme.materials.assetBody}
                   metalness={0.14}
                   roughness={0.52}
+                  transparent={offline}
+                  opacity={offline ? 0.42 : 1}
                 />
               </mesh>
               <mesh castShadow position={[0.08, 0, 0.535]} receiveShadow>
@@ -498,7 +584,7 @@ export function AmrRobot({ entity, status = "live", model, label }: AmrRobotProp
                 <meshStandardMaterial
                   color={statusColor}
                   emissive={statusColor}
-                  emissiveIntensity={0.45}
+                  emissiveIntensity={beaconLit ? 0.45 : 0}
                 />
               </mesh>
               <mesh position={[0.585, 0, 0.32]}>
@@ -515,12 +601,13 @@ export function AmrRobot({ entity, status = "live", model, label }: AmrRobotProp
               <Wheel position={[0.34, 0.43, 0.16]} color={theme.materials.assetStructure} />
             </group>
           )}
+          <RobotStatusGlyph status={status} color={statusColor} />
           {hovered || selected ? (
             <group position={[0, 0, 0.018]}>
               <mesh>
                 <torusGeometry args={[0.73, selected ? 0.026 : 0.016, 8, 72]} />
                 <meshBasicMaterial
-                  color={selected ? theme.materials.selection : theme.materials.live}
+                  color={theme.materials.selection}
                   depthWrite={false}
                   transparent
                   opacity={0.95}
@@ -655,7 +742,7 @@ export function GoalMarker({ entity, animated = true, variant = "valid" }: GoalM
   const reducedMotion = usePrefersReducedMotion();
   const requestDemandFrame = useDemandFrameInvalidation();
   const pulse = useRef<Group | null>(null);
-  const radius = entity.radiusMeters ?? 0.48;
+  const radius = entity.radiusMeters ?? DEFAULT_GOAL_RADIUS_METERS;
   useFrame(({ clock }) => {
     if (!animated || reducedMotion || variant === "invalid" || pulse.current === null) return;
     const scale = 1 + Math.sin(clock.elapsedTime * 3.2) * 0.08;
@@ -1024,7 +1111,7 @@ export function PathRibbon({
     );
   }, [elevationMeters, entity.points]);
   if (curve === null) return null;
-  const width = entity.widthMeters ?? 0.16;
+  const width = entity.widthMeters ?? DEFAULT_PATH_WIDTH_METERS;
   const statusColor =
     variant === "blocked"
       ? theme.materials.error

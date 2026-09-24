@@ -26,13 +26,18 @@ export interface MarkerLayerProps {
   readonly onRenderStateChange?: (state: MarkerLayerRenderState) => void;
 }
 
+// MarkerColor channels are sRGB 0–1, like the text label drawn from them (a
+// canvas fill in sRGB). `new Color(r, g, b)` read them as linear, so a
+// marker's mesh and its label rendered the same colour differently.
 function markerColor(
   color: MarkerColor,
   interaction: SelectableRenderState,
   selection: string,
 ): Color {
-  if (interaction.selected || interaction.hovered) return new Color(selection);
-  return new Color(color.r, color.g, color.b);
+  // Selection is persistent and recolours; hover is transient and only adds
+  // a faint emissive hint below. They used to paint the same selection colour.
+  if (interaction.selected) return new Color(selection);
+  return new Color().setRGB(color.r, color.g, color.b, SRGBColorSpace);
 }
 
 function MarkerMaterial({
@@ -46,8 +51,8 @@ function MarkerMaterial({
   return (
     <meshStandardMaterial
       color={markerColor(color, interaction, theme.materials.selection)}
-      emissive={interaction.selected ? theme.materials.selection : "#000000"}
-      emissiveIntensity={interaction.selected ? 0.22 : 0}
+      emissive={interaction.selected || interaction.hovered ? theme.materials.selection : "#000000"}
+      emissiveIntensity={interaction.selected ? 0.22 : interaction.hovered ? 0.1 : 0}
       opacity={color.a}
       roughness={0.62}
       transparent={color.a < 1}

@@ -275,7 +275,22 @@ function createOccupancyGridSnapshot(value: OccupancyGridSnapshotInput): Occupan
 function createPickRay(camera: CameraState, request: PickRequest): Ray3;
 
 // @public
+const DEFAULT_GOAL_RADIUS_METERS = 0.48;
+
+// @public
 const DEFAULT_OCCUPANCY_GRID_PLANE_TOLERANCE_METERS = 0.000001;
+
+// @public (undocumented)
+const DEFAULT_PATH_WIDTH_METERS = 0.16;
+
+// @public
+const DEFAULT_SCENE_LIGHTING: Readonly<{
+    ambientIntensity: 1.35;
+    keyIntensity: 2.4;
+}>;
+
+// @public (undocumented)
+const DIAGNOSTIC_SCENE_TOKENS: SceneThemeValues;
 
 declare namespace entities {
     export {
@@ -284,6 +299,8 @@ declare namespace entities {
         layerId,
         AssetEntity,
         AssetId,
+        DEFAULT_GOAL_RADIUS_METERS,
+        DEFAULT_PATH_WIDTH_METERS,
         EntityId,
         GoalEntity,
         LandmarkEntity,
@@ -626,6 +643,9 @@ function occupancyPointToCell(geometry: OccupancyGridGeometry, point: FramedPoin
 // @public
 function occupancyPointToImagePixel(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridImagePixel | undefined;
 
+// @public
+const OPERATIONAL_SCENE_TOKENS: SceneThemeValues;
+
 // @public (undocumented)
 type P0SpatialEntity = AssetEntity | RobotEntity | GoalEntity | PathEntity | LandmarkEntity;
 
@@ -757,6 +777,9 @@ interface RendererStatus {
     readonly state: RendererLifecycleState;
 }
 
+// @public
+function resolveSceneTokens(overrides?: SceneThemeOverrides, base?: SceneThemeValues): SceneThemeValues;
+
 // @public (undocumented)
 interface RigidTransform3 {
     // (undocumented)
@@ -828,9 +851,13 @@ interface SpatialEvent {
 
 declare namespace theme {
     export {
+        DEFAULT_SCENE_LIGHTING,
+        DIAGNOSTIC_SCENE_TOKENS,
+        OPERATIONAL_SCENE_TOKENS,
         SceneThemeOverrides,
         SceneThemeValues,
-        SceneTokenName
+        SceneTokenName,
+        resolveSceneTokens
     }
 }
 

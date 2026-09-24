@@ -23,6 +23,7 @@ export {
 } from "./SceneCanvas.js";
 export {
   AmrRobot,
+  canonicalRobotStatus,
   EditVolume,
   GoalMarker,
   GroundGrid,
@@ -33,6 +34,7 @@ export {
   SectionBox,
   Selectable,
   type AmrRobotProps,
+  type CanonicalRobotVisualStatus,
   type EditVolumeProps,
   type GoalMarkerProps,
   type GroundGridProps,

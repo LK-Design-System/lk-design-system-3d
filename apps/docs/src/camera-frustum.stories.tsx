@@ -45,7 +45,7 @@ function CameraFrustumExperience() {
             frame={FRAME}
             frameLoop="demand"
             homePose={HOME}
-            profile="diagnostic-technical"
+            profile="operational-neutral"
             renderQuality="balanced"
             style={{ height: "min(36rem, 64vw)", minHeight: "22rem" }}
             topBounds={BOUNDS}
@@ -70,7 +70,7 @@ function CameraFrustumExperience() {
             />
             <CameraFrustum
               aspect={1}
-              color="#f0b429"
+              color="#b45309"
               entityId={entityId("sensor/depth")}
               farMeters={1.4}
               fovYRadians={1.4}

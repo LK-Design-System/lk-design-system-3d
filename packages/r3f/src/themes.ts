@@ -1,4 +1,10 @@
-import type { SceneThemeOverrides, SceneThemeValues } from "@lk-design-system/lds-3d-core";
+import {
+  DEFAULT_SCENE_LIGHTING,
+  DIAGNOSTIC_SCENE_TOKENS,
+  OPERATIONAL_SCENE_TOKENS,
+  type SceneThemeOverrides,
+  type SceneThemeValues,
+} from "@lk-design-system/lds-3d-core";
 
 export type SceneVisualProfile = "operational-neutral" | "diagnostic-technical";
 
@@ -15,6 +21,14 @@ export interface SceneMaterialTokens {
   readonly panel: string;
   readonly panelBorder: string;
   readonly shadow: string;
+  /**
+   * Overlay families that had hard-coded colours in their components
+   * (CameraFrustum, VoxelLayer, PointCloudLayer). Optional so an existing
+   * custom theme stays valid; the built-in profiles define all three.
+   */
+  readonly sensor?: string;
+  readonly occupancy?: string;
+  readonly pointCloud?: string;
 }
 
 export interface SceneVisualTheme {
@@ -36,31 +50,26 @@ export interface SceneVisualTheme {
   };
 }
 
-const OPERATIONAL_SCENE_TOKENS: SceneThemeValues = Object.freeze({
-  "scene.background": "#E9EEF2",
-  "grid.major": "#94A4AF",
-  "grid.minor": "#C5CFD6",
-  "axis.x": "#D92D20",
-  "axis.y": "#039855",
-  "axis.z": "#1570EF",
-  "selection.active": "#005FCC",
-  "path.default": "#007A66",
-  "goal.default": "#6D3CCB",
-  warning: "#9A5B00",
-});
+// Scene token values live in core (OPERATIONAL_/DIAGNOSTIC_SCENE_TOKENS) so
+// every host reads one palette. Four materials are the same semantics as
+// scene tokens and are DERIVED from them rather than restated: an override
+// of "path.default" used to recolour the three host and leave r3f's
+// `materials.live` on the old value.
+function linkedMaterials(scene: SceneThemeValues) {
+  return {
+    live: scene["path.default"],
+    intent: scene["goal.default"],
+    selection: scene["selection.active"],
+    warning: scene.warning,
+  } as const;
+}
 
-const DIAGNOSTIC_SCENE_TOKENS: SceneThemeValues = Object.freeze({
-  "scene.background": "#071018",
-  "grid.major": "#23607D",
-  "grid.minor": "#153245",
-  "axis.x": "#FF6B78",
-  "axis.y": "#4DE3C1",
-  "axis.z": "#43D9FF",
-  "selection.active": "#43D9FF",
-  "path.default": "#4DE3C1",
-  "goal.default": "#D7A0FF",
-  warning: "#FFC857",
-});
+/** Last-resort overlay colours for a theme that omits the optional tokens. */
+export const DEFAULT_OVERLAY_COLORS = Object.freeze({
+  sensor: "#43D9FF",
+  occupancy: "#F0803C",
+  pointCloud: "#3C9DFF",
+} as const);
 
 export const OPERATIONAL_NEUTRAL_THEME: SceneVisualTheme = Object.freeze({
   id: "operational-neutral",
@@ -70,19 +79,18 @@ export const OPERATIONAL_NEUTRAL_THEME: SceneVisualTheme = Object.freeze({
     ground: "#DCE3E8",
     assetBody: "#D9E1E6",
     assetStructure: "#60717E",
-    live: "#007A66",
-    intent: "#6D3CCB",
-    selection: "#005FCC",
-    warning: "#9A5B00",
+    ...linkedMaterials(OPERATIONAL_SCENE_TOKENS),
     error: "#B42318",
+    sensor: "#1570EF",
+    occupancy: "#B54708",
+    pointCloud: "#2E90FA",
     text: "#16202A",
     panel: "rgba(255, 255, 255, 0.94)",
     panelBorder: "rgba(96, 113, 126, 0.30)",
     shadow: "rgba(22, 32, 42, 0.20)",
   }),
   environment: Object.freeze({
-    ambientIntensity: 1.35,
-    keyIntensity: 2.4,
+    ...DEFAULT_SCENE_LIGHTING,
     fillIntensity: 0.8,
     fogNearMeters: 28,
     fogFarMeters: 72,
@@ -102,11 +110,12 @@ export const DIAGNOSTIC_TECHNICAL_THEME: SceneVisualTheme = Object.freeze({
     ground: "#0B1720",
     assetBody: "#20313A",
     assetStructure: "#526B78",
-    live: "#4DE3C1",
-    intent: "#D7A0FF",
-    selection: "#43D9FF",
-    warning: "#FFC857",
+    ...linkedMaterials(DIAGNOSTIC_SCENE_TOKENS),
     error: "#FF6B78",
+    // The values these components hard-coded, which were tuned on this profile.
+    sensor: "#43D9FF",
+    occupancy: "#F0803C",
+    pointCloud: "#3C9DFF",
     text: "#E9F5FF",
     panel: "rgba(7, 16, 24, 0.92)",
     panelBorder: "rgba(67, 217, 255, 0.34)",
@@ -145,9 +154,16 @@ export function resolveSceneTheme(
   if (customization.scene === undefined && customization.materials === undefined) {
     return base;
   }
+  const scene = Object.freeze({ ...base.scene, ...customization.scene });
   return Object.freeze({
     ...base,
-    scene: Object.freeze({ ...base.scene, ...customization.scene }),
-    materials: Object.freeze({ ...base.materials, ...customization.materials }),
+    scene,
+    // Linked materials follow the resolved scene tokens; an explicit material
+    // override still wins.
+    materials: Object.freeze({
+      ...base.materials,
+      ...linkedMaterials(scene),
+      ...customization.materials,
+    }),
   });
 }

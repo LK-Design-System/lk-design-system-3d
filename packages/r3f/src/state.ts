@@ -1,7 +1,10 @@
 import {
   assertValidBounds3,
   assertValidVec3,
+  computeFocusCameraState,
+  computeTopCameraState,
   type Bounds3,
+  type CameraState,
   type EntityId,
   type Vec3,
 } from "@lk-design-system/lds-3d-core";
@@ -28,6 +31,35 @@ export interface ResolveCameraPoseOptions {
   readonly home?: SceneCameraPose;
   readonly minimumDistanceMeters?: number;
   readonly topHeightMeters?: number;
+  /** Width ÷ height of the canvas; bounds are fitted to it. Defaults to 16:9. */
+  readonly viewportAspect?: number;
+}
+
+/** Vertical field of view of the SceneCanvas perspective camera (42°). */
+export const SCENE_CANVAS_VERTICAL_FOV_RADIANS = (42 * Math.PI) / 180;
+const DEFAULT_VIEWPORT_ASPECT = 16 / 9;
+// The r3f focus view looks from this direction (x right-forward, -y, z up).
+const FOCUS_VIEW_DIRECTION: Vec3 = [0.75, -1, 0.62];
+
+// A camera state the core solver can fit against: this canvas's projection,
+// looking along `direction` at `target`. Bounds fitting then comes from the
+// same core function the three host uses (computeTopCameraState /
+// computeFocusCameraState) instead of a second set of r3f-only constants.
+function syntheticCurrent(bounds: Bounds3, direction: Vec3, up: Vec3, aspect: number): CameraState {
+  const center = centerOfBounds(bounds);
+  return {
+    frame: bounds.frame,
+    position: [center[0] + direction[0], center[1] + direction[1], center[2] + direction[2]],
+    target: center,
+    up,
+    projection: {
+      kind: "perspective",
+      verticalFovRadians: SCENE_CANVAS_VERTICAL_FOV_RADIANS,
+      aspect,
+      nearMeters: 0.05,
+      farMeters: 10_000,
+    },
+  };
 }
 
 function immutableVec3(value: Vec3): Vec3 {
@@ -42,16 +74,6 @@ function centerOfBounds(value: Bounds3): Vec3 {
     (value.min[1] + value.max[1]) / 2,
     (value.min[2] + value.max[2]) / 2,
   ];
-}
-
-function boundsRadius(value: Bounds3): number {
-  return (
-    Math.hypot(
-      value.max[0] - value.min[0],
-      value.max[1] - value.min[1],
-      value.max[2] - value.min[2],
-    ) / 2
-  );
 }
 
 function createCameraPose(position: Vec3, target: Vec3, up: Vec3): SceneCameraPose {
@@ -76,6 +98,10 @@ export function resolveCameraPose(
       ? (options.focusTarget ?? home.target)
       : centerOfBounds(options.focusBounds);
   const minimumDistance = options.minimumDistanceMeters ?? 4;
+  const aspect = options.viewportAspect ?? DEFAULT_VIEWPORT_ASPECT;
+  if (!Number.isFinite(aspect) || aspect <= 0) {
+    throw new RangeError("viewportAspect must be a finite positive number.");
+  }
   if (!Number.isFinite(minimumDistance) || minimumDistance <= 0) {
     throw new RangeError("minimumDistanceMeters must be a finite positive number.");
   }
@@ -85,28 +111,53 @@ export function resolveCameraPose(
       options.topBounds === undefined
         ? (options.topTarget ?? home.target)
         : centerOfBounds(options.topBounds);
-    const topHalfExtent =
-      options.topBounds === undefined
-        ? undefined
-        : Math.max(
-            (options.topBounds.max[0] - options.topBounds.min[0]) / 2,
-            (options.topBounds.max[1] - options.topBounds.min[1]) / 2,
-          );
-    const topHeight =
-      options.topHeightMeters ??
-      (topHalfExtent === undefined
-        ? 26
-        : Math.max(8, (topHalfExtent / Math.tan((42 * Math.PI) / 360)) * 1.12));
+    if (options.topBounds !== undefined && options.topHeightMeters === undefined) {
+      const fitted = computeTopCameraState({
+        current: syntheticCurrent(options.topBounds, [0, 0, 1], [0, 1, 0], aspect),
+        target: options.topBounds,
+        viewportAspect: aspect,
+      });
+      const height = Math.max(8, fitted.position[2] - fitted.target[2]);
+      return createCameraPose([target[0], target[1], target[2] + height], target, [0, 1, 0]);
+    }
+    const topHeight = options.topHeightMeters ?? 26;
     if (!Number.isFinite(topHeight) || topHeight <= 0) {
       throw new RangeError("topHeightMeters must be a finite positive number.");
     }
     return createCameraPose([target[0], target[1], target[2] + topHeight], target, [0, 1, 0]);
   }
 
-  const radius = options.focusBounds === undefined ? 1.5 : boundsRadius(options.focusBounds);
-  const distance = Math.max(minimumDistance, radius * 3.2);
+  if (options.focusBounds !== undefined) {
+    const fitted = computeFocusCameraState({
+      current: syntheticCurrent(options.focusBounds, FOCUS_VIEW_DIRECTION, [0, 0, 1], aspect),
+      target: options.focusBounds,
+      viewportAspect: aspect,
+    });
+    const offset: Vec3 = [
+      fitted.position[0] - fitted.target[0],
+      fitted.position[1] - fitted.target[1],
+      fitted.position[2] - fitted.target[2],
+    ];
+    const fittedDistance = Math.hypot(offset[0], offset[1], offset[2]);
+    const scale = Math.max(minimumDistance, fittedDistance) / fittedDistance;
+    return createCameraPose(
+      [
+        fitted.target[0] + offset[0] * scale,
+        fitted.target[1] + offset[1] * scale,
+        fitted.target[2] + offset[2] * scale,
+      ],
+      fitted.target,
+      [0, 0, 1],
+    );
+  }
+  // A point target has no extent to fit; the fixed standoff is unchanged.
+  const distance = Math.max(minimumDistance, 1.5 * 3.2);
   return createCameraPose(
-    [focus[0] + distance * 0.75, focus[1] - distance, focus[2] + distance * 0.62],
+    [
+      focus[0] + distance * FOCUS_VIEW_DIRECTION[0],
+      focus[1] + distance * FOCUS_VIEW_DIRECTION[1],
+      focus[2] + distance * FOCUS_VIEW_DIRECTION[2],
+    ],
     focus,
     [0, 0, 1],
   );

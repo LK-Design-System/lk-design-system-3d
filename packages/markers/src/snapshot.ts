@@ -21,6 +21,8 @@ import {
   type Vec3,
 } from "@lk-design-system/lds-3d-core";
 
+/** Straight (non-premultiplied) sRGB channels in 0–1, plus alpha — the
+ * visualization_msgs/ColorRGBA convention. Every renderer reads them as sRGB. */
 export interface MarkerColor {
   readonly r: number;
   readonly g: number;
@@ -49,79 +51,96 @@ export interface MarkerBaseSnapshot {
 export interface ArrowMarkerInput extends MarkerBaseInput {
   readonly kind: "arrow";
   /** Length, shaft diameter, and head diameter in meters. */
+  /** Extent along x, y, z in meters. */
   readonly scale: Vec3;
 }
 
 export interface ArrowMarkerSnapshot extends MarkerBaseSnapshot {
   readonly kind: "arrow";
+  /** Extent along x, y, z in meters. */
   readonly scale: Vec3;
 }
 
 export interface PoseMarkerInput extends MarkerBaseInput {
   readonly kind: "pose";
+  /** Meters. */
   readonly axisLength: number;
+  /** Meters. */
   readonly axisRadius?: number;
 }
 
 export interface PoseMarkerSnapshot extends MarkerBaseSnapshot {
   readonly kind: "pose";
+  /** Meters. */
   readonly axisLength: number;
+  /** Meters. */
   readonly axisRadius: number;
 }
 
 export interface LineStripMarkerInput extends MarkerBaseInput {
   readonly kind: "line-strip";
   readonly points: readonly Vec3[];
+  /** Line width in meters (world space), not pixels. */
   readonly width: number;
 }
 
 export interface LineStripMarkerSnapshot extends MarkerBaseSnapshot {
   readonly kind: "line-strip";
   readonly points: readonly Vec3[];
+  /** Line width in meters (world space), not pixels. */
   readonly width: number;
 }
 
 export interface PointSetMarkerInput extends MarkerBaseInput {
   readonly kind: "points";
   readonly points: readonly Vec3[];
+  /** Point diameter in meters (world space). PointCloudLayer `pointSize` is in screen pixels instead. */
   readonly size: number;
 }
 
 export interface PointSetMarkerSnapshot extends MarkerBaseSnapshot {
   readonly kind: "points";
   readonly points: readonly Vec3[];
+  /** Point diameter in meters (world space). PointCloudLayer `pointSize` is in screen pixels instead. */
   readonly size: number;
 }
 
 export interface TextMarkerInput extends MarkerBaseInput {
   readonly kind: "text";
   readonly text: string;
+  /** Text cap height in meters. */
   readonly height: number;
 }
 
 export interface TextMarkerSnapshot extends MarkerBaseSnapshot {
   readonly kind: "text";
   readonly text: string;
+  /** Text cap height in meters. */
   readonly height: number;
 }
 
+// Marker sizes keep the visualization_msgs field names (width, size, height,
+// scale) for ROS parity; every one of them is in meters.
 export type VolumeMarkerShape = "box" | "sphere" | "cylinder";
 
 export interface VolumeMarkerInput extends MarkerBaseInput {
   readonly kind: "volume";
   readonly shape: VolumeMarkerShape;
+  /** Extent along x, y, z in meters. */
   readonly scale: Vec3;
 }
 
 export interface VolumeMarkerSnapshot extends MarkerBaseSnapshot {
   readonly kind: "volume";
   readonly shape: VolumeMarkerShape;
+  /** Extent along x, y, z in meters. */
   readonly scale: Vec3;
 }
 
 export interface MeshMarkerInput extends MarkerBaseInput {
   readonly kind: "mesh";
   readonly asset: AssetId;
+  /** Extent along x, y, z in meters. */
   readonly scale: Vec3;
   readonly useEmbeddedMaterials?: boolean;
 }
@@ -129,6 +148,7 @@ export interface MeshMarkerInput extends MarkerBaseInput {
 export interface MeshMarkerSnapshot extends MarkerBaseSnapshot {
   readonly kind: "mesh";
   readonly asset: AssetId;
+  /** Extent along x, y, z in meters. */
   readonly scale: Vec3;
   readonly useEmbeddedMaterials: boolean;
 }

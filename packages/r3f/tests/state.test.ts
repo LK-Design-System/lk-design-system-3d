@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { bounds3, entityId, frameId } from "@lk-design-system/lds-3d-core";
+import { bounds3, computeFocusCameraState, entityId, frameId } from "@lk-design-system/lds-3d-core";
 
 import {
   EMPTY_INTERACTION_STATE,
   calculatePathLength,
   createPathSegments,
   reduceSceneInteraction,
+  SCENE_CANVAS_VERTICAL_FOV_RADIANS,
   resolveCameraPose,
   validateSceneRenderState,
 } from "../src/state.js";
@@ -31,7 +32,12 @@ describe("scene state helpers", () => {
       focusTarget: [8, 5, 0.4],
     });
     expect(top.target).toEqual([0, 0, 0]);
-    expect(top.position[2]).toBeGreaterThan(20);
+    // The fitted view contains the whole floor at the canvas aspect (the old
+    // r3f-only formula ignored aspect and stood ~50% too far back).
+    const height = top.position[2];
+    const halfHeight = height * Math.tan(SCENE_CANVAS_VERTICAL_FOV_RADIANS / 2);
+    expect(halfHeight).toBeGreaterThanOrEqual(6);
+    expect(halfHeight * (16 / 9)).toBeGreaterThanOrEqual(9);
     expect(focus.target).toEqual([8, 5, 0.4]);
   });
 
@@ -39,13 +45,36 @@ describe("scene state helpers", () => {
     const bounds = bounds3(frameId("map"), [-5, -1, 0], [5, 1, 2]);
     const pose = resolveCameraPose("focus", { focusBounds: bounds });
     expect(pose.target).toEqual([0, 0, 1]);
-    expect(
-      Math.hypot(
-        pose.position[0] - pose.target[0],
-        pose.position[1] - pose.target[1],
-        pose.position[2] - pose.target[2],
-      ),
-    ).toBeGreaterThan(10);
+    const distance = Math.hypot(
+      pose.position[0] - pose.target[0],
+      pose.position[1] - pose.target[1],
+      pose.position[2] - pose.target[2],
+    );
+    // Same fit as the three host: both call the core camera solver.
+    const direction = [0.75, -1, 0.62] as const;
+    const core = computeFocusCameraState({
+      current: {
+        frame: bounds.frame,
+        position: [direction[0], direction[1], 1 + direction[2]],
+        target: [0, 0, 1],
+        up: [0, 0, 1],
+        projection: {
+          kind: "perspective",
+          verticalFovRadians: SCENE_CANVAS_VERTICAL_FOV_RADIANS,
+          aspect: 16 / 9,
+          nearMeters: 0.05,
+          farMeters: 10_000,
+        },
+      },
+      target: bounds,
+      viewportAspect: 16 / 9,
+    });
+    const coreDistance = Math.hypot(
+      core.position[0] - core.target[0],
+      core.position[1] - core.target[1],
+      core.position[2] - core.target[2],
+    );
+    expect(distance).toBeCloseTo(Math.max(4, coreDistance), 6);
   });
 
   it("keeps hover and selection as independent semantic channels", () => {

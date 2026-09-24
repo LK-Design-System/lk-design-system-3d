@@ -52,6 +52,11 @@ export function SceneRuntimeProvider({ children, ...value }: SceneRuntimeProvide
   );
 }
 
+/** The scene runtime when rendered inside SceneCanvas, otherwise null. */
+export function useOptionalSceneRuntime(): SceneRuntimeValue | null {
+  return useContext(SceneRuntimeContext);
+}
+
 export function useSceneRuntime(): SceneRuntimeValue {
   const value = useContext(SceneRuntimeContext);
   if (value === null) {

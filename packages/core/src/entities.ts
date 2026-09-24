@@ -14,6 +14,15 @@ export interface RobotEntity {
   readonly timestamp?: Timestamp;
 }
 
+/**
+ * Renderer defaults for the optional sizes below. Every host draws with these
+ * when the entity omits them — the three host used to fall back to a 0.3 m
+ * goal and a 1 px path line while r3f drew 0.48 m and 0.16 m, so one scene
+ * had two sizes depending on the host.
+ */
+export const DEFAULT_GOAL_RADIUS_METERS = 0.48;
+export const DEFAULT_PATH_WIDTH_METERS = 0.16;
+
 export interface GoalEntity {
   readonly kind: "goal";
   readonly id: EntityId;

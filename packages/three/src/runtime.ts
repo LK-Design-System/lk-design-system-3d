@@ -3,23 +3,26 @@ import {
   type AdoptedAsset,
   type AssetOwnershipToken,
 } from "@lk-design-system/lds-3d-assets";
-import type {
-  AssetEntity,
-  FrameId,
-  P0SpatialEntity,
-  SceneThemeValues,
+import {
+  DEFAULT_GOAL_RADIUS_METERS,
+  DEFAULT_PATH_WIDTH_METERS,
+  type AssetEntity,
+  type FrameId,
+  type P0SpatialEntity,
+  type SceneThemeValues,
+  type Vec3,
 } from "@lk-design-system/lds-3d-core";
 import {
   BoxGeometry,
   BufferGeometry,
-  ConeGeometry,
+  DoubleSide,
+  Float32BufferAttribute,
   Group,
-  Line,
-  LineBasicMaterial,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
+  RingGeometry,
   SphereGeometry,
-  Vector3,
   type Object3D,
 } from "three";
 import { clone as cloneSkeleton } from "three/examples/jsm/utils/SkeletonUtils.js";
@@ -137,6 +140,42 @@ function setPose(root: Group, entity: Exclude<P0SpatialEntity, { readonly kind: 
   );
 }
 
+/**
+ * A flat ribbon along a polyline, `width` meters across, lying in the XY
+ * (ground) plane of the Z-up core frame. Each vertex is offset along the
+ * in-plane normal of its adjacent segments (mitred by averaging), so corners
+ * keep the width instead of pinching.
+ */
+export function createPathRibbonGeometry(points: readonly Vec3[], width: number): BufferGeometry {
+  if (!Number.isFinite(width) || width <= 0) {
+    throw new RangeError("Path ribbon width must be a positive finite number of meters.");
+  }
+  const geometry = new BufferGeometry();
+  if (points.length < 2) return geometry;
+  const half = width / 2;
+  const positions: number[] = [];
+  points.forEach((point, index) => {
+    const previous = points[Math.max(0, index - 1)] ?? point;
+    const next = points[Math.min(points.length - 1, index + 1)] ?? point;
+    const dx = next[0] - previous[0];
+    const dy = next[1] - previous[1];
+    const length = Math.hypot(dx, dy) || 1;
+    const nx = -dy / length;
+    const ny = dx / length;
+    positions.push(point[0] + nx * half, point[1] + ny * half, point[2] + 0.01);
+    positions.push(point[0] - nx * half, point[1] - ny * half, point[2] + 0.01);
+  });
+  const indices: number[] = [];
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const a = index * 2;
+    indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+  }
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 function visualColor(entity: P0SpatialEntity, theme: SceneThemeValues): string {
   switch (entity.kind) {
     case "goal":
@@ -144,7 +183,9 @@ function visualColor(entity: P0SpatialEntity, theme: SceneThemeValues): string {
     case "path":
       return theme["path.default"];
     case "robot":
-      return theme["axis.x"];
+      // Neutral structure, not the X-axis red: an axis colour on a robot body
+      // reads as an error state and collides with the axis triad.
+      return theme["grid.major"];
     case "landmark":
       return theme.warning;
     case "asset":
@@ -157,25 +198,41 @@ function fallbackVisual(entity: P0SpatialEntity, theme: SceneThemeValues): Visua
   root.name = `lkds3d:${entity.kind}:${entity.id}`;
   const color = visualColor(entity, theme);
   if (entity.kind === "path") {
-    const geometry = new BufferGeometry().setFromPoints(
-      entity.points.map((point) => new Vector3(point[0], point[1], point[2])),
+    // A flat ribbon at the entity's width, like the r3f PathRibbon. The old
+    // 1 px Line ignored widthMeters entirely.
+    const ribbon = new Mesh(
+      createPathRibbonGeometry(entity.points, entity.widthMeters ?? DEFAULT_PATH_WIDTH_METERS),
+      new MeshBasicMaterial({ color, side: DoubleSide }),
     );
-    const line = new Line(geometry, new LineBasicMaterial({ color }));
-    line.name = "lkds3d:path";
-    root.add(line);
+    ribbon.name = "lkds3d:path";
+    root.add(ribbon);
+    return { root, usesSharedAsset: false };
+  }
+
+  if (entity.kind === "goal") {
+    // A ring on the ground plane (Z-up: RingGeometry already lies in XY),
+    // matching the r3f GoalMarker. The previous ConeGeometry(r, r, 0.18, 24)
+    // passed 0.18 as radialSegments, which floors to 0 — no faces at all.
+    const radius = entity.radiusMeters ?? DEFAULT_GOAL_RADIUS_METERS;
+    const ring = new Mesh(
+      new RingGeometry(radius * 0.72, radius, 48),
+      new MeshBasicMaterial({ color, side: DoubleSide }),
+    );
+    ring.name = "lkds3d:goal";
+    ring.position.z = 0.01;
+    root.add(ring);
+    setPose(root, entity);
     return { root, usesSharedAsset: false };
   }
 
   const geometry =
-    entity.kind === "goal"
-      ? new ConeGeometry(entity.radiusMeters ?? 0.3, entity.radiusMeters ?? 0.3, 0.18, 24)
-      : entity.kind === "landmark"
-        ? new SphereGeometry(0.18, 16, 12)
-        : new BoxGeometry(
-            entity.kind === "robot" ? 0.65 : 0.5,
-            0.45,
-            entity.kind === "robot" ? 0.35 : 0.5,
-          );
+    entity.kind === "landmark"
+      ? new SphereGeometry(0.18, 16, 12)
+      : new BoxGeometry(
+          entity.kind === "robot" ? 0.65 : 0.5,
+          0.45,
+          entity.kind === "robot" ? 0.35 : 0.5,
+        );
   const material = new MeshStandardMaterial({ color, roughness: 0.64, metalness: 0.08 });
   root.add(new Mesh(geometry, material));
   setPose(root, entity);
@@ -219,12 +276,17 @@ function updatePath(
   root: Group,
   entity: Extract<P0SpatialEntity, { readonly kind: "path" }>,
 ): void {
-  const line = root.children.find((child): child is Line => child instanceof Line);
-  if (line === undefined) return;
-  line.geometry.setFromPoints(
-    entity.points.map((point) => new Vector3(point[0], point[1], point[2])),
+  const ribbon = root.children.find(
+    (child): child is Mesh => child instanceof Mesh && child.name === "lkds3d:path",
   );
-  line.geometry.computeBoundingSphere();
+  if (ribbon === undefined) return;
+  const previous = ribbon.geometry;
+  ribbon.geometry = createPathRibbonGeometry(
+    entity.points,
+    entity.widthMeters ?? DEFAULT_PATH_WIDTH_METERS,
+  );
+  previous.dispose();
+  ribbon.geometry.computeBoundingSphere();
 }
 
 function isAssetBackedEntity(

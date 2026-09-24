@@ -75,7 +75,7 @@ export interface AmrOperationalSceneProps {
 }
 
 // @public (undocumented)
-export function AmrRobot({ entity, status, model, label }: AmrRobotProps): react_jsx_runtime.JSX.Element;
+export function AmrRobot({ entity, status: statusProp, model, label }: AmrRobotProps): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
 export interface AmrRobotProps {
@@ -102,7 +102,7 @@ export function assertValidVoxelSnapshot(snapshot: VoxelLayerSnapshot, maxVoxels
 export function calculatePathLength(points: readonly Vec3[]): number;
 
 // @public
-export function CameraFrustum({ entityId, position, orientation, fovYRadians, aspect, nearMeters, farMeters, color, opacity, showFarPlane, }: CameraFrustumProps): react_jsx_runtime.JSX.Element;
+export function CameraFrustum({ entityId, position, orientation, fovYRadians, aspect, nearMeters, farMeters, color: colorProp, opacity, showFarPlane, }: CameraFrustumProps): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
 export interface CameraFrustumProps {
@@ -159,6 +159,12 @@ export interface CameraRigProps {
 }
 
 // @public (undocumented)
+export function canonicalRobotStatus(status: RobotVisualStatus): CanonicalRobotVisualStatus;
+
+// @public (undocumented)
+export type CanonicalRobotVisualStatus = Exclude<RobotVisualStatus, "live" | "warning" | "error">;
+
+// @public (undocumented)
 export function clearGltfModel(url: string): void;
 
 // @public
@@ -189,6 +195,13 @@ export function createVisualAlphaModelUrls(modelBasePath: string): VisualAlphaMo
 
 // @public (undocumented)
 export const DEFAULT_HOME_CAMERA_POSE: SceneCameraPose;
+
+// @public
+export const DEFAULT_OVERLAY_COLORS: Readonly<{
+    readonly sensor: "#43D9FF";
+    readonly occupancy: "#F0803C";
+    readonly pointCloud: "#3C9DFF";
+}>;
 
 // @public (undocumented)
 export const DEFAULT_POINT_CLOUD_COLOR = "#3c9dff";
@@ -258,6 +271,7 @@ export type GltfModelProps = {
     readonly receiveShadow?: boolean;
     readonly retryKey?: string | number;
     readonly onLoadStateChange?: (state: ModelLoadState, error?: Error) => void;
+    readonly dracoDecoderPath?: string;
 } & GltfModelCoordinateContract;
 
 // @public (undocumented)
@@ -429,7 +443,7 @@ export type PointCloudColorMode = "source" | "uniform" | "height";
 export type PointCloudHeightRange = readonly [minimum: number, maximum: number];
 
 // @public
-export function PointCloudLayer({ snapshot, maxPoints, pointSize, colorMode, fallbackColor, heightRange, clipBounds, opacity, onRenderStateChange, }: PointCloudLayerProps): react_jsx_runtime.JSX.Element | null;
+export function PointCloudLayer({ snapshot, maxPoints, pointSize, colorMode, fallbackColor: fallbackColorProp, heightRange, clipBounds, opacity, onRenderStateChange, }: PointCloudLayerProps): react_jsx_runtime.JSX.Element | null;
 
 // @public (undocumented)
 export interface PointCloudLayerProps {
@@ -501,6 +515,7 @@ export interface ResolveCameraPoseOptions {
     readonly topHeightMeters?: number;
     // (undocumented)
     readonly topTarget?: Vec3;
+    readonly viewportAspect?: number;
 }
 
 // @public (undocumented)
@@ -512,11 +527,14 @@ export function resolveSceneCameraKey(input: SceneCameraKeyInput): SceneCameraKe
 // @public (undocumented)
 export function resolveSceneTheme(profile?: SceneVisualProfile | SceneVisualTheme, customization?: SceneThemeCustomization): SceneVisualTheme;
 
-// @public (undocumented)
-export type RobotVisualStatus = "idle" | "live" | "warning" | "error";
+// @public
+export type RobotVisualStatus = "moving" | "idle" | "paused" | "fault" | "offline" | "unknown" | "live" | "warning" | "error";
 
 // @public (undocumented)
 export const SCENE_CANVAS_KEYBOARD_INSTRUCTIONS = "Camera keys: Home resets the view, T shows Top, F focuses the target, arrow keys orbit, Shift plus arrow keys pans, and plus, minus, Page Up, or Page Down zooms.";
+
+// @public
+export const SCENE_CANVAS_VERTICAL_FOV_RADIANS: number;
 
 // @public (undocumented)
 export const SCENE_VISUAL_THEMES: Readonly<Record<SceneVisualProfile, SceneVisualTheme>>;
@@ -725,11 +743,16 @@ export interface SceneMaterialTokens {
     // (undocumented)
     readonly live: string;
     // (undocumented)
+    readonly occupancy?: string;
+    // (undocumented)
     readonly panel: string;
     // (undocumented)
     readonly panelBorder: string;
     // (undocumented)
+    readonly pointCloud?: string;
+    // (undocumented)
     readonly selection: string;
+    readonly sensor?: string;
     // (undocumented)
     readonly shadow: string;
     // (undocumented)
@@ -1042,7 +1065,7 @@ export interface VisualAlphaModelProps {
 export type VisualAlphaModelUrls = Readonly<Record<VisualAlphaModelKey, string>>;
 
 // @public
-export function VoxelLayer({ snapshot, maxVoxels, position, orientation, color, opacity, }: VoxelLayerProps): react_jsx_runtime.JSX.Element;
+export function VoxelLayer({ snapshot, maxVoxels, position, orientation, color: colorProp, opacity, }: VoxelLayerProps): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
 export interface VoxelLayerProps {

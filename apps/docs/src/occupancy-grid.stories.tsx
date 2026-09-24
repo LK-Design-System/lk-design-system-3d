@@ -109,7 +109,7 @@ export function OccupancyGridSurfaceExperience() {
       >
         <Stack gap="var(--space-4)">
           <Scene3DFrame
-            appearance="dark"
+            appearance="light"
             badges={
               <StatusBadge tone={renderStateTone(renderState)}>
                 {renderStateLabel(renderState)}
@@ -139,7 +139,7 @@ export function OccupancyGridSurfaceExperience() {
               frame={FIXTURE_FRAMES.core}
               frameLoop="demand"
               homePose={OCCUPANCY_GRID_HOME}
-              profile="diagnostic-technical"
+              profile="operational-neutral"
               renderQuality="balanced"
               style={{
                 height: "100%",

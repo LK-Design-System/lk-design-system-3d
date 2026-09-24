@@ -15,6 +15,9 @@ import {
 } from "three";
 import type { EntityId, FrameId, Quat, Vec3 } from "@lk-design-system/lds-3d-core";
 
+import { useOptionalSceneRuntime } from "./runtime.js";
+import { DEFAULT_OVERLAY_COLORS } from "./themes.js";
+
 /**
  * Sensor-visualization primitives.
  *
@@ -108,11 +111,15 @@ export function CameraFrustum({
   aspect,
   nearMeters,
   farMeters,
-  color = "#43d9ff",
+  color: colorProp,
   opacity = 0.9,
   showFarPlane = true,
 }: CameraFrustumProps) {
   void entityId;
+  // The theme's sensor family (was a literal copied from the diagnostic
+  // selection colour). Outside SceneCanvas the diagnostic value stays.
+  const runtime = useOptionalSceneRuntime();
+  const color = colorProp ?? runtime?.theme.materials.sensor ?? DEFAULT_OVERLAY_COLORS.sensor;
   const resources = useMemo(() => {
     const corners = computeFrustumCorners(fovYRadians, aspect, nearMeters, farMeters);
     const linePositions = new Float32Array(FRUSTUM_EDGES.length * 6);
@@ -231,9 +238,11 @@ export function VoxelLayer({
   maxVoxels,
   position = ZERO,
   orientation = IDENTITY_QUATERNION,
-  color = "#f0803c",
+  color: colorProp,
   opacity = 0.85,
 }: VoxelLayerProps) {
+  const runtime = useOptionalSceneRuntime();
+  const color = colorProp ?? runtime?.theme.materials.occupancy ?? DEFAULT_OVERLAY_COLORS.occupancy;
   const mesh = useMemo(() => {
     const voxelCount = assertValidVoxelSnapshot(snapshot, maxVoxels);
     const size = snapshot.resolutionMeters;

@@ -87,7 +87,7 @@ export interface MarkerBaseSnapshot {
     readonly visible: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface MarkerColor {
     // (undocumented)
     readonly a: number;

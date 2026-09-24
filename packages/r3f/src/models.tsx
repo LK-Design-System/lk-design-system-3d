@@ -4,6 +4,7 @@ import type { Object3D } from "three";
 import { GLTFLoader, type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
   cloneThreeSceneInstance,
+  configureGltfLoader,
   releaseThreeSceneInstance,
 } from "@lk-design-system/lds-3d-three/r3f-bridge";
 import {
@@ -96,6 +97,8 @@ export type GltfModelProps = {
    */
   readonly retryKey?: string | number;
   readonly onLoadStateChange?: (state: ModelLoadState, error?: Error) => void;
+  /** Draco decoder location; same policy as the three host's createGltfAssetLoader. */
+  readonly dracoDecoderPath?: string;
 } & GltfModelCoordinateContract;
 
 /**
@@ -237,10 +240,13 @@ function LoadedGltfModel({
   selectable = true,
   castShadow = true,
   receiveShadow = true,
+  dracoDecoderPath,
   onReady,
 }: LoadedGltfModelProps) {
   const { theme } = useSceneRuntime();
-  const gltf = useLoader(GLTFLoader, url) as GLTF;
+  const gltf = useLoader(GLTFLoader, url, (loader) =>
+    configureGltfLoader(loader, dracoDecoderPath === undefined ? {} : { dracoDecoderPath }),
+  ) as GLTF;
   const sceneInstance = useMemo(
     () => cloneThreeSceneInstance(gltf.scene, castShadow, receiveShadow),
     [castShadow, gltf.scene, receiveShadow],

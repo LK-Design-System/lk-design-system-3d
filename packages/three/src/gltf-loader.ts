@@ -67,24 +67,36 @@ function parseGltf(loader: GLTFLoader, data: ArrayBuffer, path: string): Promise
 }
 
 /**
+ * Applies the shared decoder policy to a GLTFLoader: Draco when a decoder path
+ * is given, KTX2 refused. Both renderer adapters call this — the r3f GltfModel
+ * used a bare GLTFLoader, so a Draco-compressed asset loaded in the three host
+ * and failed in r3f.
+ */
+export function configureGltfLoader(
+  loader: GLTFLoader,
+  options: ThreeGltfAssetLoaderOptions = {},
+): void {
+  if (options.ktx2TranscoderPath !== undefined) {
+    throw new RangeError(
+      "ktx2TranscoderPath requires a renderer-bound KTX2 adapter and is not supported by createGltfAssetLoader.",
+    );
+  }
+  if (options.dracoDecoderPath !== undefined) {
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath(options.dracoDecoderPath);
+    loader.setDRACOLoader(dracoLoader);
+  }
+}
+
+/**
  * Creates a renderer-owned GLB/glTF loader with the assets package's normative
  * cancellation, late-result cleanup, progress, and ownership semantics.
  */
 export function createGltfAssetLoader(
   options: ThreeGltfAssetLoaderOptions = {},
 ): AssetLoader<ThreeAssetHandle> {
-  if (options.ktx2TranscoderPath !== undefined) {
-    throw new RangeError(
-      "ktx2TranscoderPath requires a renderer-bound KTX2 adapter and is not supported by createGltfAssetLoader.",
-    );
-  }
-
   const loader = new GLTFLoader();
-  if (options.dracoDecoderPath !== undefined) {
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath(options.dracoDecoderPath);
-    loader.setDRACOLoader(dracoLoader);
-  }
+  configureGltfLoader(loader, options);
 
   return createAssetLoader(async (request, context) => {
     context.throwIfCancelled();

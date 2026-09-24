@@ -13,9 +13,9 @@ import {
 } from "three";
 
 import { CORE_TO_THREE_BASIS_QUATERNION } from "./coordinates.js";
+import { useSceneRuntime } from "./runtime.js";
 
 const AXIS_LENGTH = 34;
-const AXIS_COLORS = Object.freeze({ x: "#ef4444", y: "#22c55e", z: "#3b82f6" });
 const CAMERA_OFFSET = new Vector3();
 const GLYPHS = Object.freeze({
   X: ["10001", "01010", "00100", "00100", "01010", "10001", "10001"],
@@ -108,6 +108,9 @@ export function OrientationTriad() {
   const groupRef = useRef<Group>(null);
   const { camera, size } = useThree();
   const basis = useMemo(() => new Quaternion(...CORE_TO_THREE_BASIS_QUATERNION), []);
+  // The theme's axis tokens — the same ones TransformGizmo reads. A private
+  // Tailwind palette here put two sets of X/Y/Z colours in one scene.
+  const { theme } = useSceneRuntime();
 
   useFrame(() => {
     const group = groupRef.current;
@@ -117,9 +120,9 @@ export function OrientationTriad() {
 
   return (
     <group ref={groupRef} name="lk-core-orientation-triad">
-      <Axis color={AXIS_COLORS.x} label="X" rotation={[0, 0, -Math.PI / 2]} />
-      <Axis color={AXIS_COLORS.y} label="Y" rotation={[0, 0, 0]} />
-      <Axis color={AXIS_COLORS.z} label="Z" rotation={[Math.PI / 2, 0, 0]} />
+      <Axis color={theme.scene["axis.x"]} label="X" rotation={[0, 0, -Math.PI / 2]} />
+      <Axis color={theme.scene["axis.y"]} label="Y" rotation={[0, 0, 0]} />
+      <Axis color={theme.scene["axis.z"]} label="Z" rotation={[Math.PI / 2, 0, 0]} />
     </group>
   );
 }

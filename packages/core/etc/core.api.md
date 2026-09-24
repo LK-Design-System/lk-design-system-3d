@@ -353,10 +353,25 @@ export function createSpatialTransformChangeSet(value: Omit<SpatialTransformChan
 }): SpatialTransformChangeSet;
 
 // @public
+export const DEFAULT_GOAL_RADIUS_METERS = 0.48;
+
+// @public
 export const DEFAULT_OCCUPANCY_GRID_PLANE_TOLERANCE_METERS = 0.000001;
 
 // @public (undocumented)
+export const DEFAULT_PATH_WIDTH_METERS = 0.16;
+
+// @public
+export const DEFAULT_SCENE_LIGHTING: Readonly<{
+    ambientIntensity: 1.35;
+    keyIntensity: 2.4;
+}>;
+
+// @public (undocumented)
 export const DEFAULT_SPATIAL_TRANSFORM_SNAP: SpatialTransformSnap;
+
+// @public (undocumented)
+export const DIAGNOSTIC_SCENE_TOKENS: SceneThemeValues;
 
 // @public (undocumented)
 export type EntityId = Brand<string, "EntityId">;
@@ -653,6 +668,9 @@ export function occupancyPointToCell(geometry: OccupancyGridGeometry, point: Fra
 // @public
 export function occupancyPointToImagePixel(geometry: OccupancyGridGeometry, point: FramedPoint3, options?: OccupancyGridProjectionOptions): OccupancyGridImagePixel | undefined;
 
+// @public
+export const OPERATIONAL_SCENE_TOKENS: SceneThemeValues;
+
 // @public (undocumented)
 export type P0SpatialEntity = AssetEntity | RobotEntity | GoalEntity | PathEntity | LandmarkEntity;
 
@@ -824,6 +842,9 @@ export interface RendererStatus {
     // (undocumented)
     readonly state: RendererLifecycleState;
 }
+
+// @public
+export function resolveSceneTokens(overrides?: SceneThemeOverrides, base?: SceneThemeValues): SceneThemeValues;
 
 // @public (undocumented)
 export interface RigidTransform3 {

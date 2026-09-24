@@ -6,6 +6,7 @@
 
 import { AssetOwnershipToken } from '@lk-design-system/lds-3d-assets';
 import { FrameId } from '@lk-design-system/lds-3d-core';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Object3D } from 'three';
 import { P0SpatialEntity } from '@lk-design-system/lds-3d-core';
 import { Quat } from '@lk-design-system/lds-3d-core';
@@ -14,6 +15,9 @@ import { Vec3 } from '@lk-design-system/lds-3d-core';
 
 // @public
 function cloneThreeSceneInstance(source: Object3D, castShadow: boolean, receiveShadow: boolean): Object3D;
+
+// @public
+function configureGltfLoader(loader: GLTFLoader, options?: ThreeGltfAssetLoaderOptions): void;
 
 // @public
 function consumeThreeAssetOwnership(token: AssetOwnershipToken<ThreeAssetHandle>): ThreeResolvedAsset;
@@ -46,6 +50,8 @@ function createThreeVisualInstance(input: ThreeVisualInput): ThreeVisualInstance
 
 declare namespace r3fBridge {
     export {
+        ThreeGltfAssetLoaderOptions,
+        configureGltfLoader,
         ThreeAssetHandle,
         ThreeResolvedAsset,
         ThreeVisualInput,
@@ -65,6 +71,13 @@ function releaseThreeSceneInstance(instance: Object3D): void;
 interface ThreeAssetHandle {
     // (undocumented)
     readonly __opaque: "ThreeAssetHandle";
+}
+
+// @public (undocumented)
+interface ThreeGltfAssetLoaderOptions {
+    // (undocumented)
+    readonly dracoDecoderPath?: string;
+    readonly ktx2TranscoderPath?: string;
 }
 
 // @public

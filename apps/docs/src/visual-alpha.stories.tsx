@@ -16,6 +16,7 @@ import {
   PathRibbon,
   SceneCanvas,
   VisualAlphaModel,
+  resolveSceneTheme,
   usePrefersReducedMotion,
   type SceneCameraPose,
   type SceneHoverChange,
@@ -200,24 +201,18 @@ interface StatusPalette {
   readonly selected: string;
 }
 
+// Read from the scene theme, not restated: this palette used to be a second
+// hand-copied set of the theme's materials.
 function statusPalette(profile: SceneVisualProfile): StatusPalette {
-  return profile === "diagnostic-technical"
-    ? {
-        live: "#4DE3C1",
-        stale: "#FFC857",
-        warning: "#FFC857",
-        error: "#FF6B78",
-        idle: "#526B78",
-        selected: "#43D9FF",
-      }
-    : {
-        live: "#007A66",
-        stale: "#9A5B00",
-        warning: "#9A5B00",
-        error: "#B42318",
-        idle: "#60717E",
-        selected: "#005FCC",
-      };
+  const { materials } = resolveSceneTheme(profile);
+  return {
+    live: materials.live,
+    stale: materials.warning,
+    warning: materials.warning,
+    error: materials.error,
+    idle: materials.assetStructure,
+    selected: materials.selection,
+  };
 }
 
 function visualEntityStatusLabel(status: VisualEntityStatus): string {
@@ -466,6 +461,7 @@ function WarehouseContents({
 }
 
 function SceneLegend({ profile }: { readonly profile: SceneVisualProfile }): ReactNode {
+  const legendColors = resolveSceneTheme(profile).materials;
   return (
     <div className="visual-scene-legend">
       <Card
@@ -487,22 +483,33 @@ function SceneLegend({ profile }: { readonly profile: SceneVisualProfile }): Rea
             aria-label="장면 상태 범례"
             direction="vertical"
             items={[
+              // The legend describes the scene, so it reads the scene's own
+              // theme. It used LDS status tokens (positive green, primary
+              // blue) while the scene drew teal and violet — a key that did
+              // not match its map.
               {
                 id: "executing",
                 label: "실행 중",
-                color: "var(--color-semantic-status-positive)",
+                color: legendColors.live,
                 shape: "line",
               },
               {
                 id: "goal",
                 label: "목표 / 의도",
-                color: "var(--color-semantic-primary-normal)",
+                color: legendColors.intent,
                 shape: "dot",
+              },
+              {
+                // A selected robot's route is drawn in the selection colour.
+                id: "selected",
+                label: "선택",
+                color: legendColors.selection,
+                shape: "line",
               },
               {
                 id: "blocked",
                 label: "차단 / 오류",
-                color: "var(--color-semantic-status-negative)",
+                color: legendColors.error,
                 dashed: true,
                 shape: "line",
               },

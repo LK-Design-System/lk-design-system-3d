@@ -68,7 +68,7 @@ function VoxelLayerExperience() {
             frame={FRAME}
             frameLoop="demand"
             homePose={HOME}
-            profile="diagnostic-technical"
+            profile="operational-neutral"
             renderQuality="balanced"
             style={{ height: "min(36rem, 64vw)", minHeight: "22rem" }}
             topBounds={BOUNDS}

@@ -13,3 +13,4 @@ export {
   type ThreeVisualUpdateInput,
 } from "./runtime.js";
 export type { ThreeAssetHandle } from "./asset-resource.js";
+export { configureGltfLoader, type ThreeGltfAssetLoaderOptions } from "./gltf-loader.js";
