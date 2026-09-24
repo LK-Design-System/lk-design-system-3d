@@ -1,4 +1,9 @@
-import { bounds3, frameId, quaternionFromYaw, rigidTransform3 } from "@lk-design-system/lds-3d-core";
+import {
+  bounds3,
+  frameId,
+  quaternionFromYaw,
+  rigidTransform3,
+} from "@lk-design-system/lds-3d-core";
 import { coreToThreePosition } from "@lk-design-system/lds-3d-three/coordinates";
 import { createPointCloudSnapshot } from "@lk-design-system/lds-3d-pointcloud";
 import { BufferAttribute, Color, StaticDrawUsage, Vector3 } from "three";

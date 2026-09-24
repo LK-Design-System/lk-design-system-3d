@@ -40,23 +40,10 @@
       "parentLink": "base",
       "childLink": "shoulder",
       "origin": {
-        "translation": [
-          0,
-          0,
-          0.06
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [0, 0, 0.06],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        0,
-        1
-      ],
+      "axis": [0, 0, 1],
       "limits": {
         "lower": -1.92,
         "upper": 1.92
@@ -68,23 +55,10 @@
       "parentLink": "shoulder",
       "childLink": "upper_arm",
       "origin": {
-        "translation": [
-          0,
-          0,
-          0.03
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [0, 0, 0.03],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        1,
-        0
-      ],
+      "axis": [0, 1, 0],
       "limits": {
         "lower": -1.75,
         "upper": 1.75
@@ -96,23 +70,10 @@
       "parentLink": "upper_arm",
       "childLink": "forearm",
       "origin": {
-        "translation": [
-          0,
-          0,
-          0.11
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [0, 0, 0.11],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        1,
-        0
-      ],
+      "axis": [0, 1, 0],
       "limits": {
         "lower": -1.69,
         "upper": 1.69
@@ -124,23 +85,10 @@
       "parentLink": "forearm",
       "childLink": "wrist",
       "origin": {
-        "translation": [
-          0,
-          0,
-          0.1
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [0, 0, 0.1],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        1,
-        0
-      ],
+      "axis": [0, 1, 0],
       "limits": {
         "lower": -1.66,
         "upper": 1.66
@@ -152,23 +100,10 @@
       "parentLink": "wrist",
       "childLink": "gripper",
       "origin": {
-        "translation": [
-          0,
-          0,
-          0.045
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [0, 0, 0.045],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        0,
-        1
-      ],
+      "axis": [0, 0, 1],
       "limits": {
         "lower": -2.79,
         "upper": 2.79
@@ -180,23 +115,10 @@
       "parentLink": "gripper",
       "childLink": "jaw",
       "origin": {
-        "translation": [
-          -0.013,
-          0,
-          0.038
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [-0.013, 0, 0.038],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        1,
-        0
-      ],
+      "axis": [0, 1, 0],
       "limits": {
         "lower": 0,
         "upper": 1.1

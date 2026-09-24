@@ -15,30 +15,13 @@
   "fileToCoreTransform": {
     "sourceFrame": "robots/so-arm",
     "targetFrame": "lk-world",
-    "translation": [
-      0,
-      0,
-      0
-    ],
-    "rotation": [
-      0,
-      0,
-      0,
-      1
-    ]
+    "translation": [0, 0, 0],
+    "rotation": [0, 0, 0, 1]
   },
   "boundsInCoreMeters": {
     "frame": "lk-world",
-    "min": [
-      -0.065,
-      -0.065,
-      0
-    ],
-    "max": [
-      0.065,
-      0.065,
-      0.421
-    ]
+    "min": [-0.065, -0.065, 0],
+    "max": [0.065, 0.065, 0.421]
   },
   "integrity": {
     "sha256": "e39f43e04874794802af6a9aaf1199a86061443456643cf76293949ee9d2b8a1"

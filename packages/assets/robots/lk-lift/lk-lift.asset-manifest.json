@@ -15,30 +15,13 @@
   "fileToCoreTransform": {
     "sourceFrame": "robots/lk-lift",
     "targetFrame": "lk-world",
-    "translation": [
-      0,
-      0,
-      0
-    ],
-    "rotation": [
-      0,
-      0,
-      0,
-      1
-    ]
+    "translation": [0, 0, 0],
+    "rotation": [0, 0, 0, 1]
   },
   "boundsInCoreMeters": {
     "frame": "lk-world",
-    "min": [
-      -0.25,
-      -0.25,
-      0
-    ],
-    "max": [
-      0.60732,
-      0.25,
-      1.615958
-    ]
+    "min": [-0.25, -0.25, 0],
+    "max": [0.60732, 0.25, 1.615958]
   },
   "integrity": {
     "sha256": "8584d088b62dba07aee51dca6012177a1b298cbe3e8a70a0d8a6b4615063407c"

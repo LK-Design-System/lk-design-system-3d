@@ -24,23 +24,10 @@
       "parentLink": "base_link",
       "childLink": "mast",
       "origin": {
-        "translation": [
-          0,
-          0,
-          0.1
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [0, 0, 0.1],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        0,
-        1
-      ],
+      "axis": [0, 0, 1],
       "limits": {
         "lower": 0,
         "upper": 1.2
@@ -52,23 +39,10 @@
       "parentLink": "mast",
       "childLink": "boom",
       "origin": {
-        "translation": [
-          0,
-          0,
-          1.35
-        ],
-        "rotation": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "translation": [0, 0, 1.35],
+        "rotation": [0, 0, 0, 1]
       },
-      "axis": [
-        0,
-        0,
-        1
-      ],
+      "axis": [0, 0, 1],
       "limits": {
         "lower": -1.7,
         "upper": 1.7
