@@ -30,7 +30,16 @@
     "./robots/tron/tron.glb": "./robots/tron/tron.glb",
     "./robots/tron/tron.asset-manifest.json": "./robots/tron/tron.asset-manifest.json",
     "./robots/tron/provenance.json": "./robots/tron/provenance.json",
+    "./robots/so-arm/so-arm.glb": "./robots/so-arm/so-arm.glb",
+    "./robots/so-arm/so-arm.asset-manifest.json": "./robots/so-arm/so-arm.asset-manifest.json",
+    "./robots/so-arm/so-arm.kinematics.json": "./robots/so-arm/so-arm.kinematics.json",
+    "./robots/so-arm/provenance.json": "./robots/so-arm/provenance.json",
+    "./robots/lk-lift/lk-lift.glb": "./robots/lk-lift/lk-lift.glb",
+    "./robots/lk-lift/lk-lift.asset-manifest.json": "./robots/lk-lift/lk-lift.asset-manifest.json",
+    "./robots/lk-lift/lk-lift.kinematics.json": "./robots/lk-lift/lk-lift.kinematics.json",
+    "./robots/lk-lift/provenance.json": "./robots/lk-lift/provenance.json",
     "./asset-manifest.v1.schema.json": "./asset-manifest.v1.schema.json",
+    "./robot-kinematics.v1.schema.json": "./robot-kinematics.v1.schema.json",
     "./package.json": "./package.json"
   },
   "scripts": {

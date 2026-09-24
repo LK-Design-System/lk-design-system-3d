@@ -20,9 +20,4 @@ catalog:
   typescript: 5.9.3
   vitest: 3.2.4
 
-minimumReleaseAgeExclude:
-  - "@lk-design-system/lds-core@0.1.0-rc.4"
-  - "@lk-design-system/lds-product@0.1.0-rc.4"
-  - "@lk-design-system/lds-robotics-ui@0.1.0-rc.4"
-  - "@lk-design-system/lds-theme@0.1.0-rc.4"
 

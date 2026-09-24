@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v7.0.0
         with:
           repository: LK-Design-System/lk-design-system
-          ref: 10a99516143eaba79ae13a5375f138fbc8c0f993
+          ref: e59e1ec9f294c5c5c5cb90a6573efd3a8d23288b
           path: .lds-package-source
 
       - name: Build public LDS packages
@@ -58,7 +58,6 @@ jobs:
             npm.cmd pack --pack-destination "$env:GITHUB_WORKSPACE"
             Pop-Location
           }
-          Copy-Item .lds-package-source/vendor/lk-design-system-lds-robotics-ui-0.1.0-rc.4.tgz .
 
       - name: Install dependencies
         shell: pwsh
@@ -81,12 +80,6 @@ jobs:
             Copy-Item $tarball.FullName "apps/docs/vendor/$($tarball.Name)" -Force
             $overrides."@lk-design-system/lds-$package" = "file:./$($tarball.Name)"
           }
-          $roboticsTarball = Get-ChildItem -Filter 'lk-design-system-lds-robotics-ui-*.tgz' | Select-Object -First 1
-          if (-not $roboticsTarball) {
-            throw 'The public Robotics UI package could not be packed.'
-          }
-          $manifest.dependencies.'@lk-design-system/lds-robotics-ui' = "file:../../$($roboticsTarball.Name)"
-          $overrides.'@lk-design-system/lds-robotics-ui' = "file:./$($roboticsTarball.Name)"
           $overrideYaml = "`noverrides:`n"
           foreach ($entry in $overrides.GetEnumerator()) {
             $overrideYaml += "  `"$($entry.Key)`": `"$($entry.Value)`"`n"

@@ -1,6 +1,6 @@
 {
   "name": "@lk-design-system/lds-3d-docs",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,10 +9,9 @@
     "build-storybook": "storybook build --config-dir .storybook --output-dir ../../storybook-static"
   },
   "dependencies": {
-    "@lk-design-system/lds-core": "0.1.0-rc.4",
-    "@lk-design-system/lds-product": "0.1.0-rc.4",
-    "@lk-design-system/lds-robotics-ui": "0.1.0-rc.4",
-    "@lk-design-system/lds-theme": "0.1.0-rc.4",
+    "@lk-design-system/lds-core": "0.2.9",
+    "@lk-design-system/lds-product": "0.2.9",
+    "@lk-design-system/lds-theme": "0.2.9",
     "@lk-design-system/lds-3d-assets": "workspace:*",
     "@lk-design-system/lds-3d-core": "workspace:*",
     "@lk-design-system/lds-3d-markers": "workspace:*",

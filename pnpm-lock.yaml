@@ -107,18 +107,6 @@ importers:
 
   apps/docs:
     dependencies:
-      '@lk-design-system/lds-core':
-        specifier: 0.1.0-rc.4
-        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-design-system/lds-product':
-        specifier: 0.1.0-rc.4
-        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-design-system/lds-robotics-ui':
-        specifier: 0.1.0-rc.4
-        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-design-system/lds-theme':
-        specifier: 0.1.0-rc.4
-        version: 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@lk-design-system/lds-3d-assets':
         specifier: workspace:*
         version: link:../../packages/assets
@@ -143,6 +131,15 @@ importers:
       '@lk-design-system/lds-3d-three':
         specifier: workspace:*
         version: link:../../packages/three
+      '@lk-design-system/lds-core':
+        specifier: 0.2.9
+        version: 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-product':
+        specifier: 0.2.9
+        version: 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-theme':
+        specifier: 0.2.9
+        version: 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-three/drei':
         specifier: 'catalog:'
         version: 10.7.7(@react-three/fiber@9.6.1(@types/react@19.1.16)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1))(@types/react@19.1.16)(@types/three@0.185.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(three@0.185.1)
@@ -946,26 +943,20 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lk-design-system/lds-core@0.1.0-rc.4':
-    resolution: {integrity: sha512-Kn4z9yfUhCa/E51ou6NMHTU4oRaGgQ3+cJFyNXzKKXL87DoNkUDd9dWzxtcn+MTpq+KRs+yzco110m/r08E9CQ==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-core/0.1.0-rc.4/e158e51d5094abdfc52a99ca5e792cac5fd08f2f}
+  '@lk-design-system/lds-core@0.2.9':
+    resolution: {integrity: sha512-xtRu52FnP1U9CJgpAtArTWqI9PZmOluB5W7ufGmn7/Ka9iGAC/CVanlLXPOPQ3Y7p7dNE6XmSVjWNKB4vaNLFA==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-core/0.2.9/9cec89547d3edf6cacd1d110d769ff9015f1fbea}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-design-system/lds-product@0.1.0-rc.4':
-    resolution: {integrity: sha512-0ZFYAaFoykMydFFQbabMvlV2nTjQ2CLFOntCqv56J4HAH8odheAfWdPNmKXbVh+k+AzDdg9BkFBGh6Ppv9eRLg==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-product/0.1.0-rc.4/0e9a5053e0d19889c95e669bf64ac8bc58e3320c}
+  '@lk-design-system/lds-product@0.2.9':
+    resolution: {integrity: sha512-nGcdjkZ+aa2pT5adG3BPw53P+s/YvUy03NEQYNuTcBQc+TCngEv+wMZimJ4G4PJGFsmY5yegt1LeVg/gHiZsHg==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-product/0.2.9/23831a9268d4a242743eced31a994dd7f02d6bf9}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
 
-  '@lk-design-system/lds-robotics-ui@0.1.0-rc.4':
-    resolution: {integrity: sha512-Y2Yi+aIL94IeMxsRsNrtCYKuo20mJkMtN+/W123yVSzZlBCFdZdluobRf4uunA+3jo7SHajxJqxmBXAwES/KJA==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-robotics-ui/0.1.0-rc.4/f49bbb6ae77d689a8fc44f131eb0f309de378f12}
-    peerDependencies:
-      react: '>=18 <20'
-      react-dom: '>=18 <20'
-
-  '@lk-design-system/lds-theme@0.1.0-rc.4':
-    resolution: {integrity: sha512-5MbZdQSOVzsCB+oEQKOjcT8uYkOlikejnDtfub6M6NTLha2R4BNCROzhEv4W0r+ERoKL8p5zuqA6nAXY/op/fQ==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-theme/0.1.0-rc.4/9a4a3c1b3c424bb439094e42530a0f9d724b51df}
+  '@lk-design-system/lds-theme@0.2.9':
+    resolution: {integrity: sha512-YRdXiOqXpkMjvvqTNY2ynyNFMH/pUi+uL58LVTh04IjUfeGa8/vNX5Tr/QT9TAos+YniwDMKMAHay1iRICBVNw==, tarball: https://npm.pkg.github.com/download/@lk-design-system/lds-theme/0.2.9/7d26eeb883b17a7c6a36cbba52e45bea304cfee9}
     peerDependencies:
       react: '>=18 <20'
       react-dom: '>=18 <20'
@@ -1878,6 +1869,7 @@ packages:
   eslint@9.39.1:
     resolution: {integrity: sha512-BhHmn2yNOFA9H9JmmIVKJmd288g9hrVRDkdoIgRCRuSySRUHH7r/DI6aAXW9T1WwUuY3DFgrcaqB+deURBLR5g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -3770,27 +3762,20 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lk-design-system/lds-core@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-core@0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-design-system/lds-product@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-product@0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@lk-design-system/lds-core': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-core': 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@lk-design-system/lds-robotics-ui@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@lk-design-system/lds-theme@0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@lk-design-system/lds-core': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@lk-design-system/lds-product': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-
-  '@lk-design-system/lds-theme@0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
-    dependencies:
-      '@lk-design-system/lds-core': 0.1.0-rc.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@lk-design-system/lds-core': 0.2.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 

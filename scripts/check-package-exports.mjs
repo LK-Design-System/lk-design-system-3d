@@ -25,6 +25,17 @@ const expectedExports = {
     "./robots/tron/tron.glb",
     "./robots/tron/tron.asset-manifest.json",
     "./robots/tron/provenance.json",
+    // Every file robots/catalog.json points at is importable: the catalog is
+    // public, so a catalog entry whose files are not exported is a dead link.
+    "./robots/so-arm/so-arm.glb",
+    "./robots/so-arm/so-arm.asset-manifest.json",
+    "./robots/so-arm/so-arm.kinematics.json",
+    "./robots/so-arm/provenance.json",
+    "./robots/lk-lift/lk-lift.glb",
+    "./robots/lk-lift/lk-lift.asset-manifest.json",
+    "./robots/lk-lift/lk-lift.kinematics.json",
+    "./robots/lk-lift/provenance.json",
+    "./robot-kinematics.v1.schema.json",
     "./package.json",
   ],
   testing: [".", "./fixtures", "./contracts", "./provenance", "./package.json"],
