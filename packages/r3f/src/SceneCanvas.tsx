@@ -19,8 +19,10 @@ import {
   assertValidBounds3,
   assertValidFrameId,
   type Bounds3,
+  type CameraConstraints,
   type EntityId,
   type FrameId,
+  type GroundHeightSampler,
   type Vec3,
 } from "@lk-design-system/lds-3d-core";
 
@@ -49,6 +51,7 @@ import {
   reduceSceneInteraction,
   type SceneCameraMode,
   type SceneCameraPose,
+  type SceneFollowSubject,
   type SceneInteractionState,
   type SceneRenderState,
 } from "./state.js";
@@ -150,6 +153,24 @@ export interface SceneCanvasProps {
   readonly onCameraSettled?: (mode: Exclude<SceneCameraMode, "free">) => void;
   /** Exposed to the caller-owned overlay; SceneCanvas never renders a retry action. */
   readonly onRetry?: () => void;
+  /** The rendered pose the `follow` camera tracks, in `frame`. */
+  readonly followSubject?: SceneFollowSubject;
+  /** Entry transition into `follow`, in ms. Reduced motion always jumps. Default 800. */
+  readonly followTransitionMs?: number;
+  /** Keep the follow camera in front of objects flagged `userData.lds3dCameraObstacle`. */
+  readonly followObstacles?: boolean;
+  /** Where the eye and orbit target may go, in `frame`. */
+  readonly cameraConstraints?: CameraConstraints;
+  /** Ground height in `frame` for the camera constraints' clearance rules. */
+  readonly groundHeightAt?: GroundHeightSampler;
+  /**
+   * The browser dropped the WebGL context (GPU reset, too many contexts, a
+   * backgrounded tab). The canvas asks for restoration; tell the operator the
+   * view is paused, and offer a way back if it does not return.
+   */
+  readonly onContextLost?: () => void;
+  /** The context came back and the scene will redraw. */
+  readonly onContextRestored?: () => void;
 }
 
 const READY_STATE: SceneRenderState = Object.freeze({ kind: "ready" });
@@ -192,7 +213,13 @@ interface DefaultStatusOverlayProps {
 }
 
 /** Keeps a demand-driven R3F canvas renderable after a WebGL context restore. */
-function ContextRecovery(): null {
+function ContextRecovery({
+  onLost,
+  onRestored,
+}: {
+  readonly onLost?: (() => void) | undefined;
+  readonly onRestored?: (() => void) | undefined;
+}): null {
   const gl = useThree((state) => state.gl);
   const invalidate = useThree((state) => state.invalidate);
 
@@ -201,10 +228,12 @@ function ContextRecovery(): null {
     const onContextLost = (event: Event): void => {
       // WebGL restoration is opt-in after a lost event.
       event.preventDefault();
+      onLost?.();
     };
     const onContextRestored = (): void => {
       gl.resetState();
       invalidate();
+      onRestored?.();
     };
 
     canvas.addEventListener("webglcontextlost", onContextLost, false);
@@ -213,7 +242,7 @@ function ContextRecovery(): null {
       canvas.removeEventListener("webglcontextlost", onContextLost, false);
       canvas.removeEventListener("webglcontextrestored", onContextRestored, false);
     };
-  }, [gl, invalidate]);
+  }, [gl, invalidate, onLost, onRestored]);
 
   return null;
 }
@@ -313,6 +342,13 @@ function SceneCanvasComponent(
     onCameraModeChange,
     onCameraSettled,
     onRetry,
+    followSubject,
+    followTransitionMs,
+    followObstacles,
+    cameraConstraints,
+    groundHeightAt,
+    onContextLost,
+    onContextRestored,
   }: SceneCanvasProps,
   ref: ForwardedRef<SceneCanvasHandle>,
 ) {
@@ -604,7 +640,7 @@ function SceneCanvasComponent(
         shadows={resolvedRenderQuality.shadows}
         style={{ display: "block", minHeight: 320, width: "100%", height: "100%" }}
       >
-        <ContextRecovery />
+        <ContextRecovery onLost={onContextLost} onRestored={onContextRestored} />
         <SceneRuntimeProvider
           cameraMode={resolvedCameraMode}
           clearSelection={clearSelection}
@@ -627,6 +663,11 @@ function SceneCanvasComponent(
             {...(topTarget === undefined ? {} : { topTarget })}
             {...(topBounds === undefined ? {} : { topBounds })}
             {...(onCameraSettled === undefined ? {} : { onSettled: onCameraSettled })}
+            {...(followSubject === undefined ? {} : { followSubject })}
+            {...(followTransitionMs === undefined ? {} : { followTransitionMs })}
+            {...(followObstacles === undefined ? {} : { followObstacles })}
+            {...(cameraConstraints === undefined ? {} : { constraints: cameraConstraints })}
+            {...(groundHeightAt === undefined ? {} : { groundHeightAt })}
           />
           <SceneEnvironment {...resolvedEnvironment} />
           <OrientationTriad />

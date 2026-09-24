@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useFrame, useThree, type ThreeElements } from "@react-three/fiber";
 import {
+  Box3,
   BoxGeometry,
   BufferGeometry,
   CatmullRomCurve3,
@@ -36,12 +37,21 @@ import {
 } from "./path-interaction.js";
 import {
   createPathRibbonIntervals,
+  drapePathPoints,
+  resolveMinimumScreenWidthMeters,
   resolvePathExecutionCursorMetrics,
   resolvePathExecutionProgress,
   resolvePathRibbonVisualState,
+  type PathGroundHeightSampler,
   type PathRibbonInterval,
   type PathRibbonVariant,
 } from "./path-ribbon.js";
+import {
+  assertValidLocalizationUncertainty,
+  resolveRobotPoseFreshnessVisual,
+  type RobotLocalizationUncertainty,
+  type RobotPoseFreshness,
+} from "./robot-pose.js";
 import { DEFAULT_SCENE_SHADOW_MAP_SIZE, shouldScheduleDemandFrame } from "./rendering.js";
 import { useEntityInteraction, useSceneRuntime } from "./runtime.js";
 import type { SceneRenderState } from "./state.js";
@@ -523,6 +533,31 @@ export interface AmrRobotProps {
   readonly status?: RobotVisualStatus;
   readonly model?: ReactNode;
   readonly label?: string;
+  /**
+   * How far the displayed pose can be trusted, judged by the product. A
+   * non-fresh pose fades the body, turns the beacon off and draws a dashed
+   * "last known position" ring, so the operator does not read it as live.
+   * Default `fresh`.
+   */
+  readonly poseFreshness?: RobotPoseFreshness;
+  /** Localization uncertainty drawn as a translucent ground disc. */
+  readonly localization?: RobotLocalizationUncertainty;
+}
+
+/** A ring of short arcs on the ground: the "last known position" cue. */
+function LastKnownRing({ color, radius }: { readonly color: string; readonly radius: number }) {
+  const dashes = 16;
+  const arc = (Math.PI * 2) / dashes / 1.8;
+  return (
+    <group name="lkds3d:robot-pose:last-known" position={[0, 0, 0.02]}>
+      {Array.from({ length: dashes }, (_, index) => (
+        <mesh key={index} rotation={[0, 0, (index * Math.PI * 2) / dashes]}>
+          <torusGeometry args={[radius, 0.022, 6, 8, arc]} />
+          <meshBasicMaterial color={color} depthWrite={false} transparent opacity={0.9} />
+        </mesh>
+      ))}
+    </group>
+  );
 }
 
 function Wheel({ position, color }: { readonly position: Vec3; readonly color: string }) {
@@ -534,8 +569,17 @@ function Wheel({ position, color }: { readonly position: Vec3; readonly color: s
   );
 }
 
-export function AmrRobot({ entity, status: statusProp = "moving", model, label }: AmrRobotProps) {
+export function AmrRobot({
+  entity,
+  status: statusProp = "moving",
+  model,
+  label,
+  poseFreshness = "fresh",
+  localization,
+}: AmrRobotProps) {
   const { theme } = useSceneRuntime();
+  if (localization !== undefined) assertValidLocalizationUncertainty(localization);
+  const freshnessVisual = resolveRobotPoseFreshnessVisual(poseFreshness);
   const status = canonicalRobotStatus(statusProp);
   const statusColor =
     status === "fault"
@@ -547,7 +591,8 @@ export function AmrRobot({ entity, status: statusProp = "moving", model, label }
           : theme.materials.live;
   // offline: the last-known pose of a robot we cannot hear — ghosted, beacon off.
   const offline = status === "offline";
-  const beaconLit = status !== "idle" && !offline;
+  const beaconLit = status !== "idle" && !offline && freshnessVisual.beaconAllowed;
+  const bodyOpacity = offline ? 0.42 : freshnessVisual.bodyOpacity;
 
   return (
     <Selectable
@@ -567,8 +612,8 @@ export function AmrRobot({ entity, status: statusProp = "moving", model, label }
                   color={theme.materials.assetBody}
                   metalness={0.14}
                   roughness={0.52}
-                  transparent={offline}
-                  opacity={offline ? 0.42 : 1}
+                  transparent={bodyOpacity < 1}
+                  opacity={bodyOpacity}
                 />
               </mesh>
               <mesh castShadow position={[0.08, 0, 0.535]} receiveShadow>
@@ -602,6 +647,20 @@ export function AmrRobot({ entity, status: statusProp = "moving", model, label }
             </group>
           )}
           <RobotStatusGlyph status={status} color={statusColor} />
+          {freshnessVisual.lastKnownRing ? (
+            <LastKnownRing color={theme.materials.text} radius={0.95} />
+          ) : null}
+          {localization !== undefined && localization.radiusMeters > 0 ? (
+            <mesh name="lkds3d:robot-pose:localization" position={[0, 0, 0.012]}>
+              <circleGeometry args={[localization.radiusMeters, 48]} />
+              <meshBasicMaterial
+                color={theme.materials.intent}
+                depthWrite={false}
+                transparent
+                opacity={0.16}
+              />
+            </mesh>
+          ) : null}
           {hovered || selected ? (
             <group position={[0, 0, 0.018]}>
               <mesh>
@@ -837,6 +896,39 @@ export interface PathRibbonProps {
   readonly animated?: boolean;
   /** Enables click-to-select. Defaults to false for backward compatibility. */
   readonly selectable?: boolean;
+  /**
+   * Seats the ribbon on terrain: the path is resampled every
+   * `drapeSpacingMeters` and each sample sits at ground height plus
+   * `elevationMeters`. Without it the ribbon keeps its input heights.
+   */
+  readonly groundHeightAt?: PathGroundHeightSampler;
+  /** Resampling interval for `groundHeightAt`. Default 1 m. */
+  readonly drapeSpacingMeters?: number;
+  /** Never render thinner than this many CSS pixels, however far the camera is. */
+  readonly minScreenWidthPx?: number;
+}
+
+/** Widens a ribbon so it keeps a minimum on-screen width as the camera moves away. */
+function useMinimumScreenWidth(
+  widthMeters: number,
+  minimumPx: number | undefined,
+  center: Vector3,
+): number {
+  const { camera, size } = useThree();
+  const [effective, setEffective] = useState(widthMeters);
+  useFrame(() => {
+    if (minimumPx === undefined) return;
+    const fov = "fov" in camera ? (camera.fov * Math.PI) / 180 : Math.PI / 4;
+    const next = resolveMinimumScreenWidthMeters(
+      widthMeters,
+      minimumPx,
+      camera.position.distanceTo(center),
+      fov,
+      size.height,
+    );
+    if (next !== effective) setEffective(next);
+  });
+  return minimumPx === undefined ? widthMeters : effective;
 }
 
 function createPathRibbonSurfaceGeometry(
@@ -1100,18 +1192,32 @@ export function PathRibbon({
   variant = "planned",
   animated = true,
   selectable = false,
+  groundHeightAt,
+  drapeSpacingMeters,
+  minScreenWidthPx,
 }: PathRibbonProps) {
   const { theme } = useSceneRuntime();
   const curve = useMemo(() => {
     if (entity.points.length < 2) return null;
-    return new CatmullRomCurve3(
-      entity.points.map((point) => new Vector3(point[0], point[1], point[2] + elevationMeters)),
-      false,
-      "centripetal",
-    );
-  }, [elevationMeters, entity.points]);
+    const points =
+      groundHeightAt === undefined
+        ? entity.points.map((point) => new Vector3(point[0], point[1], point[2] + elevationMeters))
+        : drapePathPoints(entity.points, groundHeightAt, {
+            elevationMeters,
+            ...(drapeSpacingMeters === undefined ? {} : { spacingMeters: drapeSpacingMeters }),
+          }).map((point) => new Vector3(point[0], point[1], point[2]));
+    return new CatmullRomCurve3(points, false, "centripetal");
+  }, [drapeSpacingMeters, elevationMeters, entity.points, groundHeightAt]);
+  const center = useMemo(() => {
+    if (curve === null) return new Vector3();
+    return new Box3().setFromPoints(curve.points).getCenter(new Vector3());
+  }, [curve]);
+  const width = useMinimumScreenWidth(
+    entity.widthMeters ?? DEFAULT_PATH_WIDTH_METERS,
+    minScreenWidthPx,
+    center,
+  );
   if (curve === null) return null;
-  const width = entity.widthMeters ?? DEFAULT_PATH_WIDTH_METERS;
   const statusColor =
     variant === "blocked"
       ? theme.materials.error
@@ -1133,7 +1239,7 @@ export function PathRibbon({
             animated={animated}
             curve={curve}
             interaction={interaction}
-            segmentCount={Math.max(24, entity.points.length * 18)}
+            segmentCount={Math.max(24, curve.points.length * 18)}
             statusColor={statusColor}
             variant={variant}
             width={width}

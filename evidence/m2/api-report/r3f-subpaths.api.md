@@ -6,14 +6,17 @@
 
 import { AssetManifestV1 } from '@lk-design-system/lds-3d-assets';
 import { Bounds3 } from '@lk-design-system/lds-3d-core';
+import { CameraConstraints } from '@lk-design-system/lds-3d-core';
 import { CORE_TO_THREE_BASIS } from '@lk-design-system/lds-3d-three/coordinates';
 import { CORE_TO_THREE_BASIS_QUATERNION } from '@lk-design-system/lds-3d-three/coordinates';
 import { coreToThreePosition } from '@lk-design-system/lds-3d-three/coordinates';
 import { coreToThreeQuaternion } from '@lk-design-system/lds-3d-three/coordinates';
 import { CSSProperties } from 'react';
 import { EntityId } from '@lk-design-system/lds-3d-core';
+import { FollowCameraMode } from '@lk-design-system/lds-3d-core';
 import { FrameId } from '@lk-design-system/lds-3d-core';
 import { GoalEntity } from '@lk-design-system/lds-3d-core';
+import { GroundHeightSampler } from '@lk-design-system/lds-3d-core';
 import { JointValues } from '@lk-design-system/lds-3d-assets';
 import { MarkerFreshnessPolicy } from '@lk-design-system/lds-3d-markers';
 import { MarkerLayerRenderState } from '@lk-design-system/lds-3d-markers';
@@ -34,8 +37,13 @@ import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ReactNode } from 'react';
 import { RobotEntity } from '@lk-design-system/lds-3d-core';
 import { RobotKinematicsV1 } from '@lk-design-system/lds-3d-assets';
+import { SceneLayerEntry } from '@lk-design-system/lds-3d-core';
+import { SceneLayerStatus } from '@lk-design-system/lds-3d-core';
+import { SceneLayerSummary } from '@lk-design-system/lds-3d-core';
 import { SceneThemeOverrides } from '@lk-design-system/lds-3d-core';
 import { SceneThemeValues } from '@lk-design-system/lds-3d-core';
+import { ScreenLabelAnchor } from '@lk-design-system/lds-3d-core';
+import { ScreenLabelHiddenReason } from '@lk-design-system/lds-3d-core';
 import { SpatialAssetNode } from '@lk-design-system/lds-3d-core';
 import { SpatialEditVolume } from '@lk-design-system/lds-3d-core';
 import { SpatialNodeTransform } from '@lk-design-system/lds-3d-core';
@@ -75,7 +83,7 @@ interface AmrOperationalSceneProps {
 }
 
 // @public (undocumented)
-function AmrRobot({ entity, status: statusProp, model, label }: AmrRobotProps): react_jsx_runtime.JSX.Element;
+function AmrRobot({ entity, status: statusProp, model, label, poseFreshness, localization, }: AmrRobotProps): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
 interface AmrRobotProps {
@@ -83,8 +91,10 @@ interface AmrRobotProps {
     readonly entity: RobotEntity;
     // (undocumented)
     readonly label?: string;
+    readonly localization?: RobotLocalizationUncertainty;
     // (undocumented)
     readonly model?: ReactNode;
+    readonly poseFreshness?: RobotPoseFreshness;
     // (undocumented)
     readonly status?: RobotVisualStatus;
 }
@@ -100,6 +110,9 @@ function assertValidVoxelSnapshot(snapshot: VoxelLayerSnapshot, maxVoxels: numbe
 
 // @public (undocumented)
 function calculatePathLength(points: readonly Vec3[]): number;
+
+// @public
+const CAMERA_OBSTACLE_USER_DATA_KEY = "lds3dCameraObstacle";
 
 // @public
 function CameraFrustum({ entityId, position, orientation, fovYRadians, aspect, nearMeters, farMeters, color: colorProp, opacity, showFarPlane, }: CameraFrustumProps): react_jsx_runtime.JSX.Element;
@@ -125,16 +138,21 @@ interface CameraFrustumProps {
 }
 
 // @public (undocumented)
-function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, keyboardCommand, onManualControl, onSettled, }: CameraRigProps): null;
+function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, keyboardCommand, onManualControl, onSettled, followSubject, followTransitionMs, followObstacles, constraints, groundHeightAt, }: CameraRigProps): null;
 
 // @public (undocumented)
 interface CameraRigProps {
+    readonly constraints?: CameraConstraints;
     // (undocumented)
     readonly enableOrbit?: boolean;
     // (undocumented)
     readonly focusBounds?: Bounds3;
     // (undocumented)
     readonly focusTarget?: Vec3;
+    readonly followObstacles?: boolean;
+    readonly followSubject?: SceneFollowSubject;
+    readonly followTransitionMs?: number;
+    readonly groundHeightAt?: GroundHeightSampler;
     // (undocumented)
     readonly homePose?: SceneCameraPose;
     // (undocumented)
@@ -168,7 +186,16 @@ type CanonicalRobotVisualStatus = Exclude<RobotVisualStatus, "live" | "warning" 
 function clearGltfModel(url: string): void;
 
 // @public
+function clipThreeCameraBoom(placement: ThreeCameraPlacement, obstacleDistanceMeters: number | undefined, options?: {
+    readonly marginMeters?: number;
+    readonly minDistanceMeters?: number;
+}): ThreeCameraPlacementResult;
+
+// @public
 function computeFrustumCorners(fovYRadians: number, aspect: number, nearMeters: number, farMeters: number): readonly Vec3[];
+
+// @public
+function constrainThreeCameraPlacement(placement: ThreeCameraPlacement, constraints: CameraConstraints, groundHeightAt?: GroundHeightSampler): ThreeCameraPlacementResult;
 
 declare namespace coordinates {
     export {
@@ -213,7 +240,22 @@ const DEFAULT_POINT_CLOUD_COLOR = "#3c9dff";
 const DEFAULT_POINT_CLOUD_POINT_SIZE = 1.5;
 
 // @public (undocumented)
+const DEFAULT_SCENE_LINE_TOKENS: SceneLineTokens;
+
+// @public (undocumented)
+const DIAGNOSTIC_SCENE_LABEL_TOKENS: SceneLabelTokens;
+
+// @public (undocumented)
+const DIAGNOSTIC_SCENE_NATURE_TOKENS: SceneNatureTokens;
+
+// @public (undocumented)
 const DIAGNOSTIC_TECHNICAL_THEME: SceneVisualTheme;
+
+// @public
+function drapePathPoints(points: readonly (readonly [number, number, number])[], groundHeightAt: PathGroundHeightSampler, options?: {
+    readonly spacingMeters?: number;
+    readonly elevationMeters?: number;
+}): readonly (readonly [number, number, number])[];
 
 // @public
 function EditVolume({ volume, selectable }: EditVolumeProps): react_jsx_runtime.JSX.Element;
@@ -242,6 +284,9 @@ interface EntityInteractionBindings {
     // (undocumented)
     readonly selected: boolean;
 }
+
+// @public
+function estimateSceneLabelWidthPx(text: string, tokens: SceneLabelTokens): number;
 
 // @public (undocumented)
 function GltfModel({ onLoadStateChange, ...props }: GltfModelProps): react_jsx_runtime.JSX.Element;
@@ -430,19 +475,31 @@ interface OccupancyGridSurfaceProps {
 // @public (undocumented)
 const OPERATIONAL_NEUTRAL_THEME: SceneVisualTheme;
 
+// @public (undocumented)
+const OPERATIONAL_SCENE_LABEL_TOKENS: SceneLabelTokens;
+
+// @public (undocumented)
+const OPERATIONAL_SCENE_NATURE_TOKENS: SceneNatureTokens;
+
 // @public
 function OrientationTriad(): react_jsx_runtime.JSX.Element;
 
+// @public
+type PathGroundHeightSampler = (x: number, y: number) => number;
+
 // @public (undocumented)
-function PathRibbon({ entity, elevationMeters, variant, animated, selectable, }: PathRibbonProps): react_jsx_runtime.JSX.Element | null;
+function PathRibbon({ entity, elevationMeters, variant, animated, selectable, groundHeightAt, drapeSpacingMeters, minScreenWidthPx, }: PathRibbonProps): react_jsx_runtime.JSX.Element | null;
 
 // @public (undocumented)
 interface PathRibbonProps {
     readonly animated?: boolean;
+    readonly drapeSpacingMeters?: number;
     // (undocumented)
     readonly elevationMeters?: number;
     // (undocumented)
     readonly entity: PathEntity;
+    readonly groundHeightAt?: PathGroundHeightSampler;
+    readonly minScreenWidthPx?: number;
     readonly selectable?: boolean;
     // (undocumented)
     readonly variant?: PathRibbonVariant;
@@ -459,6 +516,19 @@ interface PathSegment {
     readonly lengthMeters: number;
     // (undocumented)
     readonly start: Vec3;
+}
+
+// @public (undocumented)
+interface PlacedSceneLabel {
+    // (undocumented)
+    readonly heightPx: number;
+    // (undocumented)
+    readonly label: SceneLabel;
+    // (undocumented)
+    readonly widthPx: number;
+    readonly x: number;
+    // (undocumented)
+    readonly y: number;
 }
 
 // @public (undocumented)
@@ -530,6 +600,7 @@ interface ResolveCameraPoseOptions {
     readonly focusBounds?: Bounds3;
     // (undocumented)
     readonly focusTarget?: Vec3;
+    readonly followSubject?: SceneFollowSubject;
     // (undocumented)
     readonly home?: SceneCameraPose;
     // (undocumented)
@@ -543,14 +614,44 @@ interface ResolveCameraPoseOptions {
     readonly viewportAspect?: number;
 }
 
+// @public
+function resolveMinimumScreenWidthMeters(widthMeters: number, minimumPx: number, distanceMeters: number, verticalFovRadians: number, viewportHeightPx: number): number;
+
 // @public (undocumented)
 function resolveModelUrl(modelBasePath: string, fileName: string): string;
+
+// @public (undocumented)
+function resolveRobotPoseFreshnessVisual(freshness: RobotPoseFreshness): RobotPoseFreshnessVisual;
 
 // @public
 function resolveSceneCameraKey(input: SceneCameraKeyInput): SceneCameraKeyboardCommand | null;
 
+// @public
+function resolveSceneLabelTokens(theme: SceneVisualTheme): SceneLabelTokens;
+
+// @public
+function resolveSceneLineTokens(theme: SceneVisualTheme): SceneLineTokens;
+
+// @public
+function resolveSceneNatureTokens(theme: SceneVisualTheme): SceneNatureTokens;
+
 // @public (undocumented)
 function resolveSceneTheme(profile?: SceneVisualProfile | SceneVisualTheme, customization?: SceneThemeCustomization): SceneVisualTheme;
+
+// @public
+interface RobotLocalizationUncertainty {
+    readonly radiusMeters: number;
+}
+
+// @public
+type RobotPoseFreshness = "fresh" | "stale" | "expired" | "future";
+
+// @public (undocumented)
+interface RobotPoseFreshnessVisual {
+    readonly beaconAllowed: boolean;
+    readonly bodyOpacity: number;
+    readonly lastKnownRing: boolean;
+}
 
 // @public
 type RobotVisualStatus = "moving" | "idle" | "paused" | "fault" | "offline" | "unknown" | "live" | "warning" | "error";
@@ -561,6 +662,7 @@ declare namespace scene {
         AmrOperationalSceneProps,
         AmrRobot,
         AmrRobotProps,
+        CAMERA_OBSTACLE_USER_DATA_KEY,
         CameraFrustum,
         CameraFrustumProps,
         CameraRig,
@@ -588,9 +690,11 @@ declare namespace scene {
         OccupancyGridSurface,
         OccupancyGridSurfaceProps,
         OrientationTriad,
+        PathGroundHeightSampler,
         PathRibbon,
         PathRibbonProps,
         PathRibbonVariant,
+        PlacedSceneLabel,
         PointCloudColorMode,
         PointCloudHeightRange,
         PointCloudLayer,
@@ -598,6 +702,9 @@ declare namespace scene {
         PointCloudLayers,
         PointCloudLayersProps,
         PointCloudSceneLayer,
+        RobotLocalizationUncertainty,
+        RobotPoseFreshness,
+        RobotPoseFreshnessVisual,
         RobotVisualStatus,
         SCENE_CANVAS_KEYBOARD_INSTRUCTIONS,
         SceneCameraChangeSource,
@@ -611,6 +718,15 @@ declare namespace scene {
         SceneEnvironmentProps,
         SceneFrameLoop,
         SceneHoverChange,
+        SceneLabel,
+        SceneLabelLayout,
+        SceneLabelOverlay,
+        SceneLabelOverlayProps,
+        SceneLabelProjector,
+        SceneLabelProjectorProps,
+        SceneLayer,
+        SceneLayerProps,
+        SceneLayerRegistry,
         SceneOverlayContext,
         ScenePointerDetail,
         SceneRenderQuality,
@@ -628,6 +744,8 @@ declare namespace scene {
         SpatialAssetRenderer,
         SpatialStructure,
         SpatialStructureProps,
+        ThreeCameraPlacement,
+        ThreeCameraPlacementResult,
         TransformGizmo,
         TransformGizmoProps,
         VisualAlphaAssetPlacement,
@@ -636,11 +754,18 @@ declare namespace scene {
         VoxelLayerSnapshot,
         assertValidVoxelSnapshot,
         canonicalRobotStatus,
+        clipThreeCameraBoom,
         computeFrustumCorners,
+        constrainThreeCameraPlacement,
+        drapePathPoints,
+        estimateSceneLabelWidthPx,
         isEditableKeyboardTarget,
+        resolveMinimumScreenWidthMeters,
+        resolveRobotPoseFreshnessVisual,
         resolveSceneCameraKey,
         useEntityInteraction,
         usePrefersReducedMotion,
+        useSceneLayerRegistry,
         useSceneRuntime
     }
 }
@@ -691,7 +816,7 @@ interface SceneCameraKeyInput {
 }
 
 // @public (undocumented)
-type SceneCameraMode = "home" | "top" | "focus" | "free";
+type SceneCameraMode = "home" | "top" | "focus" | "follow" | "free";
 
 // @public (undocumented)
 interface SceneCameraPose {
@@ -723,6 +848,7 @@ interface SceneCanvasProps {
     readonly ariaDescribedBy?: string;
     // (undocumented)
     readonly ariaLabel?: string;
+    readonly cameraConstraints?: CameraConstraints;
     // (undocumented)
     readonly cameraMode?: SceneCameraMode;
     // (undocumented)
@@ -744,8 +870,12 @@ interface SceneCanvasProps {
     readonly focusBounds?: Bounds3;
     // (undocumented)
     readonly focusTarget?: Vec3;
+    readonly followObstacles?: boolean;
+    readonly followSubject?: SceneFollowSubject;
+    readonly followTransitionMs?: number;
     readonly frame: FrameId;
     readonly frameLoop?: SceneFrameLoop;
+    readonly groundHeightAt?: GroundHeightSampler;
     // (undocumented)
     readonly homePose?: SceneCameraPose;
     // (undocumented)
@@ -754,6 +884,8 @@ interface SceneCanvasProps {
     readonly onCameraModeChange?: (mode: SceneCameraMode, source: SceneCameraChangeSource) => void;
     // (undocumented)
     readonly onCameraSettled?: (mode: Exclude<SceneCameraMode, "free">) => void;
+    readonly onContextLost?: () => void;
+    readonly onContextRestored?: () => void;
     // (undocumented)
     readonly onHoverChange?: (change: SceneHoverChange) => void;
     readonly onRetry?: () => void;
@@ -809,6 +941,24 @@ interface SceneEnvironmentProps extends GroundGridProps {
 }
 
 // @public
+interface SceneFollowSubject {
+    // (undocumented)
+    readonly distanceMeters?: number;
+    // (undocumented)
+    readonly eyeHeightMeters?: number;
+    readonly headingRadians: number;
+    // (undocumented)
+    readonly heightMeters?: number;
+    // (undocumented)
+    readonly lookAheadMeters?: number;
+    // (undocumented)
+    readonly lookAtHeightMeters?: number;
+    readonly mode?: FollowCameraMode;
+    // (undocumented)
+    readonly position: Vec3;
+}
+
+// @public
 type SceneFrameLoop = "always" | "demand";
 
 // @public (undocumented)
@@ -844,6 +994,120 @@ interface SceneInteractionState {
 }
 
 // @public (undocumented)
+interface SceneLabel {
+    // (undocumented)
+    readonly id: string;
+    readonly maxDistanceMeters?: number;
+    readonly position: Vec3;
+    readonly priority?: number;
+    // (undocumented)
+    readonly selected?: boolean;
+    // (undocumented)
+    readonly text: string;
+    readonly widthPx?: number;
+}
+
+// @public (undocumented)
+interface SceneLabelLayout {
+    // (undocumented)
+    readonly hidden: readonly {
+        readonly id: string;
+        readonly reason: ScreenLabelHiddenReason;
+    }[];
+    // (undocumented)
+    readonly placed: readonly PlacedSceneLabel[];
+}
+
+// @public
+function SceneLabelOverlay({ layout, theme, renderLabel }: SceneLabelOverlayProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+interface SceneLabelOverlayProps {
+    // (undocumented)
+    readonly layout: SceneLabelLayout;
+    readonly renderLabel?: (entry: PlacedSceneLabel) => ReactNode;
+    // (undocumented)
+    readonly theme: SceneVisualTheme;
+}
+
+// @public
+function SceneLabelProjector({ labels, theme, onLayout, anchor, paddingPx, maxVisible, }: SceneLabelProjectorProps): null;
+
+// @public (undocumented)
+interface SceneLabelProjectorProps {
+    // (undocumented)
+    readonly anchor?: ScreenLabelAnchor;
+    // (undocumented)
+    readonly labels: readonly SceneLabel[];
+    // (undocumented)
+    readonly maxVisible?: number;
+    readonly onLayout: (layout: SceneLabelLayout) => void;
+    // (undocumented)
+    readonly paddingPx?: number;
+    // (undocumented)
+    readonly theme: SceneVisualTheme;
+}
+
+// @public
+interface SceneLabelTokens {
+    readonly accent: string;
+    // (undocumented)
+    readonly background: string;
+    // (undocumented)
+    readonly border: string;
+    // (undocumented)
+    readonly fontFamily: string;
+    // (undocumented)
+    readonly fontSizePx: number;
+    // (undocumented)
+    readonly fontWeight: number;
+    // (undocumented)
+    readonly lineHeightPx: number;
+    // (undocumented)
+    readonly paddingXPx: number;
+    // (undocumented)
+    readonly paddingYPx: number;
+    // (undocumented)
+    readonly radiusPx: number;
+    // (undocumented)
+    readonly text: string;
+}
+
+// @public
+function SceneLayer({ id, children, onStatusChange, recoverable, retryKey, }: SceneLayerProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+interface SceneLayerProps {
+    // (undocumented)
+    readonly children: ReactNode;
+    // (undocumented)
+    readonly id: string;
+    readonly onStatusChange: (id: string, status: SceneLayerStatus) => void;
+    readonly recoverable?: boolean;
+    readonly retryKey?: number;
+}
+
+// @public (undocumented)
+interface SceneLayerRegistry {
+    // (undocumented)
+    readonly entries: readonly SceneLayerEntry[];
+    readonly report: (id: string, status: SceneLayerStatus) => void;
+    // (undocumented)
+    readonly summary: SceneLayerSummary;
+}
+
+// @public
+interface SceneLineTokens {
+    readonly ribbonMinWidthPx: number;
+    // (undocumented)
+    readonly routeDashPx: number;
+    // (undocumented)
+    readonly routeGapPx: number;
+    readonly routeWidthPx: number;
+    readonly trailWidthPx: number;
+}
+
+// @public (undocumented)
 interface SceneMaterialTokens {
     // (undocumented)
     readonly assetBody: string;
@@ -874,6 +1138,20 @@ interface SceneMaterialTokens {
     readonly text: string;
     // (undocumented)
     readonly warning: string;
+}
+
+// @public
+interface SceneNatureTokens {
+    // (undocumented)
+    readonly pavement: string;
+    // (undocumented)
+    readonly skyHorizon: string;
+    // (undocumented)
+    readonly skyZenith: string;
+    // (undocumented)
+    readonly terrain: string;
+    // (undocumented)
+    readonly vegetation: string;
 }
 
 // @public (undocumented)
@@ -988,7 +1266,13 @@ interface SceneStateMarkerProps {
 // @public (undocumented)
 interface SceneThemeCustomization {
     // (undocumented)
+    readonly labels?: Readonly<Partial<SceneLabelTokens>>;
+    // (undocumented)
+    readonly lines?: Readonly<Partial<SceneLineTokens>>;
+    // (undocumented)
     readonly materials?: Readonly<Partial<SceneMaterialTokens>>;
+    // (undocumented)
+    readonly nature?: Readonly<Partial<SceneNatureTokens>>;
     // (undocumented)
     readonly scene?: SceneThemeOverrides;
 }
@@ -1017,7 +1301,12 @@ interface SceneVisualTheme {
     // (undocumented)
     readonly label: string;
     // (undocumented)
+    readonly labels?: SceneLabelTokens;
+    readonly lines?: SceneLineTokens;
+    // (undocumented)
     readonly materials: SceneMaterialTokens;
+    // (undocumented)
+    readonly nature?: SceneNatureTokens;
     // (undocumented)
     readonly scene: SceneThemeValues;
 }
@@ -1089,6 +1378,7 @@ declare namespace state {
         SCENE_CANVAS_VERTICAL_FOV_RADIANS,
         SceneCameraMode,
         SceneCameraPose,
+        SceneFollowSubject,
         SceneInteractionAction,
         SceneInteractionState,
         SceneRenderState,
@@ -1103,15 +1393,38 @@ declare namespace state {
 declare namespace themes {
     export {
         DEFAULT_OVERLAY_COLORS,
+        DEFAULT_SCENE_LINE_TOKENS,
+        DIAGNOSTIC_SCENE_LABEL_TOKENS,
+        DIAGNOSTIC_SCENE_NATURE_TOKENS,
         DIAGNOSTIC_TECHNICAL_THEME,
         OPERATIONAL_NEUTRAL_THEME,
+        OPERATIONAL_SCENE_LABEL_TOKENS,
+        OPERATIONAL_SCENE_NATURE_TOKENS,
         SCENE_VISUAL_THEMES,
+        SceneLabelTokens,
+        SceneLineTokens,
         SceneMaterialTokens,
+        SceneNatureTokens,
         SceneThemeCustomization,
         SceneVisualProfile,
         SceneVisualTheme,
+        resolveSceneLabelTokens,
+        resolveSceneLineTokens,
+        resolveSceneNatureTokens,
         resolveSceneTheme
     }
+}
+
+// @public (undocumented)
+interface ThreeCameraPlacement {
+    readonly position: Vec3;
+    readonly target: Vec3;
+}
+
+// @public (undocumented)
+interface ThreeCameraPlacementResult extends ThreeCameraPlacement {
+    // (undocumented)
+    readonly changed: boolean;
 }
 
 // @public
@@ -1144,6 +1457,12 @@ function useEntityInteraction(entityId: EntityId, options?: {
 
 // @public (undocumented)
 function usePrefersReducedMotion(): boolean;
+
+// @public
+function useSceneLayerRegistry(layerIds: readonly string[], options?: {
+    readonly required?: readonly string[];
+    readonly disabled?: readonly string[];
+}): SceneLayerRegistry;
 
 // @public (undocumented)
 function useSceneRuntime(): SceneRuntimeValue;

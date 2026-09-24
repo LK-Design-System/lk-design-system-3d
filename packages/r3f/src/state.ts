@@ -2,14 +2,35 @@ import {
   assertValidBounds3,
   assertValidVec3,
   computeFocusCameraState,
+  computeFollowCameraState,
   computeTopCameraState,
+  frameId,
   type Bounds3,
   type CameraState,
   type EntityId,
+  type FollowCameraMode,
   type Vec3,
 } from "@lk-design-system/lds-3d-core";
 
-export type SceneCameraMode = "home" | "top" | "focus" | "free";
+export type SceneCameraMode = "home" | "top" | "focus" | "follow" | "free";
+
+/**
+ * The subject a `follow` camera tracks, in the canvas core frame. Pass the
+ * rendered (smoothed) pose, not the raw report, or the camera shakes with the
+ * transport jitter the subject's own smoothing already removed.
+ */
+export interface SceneFollowSubject {
+  readonly position: Vec3;
+  /** Yaw about core +Z in radians; 0 faces +X. */
+  readonly headingRadians: number;
+  /** Default `third-person`. */
+  readonly mode?: FollowCameraMode;
+  readonly distanceMeters?: number;
+  readonly heightMeters?: number;
+  readonly lookAtHeightMeters?: number;
+  readonly eyeHeightMeters?: number;
+  readonly lookAheadMeters?: number;
+}
 
 export interface SceneCameraPose {
   readonly position: Vec3;
@@ -33,6 +54,34 @@ export interface ResolveCameraPoseOptions {
   readonly topHeightMeters?: number;
   /** Width ÷ height of the canvas; bounds are fitted to it. Defaults to 16:9. */
   readonly viewportAspect?: number;
+  /** Required for a `follow` pose; without it `follow` resolves to home. */
+  readonly followSubject?: SceneFollowSubject;
+}
+
+const FOLLOW_POSE_FRAME = frameId("scene-follow");
+
+function followPose(subject: SceneFollowSubject, aspect: number): SceneCameraPose {
+  const state = computeFollowCameraState({
+    frame: FOLLOW_POSE_FRAME,
+    subjectPosition: subject.position,
+    headingRadians: subject.headingRadians,
+    mode: subject.mode ?? "third-person",
+    projection: {
+      kind: "perspective",
+      verticalFovRadians: SCENE_CANVAS_VERTICAL_FOV_RADIANS,
+      aspect,
+      nearMeters: 0.05,
+      farMeters: 10_000,
+    },
+    ...(subject.distanceMeters === undefined ? {} : { distanceMeters: subject.distanceMeters }),
+    ...(subject.heightMeters === undefined ? {} : { heightMeters: subject.heightMeters }),
+    ...(subject.lookAtHeightMeters === undefined
+      ? {}
+      : { lookAtHeightMeters: subject.lookAtHeightMeters }),
+    ...(subject.eyeHeightMeters === undefined ? {} : { eyeHeightMeters: subject.eyeHeightMeters }),
+    ...(subject.lookAheadMeters === undefined ? {} : { lookAheadMeters: subject.lookAheadMeters }),
+  });
+  return createCameraPose(state.position, state.target, state.up);
 }
 
 /** Vertical field of view of the SceneCanvas perspective camera (42°). */
@@ -89,7 +138,7 @@ export function resolveCameraPose(
   options: ResolveCameraPoseOptions = {},
 ): SceneCameraPose {
   const home = options.home ?? DEFAULT_HOME_CAMERA_POSE;
-  if (mode === "home" || mode === "free") {
+  if (mode === "home" || mode === "free" || (mode === "follow" && !options.followSubject)) {
     return createCameraPose(home.position, home.target, home.up);
   }
 
@@ -104,6 +153,9 @@ export function resolveCameraPose(
   }
   if (!Number.isFinite(minimumDistance) || minimumDistance <= 0) {
     throw new RangeError("minimumDistanceMeters must be a finite positive number.");
+  }
+  if (mode === "follow" && options.followSubject !== undefined) {
+    return followPose(options.followSubject, aspect);
   }
 
   if (mode === "top") {

@@ -1,10 +1,23 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Quaternion, Vector3 } from "three";
+import { Quaternion, Raycaster, Vector3, type Object3D } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import type { Bounds3, Vec3 } from "@lk-design-system/lds-3d-core";
+import {
+  FOLLOW_CAMERA_TRANSITION_MS,
+  cameraTransitionProgress,
+  easeInOutQuintic,
+  type Bounds3,
+  type CameraConstraints,
+  type GroundHeightSampler,
+  type Vec3,
+} from "@lk-design-system/lds-3d-core";
 
 import { resolveCameraMotionPolicy } from "./camera-motion.js";
+import {
+  CAMERA_OBSTACLE_USER_DATA_KEY,
+  clipThreeCameraBoom,
+  constrainThreeCameraPlacement,
+} from "./camera-rig-constraints.js";
 import { coreToThreePosition } from "./coordinates.js";
 import { usePrefersReducedMotion } from "./motion.js";
 import { shouldScheduleDemandFrame } from "./rendering.js";
@@ -14,6 +27,7 @@ import {
   resolveCameraPose,
   type SceneCameraMode,
   type SceneCameraPose,
+  type SceneFollowSubject,
 } from "./state.js";
 
 export interface CameraRigProps {
@@ -31,6 +45,37 @@ export interface CameraRigProps {
   };
   readonly onManualControl?: (source: "keyboard" | "user") => void;
   readonly onSettled?: (mode: Exclude<SceneCameraMode, "free">) => void;
+  /** The pose `follow` mode tracks. Without it, `follow` holds the home view. */
+  readonly followSubject?: SceneFollowSubject;
+  /** Entry transition into `follow`. Reduced motion always jumps. Default 800 ms. */
+  readonly followTransitionMs?: number;
+  /**
+   * In `follow`, keep the eye in front of objects whose `userData.lds3dCameraObstacle`
+   * (or an ancestor's) is true, so the camera does not pass through walls.
+   */
+  readonly followObstacles?: boolean;
+  /** Where the eye and target may go. Applied after every camera update. */
+  readonly constraints?: CameraConstraints;
+  /** Ground height in core coordinates, for the constraints' clearance rules. */
+  readonly groundHeightAt?: GroundHeightSampler;
+}
+
+interface FollowTransitionStart {
+  readonly position: Vector3;
+  readonly target: Vector3;
+  readonly up: Vector3;
+  readonly startedAt: number;
+}
+
+function toVec3(value: Vector3): Vec3 {
+  return [value.x, value.y, value.z];
+}
+
+function isCameraObstacle(object: Object3D): boolean {
+  for (let current: Object3D | null = object; current !== null; current = current.parent) {
+    if (current.userData[CAMERA_OBSTACLE_USER_DATA_KEY] === true) return true;
+  }
+  return false;
 }
 
 function asVector3(value: Vec3): Vector3 {
@@ -49,8 +94,15 @@ export function CameraRig({
   keyboardCommand,
   onManualControl,
   onSettled,
+  followSubject,
+  followTransitionMs = FOLLOW_CAMERA_TRANSITION_MS,
+  followObstacles = false,
+  constraints,
+  groundHeightAt,
 }: CameraRigProps) {
-  const { camera, frameloop, get, gl, invalidate, set, size } = useThree();
+  const { camera, frameloop, get, gl, invalidate, scene, set, size } = useThree();
+  const followStart = useRef<FollowTransitionStart | null>(null);
+  const raycaster = useMemo(() => new Raycaster(), []);
   // Fit bounds to the canvas actually on screen (core camera solver).
   const viewportAspect = size.height > 0 ? size.width / size.height : 0;
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -76,9 +128,19 @@ export function CameraRig({
       ...(topTarget === undefined ? {} : { topTarget }),
       ...(topBounds === undefined ? {} : { topBounds }),
       ...(viewportAspect > 0 && Number.isFinite(viewportAspect) ? { viewportAspect } : {}),
+      ...(followSubject === undefined ? {} : { followSubject }),
     };
     return resolveCameraPose(mode, options);
-  }, [focusBounds, focusTarget, homePose, mode, topBounds, topTarget, viewportAspect]);
+  }, [
+    focusBounds,
+    focusTarget,
+    followSubject,
+    homePose,
+    mode,
+    topBounds,
+    topTarget,
+    viewportAspect,
+  ]);
   const desiredPosition = useMemo(
     () => asVector3(coreToThreePosition(desired.position)),
     [desired.position],
@@ -97,8 +159,8 @@ export function CameraRig({
     controls.enableRotate = enableOrbit;
     controls.enableZoom = enableOrbit;
     controls.screenSpacePanning = false;
-    controls.minDistance = 1.2;
-    controls.maxDistance = 80;
+    controls.minDistance = constraints?.minDistanceMeters ?? 1.2;
+    controls.maxDistance = constraints?.maxDistanceMeters ?? 80;
     controls.maxPolarAngle = Math.PI * 0.495;
     controls.target.copy(asVector3(coreToThreePosition(homePose.target)));
     const handleStart = (): void => {
@@ -125,10 +187,28 @@ export function CameraRig({
     get,
     gl.domElement,
     homePose.target,
+    constraints?.maxDistanceMeters,
+    constraints?.minDistanceMeters,
     onManualControl,
     requestDemandFrame,
     set,
   ]);
+
+  useEffect(() => {
+    if (mode !== "follow") {
+      followStart.current = null;
+      return;
+    }
+    const controls = controlsRef.current;
+    followStart.current = {
+      position: camera.position.clone(),
+      target: controls === null ? camera.position.clone() : controls.target.clone(),
+      up: camera.up.clone(),
+      startedAt: performance.now(),
+    };
+    transitionActive.current = true;
+    requestDemandFrame(true);
+  }, [camera, mode, requestDemandFrame]);
 
   useEffect(() => {
     const controls = controlsRef.current;
@@ -183,6 +263,11 @@ export function CameraRig({
   }, [camera, enableOrbit, keyboardCommand, onManualControl, requestDemandFrame]);
 
   useEffect(() => {
+    if (mode === "follow") {
+      // The follow effect owns the entry transition; later subject updates only need a frame.
+      requestDemandFrame(true);
+      return;
+    }
     if (mode === "free") {
       transitionActive.current = false;
       requestDemandFrame(true);
@@ -222,7 +307,46 @@ export function CameraRig({
       return;
     }
 
-    if (transitionActive.current && mode !== "free") {
+    if (mode === "follow") {
+      const start = followStart.current;
+      if (start === null) {
+        camera.position.copy(desiredPosition);
+        controls.target.copy(desiredTarget);
+        camera.up.copy(desiredUp);
+      } else {
+        const progress = cameraTransitionProgress(
+          performance.now() - start.startedAt,
+          followTransitionMs,
+          prefersReducedMotion,
+        );
+        const eased = easeInOutQuintic(progress);
+        camera.position.lerpVectors(start.position, desiredPosition, eased);
+        controls.target.lerpVectors(start.target, desiredTarget, eased);
+        camera.up.lerpVectors(start.up, desiredUp, eased).normalize();
+        if (progress >= 1) {
+          followStart.current = null;
+          transitionActive.current = false;
+          onSettled?.("follow");
+        }
+      }
+      if (followObstacles) {
+        const eye = camera.position;
+        const direction = eye.clone().sub(controls.target);
+        const length = direction.length();
+        if (length > 0) {
+          raycaster.set(controls.target, direction.normalize());
+          raycaster.far = length;
+          const hit = raycaster
+            .intersectObjects(scene.children, true)
+            .find((intersection) => isCameraObstacle(intersection.object));
+          const clipped = clipThreeCameraBoom(
+            { position: toVec3(eye), target: toVec3(controls.target) },
+            hit?.distance,
+          );
+          if (clipped.changed) camera.position.set(...clipped.position);
+        }
+      }
+    } else if (transitionActive.current && mode !== "free") {
       const speed = motionPolicy.kind === "animated" ? motionPolicy.speed : transitionSpeed;
       const alpha = 1 - Math.exp(-speed * delta);
       camera.position.lerp(desiredPosition, alpha);
@@ -240,7 +364,18 @@ export function CameraRig({
       }
     }
     controls.update();
-    requestDemandFrame(transitionActive.current);
+    if (constraints !== undefined) {
+      const constrained = constrainThreeCameraPlacement(
+        { position: toVec3(camera.position), target: toVec3(controls.target) },
+        constraints,
+        groundHeightAt,
+      );
+      if (constrained.changed) {
+        camera.position.set(...constrained.position);
+        controls.target.set(...constrained.target);
+      }
+    }
+    requestDemandFrame(transitionActive.current || followStart.current !== null);
   });
 
   return null;

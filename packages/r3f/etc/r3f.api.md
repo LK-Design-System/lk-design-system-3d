@@ -6,14 +6,17 @@
 
 import { AssetManifestV1 } from '@lk-design-system/lds-3d-assets';
 import { Bounds3 } from '@lk-design-system/lds-3d-core';
+import { CameraConstraints } from '@lk-design-system/lds-3d-core';
 import { CORE_TO_THREE_BASIS } from '@lk-design-system/lds-3d-three/coordinates';
 import { CORE_TO_THREE_BASIS_QUATERNION } from '@lk-design-system/lds-3d-three/coordinates';
 import { coreToThreePosition } from '@lk-design-system/lds-3d-three/coordinates';
 import { coreToThreeQuaternion } from '@lk-design-system/lds-3d-three/coordinates';
 import { CSSProperties } from 'react';
 import { EntityId } from '@lk-design-system/lds-3d-core';
+import { FollowCameraMode } from '@lk-design-system/lds-3d-core';
 import { FrameId } from '@lk-design-system/lds-3d-core';
 import { GoalEntity } from '@lk-design-system/lds-3d-core';
+import { GroundHeightSampler } from '@lk-design-system/lds-3d-core';
 import { JointValues } from '@lk-design-system/lds-3d-assets';
 import { MarkerFreshnessPolicy } from '@lk-design-system/lds-3d-markers';
 import { MarkerLayerRenderState } from '@lk-design-system/lds-3d-markers';
@@ -34,8 +37,13 @@ import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ReactNode } from 'react';
 import { RobotEntity } from '@lk-design-system/lds-3d-core';
 import { RobotKinematicsV1 } from '@lk-design-system/lds-3d-assets';
+import { SceneLayerEntry } from '@lk-design-system/lds-3d-core';
+import { SceneLayerStatus } from '@lk-design-system/lds-3d-core';
+import { SceneLayerSummary } from '@lk-design-system/lds-3d-core';
 import { SceneThemeOverrides } from '@lk-design-system/lds-3d-core';
 import { SceneThemeValues } from '@lk-design-system/lds-3d-core';
+import { ScreenLabelAnchor } from '@lk-design-system/lds-3d-core';
+import { ScreenLabelHiddenReason } from '@lk-design-system/lds-3d-core';
 import { SpatialAssetNode } from '@lk-design-system/lds-3d-core';
 import { SpatialEditVolume } from '@lk-design-system/lds-3d-core';
 import { SpatialNodeTransform } from '@lk-design-system/lds-3d-core';
@@ -75,7 +83,7 @@ export interface AmrOperationalSceneProps {
 }
 
 // @public (undocumented)
-export function AmrRobot({ entity, status: statusProp, model, label }: AmrRobotProps): react_jsx_runtime.JSX.Element;
+export function AmrRobot({ entity, status: statusProp, model, label, poseFreshness, localization, }: AmrRobotProps): react_jsx_runtime.JSX.Element;
 
 // @public (undocumented)
 export interface AmrRobotProps {
@@ -83,8 +91,10 @@ export interface AmrRobotProps {
     readonly entity: RobotEntity;
     // (undocumented)
     readonly label?: string;
+    readonly localization?: RobotLocalizationUncertainty;
     // (undocumented)
     readonly model?: ReactNode;
+    readonly poseFreshness?: RobotPoseFreshness;
     // (undocumented)
     readonly status?: RobotVisualStatus;
 }
@@ -100,6 +110,9 @@ export function assertValidVoxelSnapshot(snapshot: VoxelLayerSnapshot, maxVoxels
 
 // @public (undocumented)
 export function calculatePathLength(points: readonly Vec3[]): number;
+
+// @public
+export const CAMERA_OBSTACLE_USER_DATA_KEY = "lds3dCameraObstacle";
 
 // @public
 export function CameraFrustum({ entityId, position, orientation, fovYRadians, aspect, nearMeters, farMeters, color: colorProp, opacity, showFarPlane, }: CameraFrustumProps): react_jsx_runtime.JSX.Element;
@@ -125,16 +138,21 @@ export interface CameraFrustumProps {
 }
 
 // @public (undocumented)
-export function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, keyboardCommand, onManualControl, onSettled, }: CameraRigProps): null;
+export function CameraRig({ mode, focusTarget, focusBounds, topTarget, topBounds, homePose, transitionSpeed, enableOrbit, keyboardCommand, onManualControl, onSettled, followSubject, followTransitionMs, followObstacles, constraints, groundHeightAt, }: CameraRigProps): null;
 
 // @public (undocumented)
 export interface CameraRigProps {
+    readonly constraints?: CameraConstraints;
     // (undocumented)
     readonly enableOrbit?: boolean;
     // (undocumented)
     readonly focusBounds?: Bounds3;
     // (undocumented)
     readonly focusTarget?: Vec3;
+    readonly followObstacles?: boolean;
+    readonly followSubject?: SceneFollowSubject;
+    readonly followTransitionMs?: number;
+    readonly groundHeightAt?: GroundHeightSampler;
     // (undocumented)
     readonly homePose?: SceneCameraPose;
     // (undocumented)
@@ -168,7 +186,16 @@ export type CanonicalRobotVisualStatus = Exclude<RobotVisualStatus, "live" | "wa
 export function clearGltfModel(url: string): void;
 
 // @public
+export function clipThreeCameraBoom(placement: ThreeCameraPlacement, obstacleDistanceMeters: number | undefined, options?: {
+    readonly marginMeters?: number;
+    readonly minDistanceMeters?: number;
+}): ThreeCameraPlacementResult;
+
+// @public
 export function computeFrustumCorners(fovYRadians: number, aspect: number, nearMeters: number, farMeters: number): readonly Vec3[];
+
+// @public
+export function constrainThreeCameraPlacement(placement: ThreeCameraPlacement, constraints: CameraConstraints, groundHeightAt?: GroundHeightSampler): ThreeCameraPlacementResult;
 
 export { CORE_TO_THREE_BASIS }
 
@@ -210,7 +237,22 @@ export const DEFAULT_POINT_CLOUD_COLOR = "#3c9dff";
 export const DEFAULT_POINT_CLOUD_POINT_SIZE = 1.5;
 
 // @public (undocumented)
+export const DEFAULT_SCENE_LINE_TOKENS: SceneLineTokens;
+
+// @public (undocumented)
+export const DIAGNOSTIC_SCENE_LABEL_TOKENS: SceneLabelTokens;
+
+// @public (undocumented)
+export const DIAGNOSTIC_SCENE_NATURE_TOKENS: SceneNatureTokens;
+
+// @public (undocumented)
 export const DIAGNOSTIC_TECHNICAL_THEME: SceneVisualTheme;
+
+// @public
+export function drapePathPoints(points: readonly (readonly [number, number, number])[], groundHeightAt: PathGroundHeightSampler, options?: {
+    readonly spacingMeters?: number;
+    readonly elevationMeters?: number;
+}): readonly (readonly [number, number, number])[];
 
 // @public
 export function EditVolume({ volume, selectable }: EditVolumeProps): react_jsx_runtime.JSX.Element;
@@ -239,6 +281,9 @@ export interface EntityInteractionBindings {
     // (undocumented)
     readonly selected: boolean;
 }
+
+// @public
+export function estimateSceneLabelWidthPx(text: string, tokens: SceneLabelTokens): number;
 
 // @public (undocumented)
 export function GltfModel({ onLoadStateChange, ...props }: GltfModelProps): react_jsx_runtime.JSX.Element;
@@ -405,19 +450,31 @@ export interface OccupancyGridSurfaceProps {
 // @public (undocumented)
 export const OPERATIONAL_NEUTRAL_THEME: SceneVisualTheme;
 
+// @public (undocumented)
+export const OPERATIONAL_SCENE_LABEL_TOKENS: SceneLabelTokens;
+
+// @public (undocumented)
+export const OPERATIONAL_SCENE_NATURE_TOKENS: SceneNatureTokens;
+
 // @public
 export function OrientationTriad(): react_jsx_runtime.JSX.Element;
 
+// @public
+export type PathGroundHeightSampler = (x: number, y: number) => number;
+
 // @public (undocumented)
-export function PathRibbon({ entity, elevationMeters, variant, animated, selectable, }: PathRibbonProps): react_jsx_runtime.JSX.Element | null;
+export function PathRibbon({ entity, elevationMeters, variant, animated, selectable, groundHeightAt, drapeSpacingMeters, minScreenWidthPx, }: PathRibbonProps): react_jsx_runtime.JSX.Element | null;
 
 // @public (undocumented)
 export interface PathRibbonProps {
     readonly animated?: boolean;
+    readonly drapeSpacingMeters?: number;
     // (undocumented)
     readonly elevationMeters?: number;
     // (undocumented)
     readonly entity: PathEntity;
+    readonly groundHeightAt?: PathGroundHeightSampler;
+    readonly minScreenWidthPx?: number;
     readonly selectable?: boolean;
     // (undocumented)
     readonly variant?: PathRibbonVariant;
@@ -434,6 +491,19 @@ export interface PathSegment {
     readonly lengthMeters: number;
     // (undocumented)
     readonly start: Vec3;
+}
+
+// @public (undocumented)
+export interface PlacedSceneLabel {
+    // (undocumented)
+    readonly heightPx: number;
+    // (undocumented)
+    readonly label: SceneLabel;
+    // (undocumented)
+    readonly widthPx: number;
+    readonly x: number;
+    // (undocumented)
+    readonly y: number;
 }
 
 // @public (undocumented)
@@ -505,6 +575,7 @@ export interface ResolveCameraPoseOptions {
     readonly focusBounds?: Bounds3;
     // (undocumented)
     readonly focusTarget?: Vec3;
+    readonly followSubject?: SceneFollowSubject;
     // (undocumented)
     readonly home?: SceneCameraPose;
     // (undocumented)
@@ -518,14 +589,44 @@ export interface ResolveCameraPoseOptions {
     readonly viewportAspect?: number;
 }
 
+// @public
+export function resolveMinimumScreenWidthMeters(widthMeters: number, minimumPx: number, distanceMeters: number, verticalFovRadians: number, viewportHeightPx: number): number;
+
 // @public (undocumented)
 export function resolveModelUrl(modelBasePath: string, fileName: string): string;
+
+// @public (undocumented)
+export function resolveRobotPoseFreshnessVisual(freshness: RobotPoseFreshness): RobotPoseFreshnessVisual;
 
 // @public
 export function resolveSceneCameraKey(input: SceneCameraKeyInput): SceneCameraKeyboardCommand | null;
 
+// @public
+export function resolveSceneLabelTokens(theme: SceneVisualTheme): SceneLabelTokens;
+
+// @public
+export function resolveSceneLineTokens(theme: SceneVisualTheme): SceneLineTokens;
+
+// @public
+export function resolveSceneNatureTokens(theme: SceneVisualTheme): SceneNatureTokens;
+
 // @public (undocumented)
 export function resolveSceneTheme(profile?: SceneVisualProfile | SceneVisualTheme, customization?: SceneThemeCustomization): SceneVisualTheme;
+
+// @public
+export interface RobotLocalizationUncertainty {
+    readonly radiusMeters: number;
+}
+
+// @public
+export type RobotPoseFreshness = "fresh" | "stale" | "expired" | "future";
+
+// @public (undocumented)
+export interface RobotPoseFreshnessVisual {
+    readonly beaconAllowed: boolean;
+    readonly bodyOpacity: number;
+    readonly lastKnownRing: boolean;
+}
 
 // @public
 export type RobotVisualStatus = "moving" | "idle" | "paused" | "fault" | "offline" | "unknown" | "live" | "warning" | "error";
@@ -576,7 +677,7 @@ export interface SceneCameraKeyInput {
 }
 
 // @public (undocumented)
-export type SceneCameraMode = "home" | "top" | "focus" | "free";
+export type SceneCameraMode = "home" | "top" | "focus" | "follow" | "free";
 
 // @public (undocumented)
 export interface SceneCameraPose {
@@ -608,6 +709,7 @@ export interface SceneCanvasProps {
     readonly ariaDescribedBy?: string;
     // (undocumented)
     readonly ariaLabel?: string;
+    readonly cameraConstraints?: CameraConstraints;
     // (undocumented)
     readonly cameraMode?: SceneCameraMode;
     // (undocumented)
@@ -629,8 +731,12 @@ export interface SceneCanvasProps {
     readonly focusBounds?: Bounds3;
     // (undocumented)
     readonly focusTarget?: Vec3;
+    readonly followObstacles?: boolean;
+    readonly followSubject?: SceneFollowSubject;
+    readonly followTransitionMs?: number;
     readonly frame: FrameId;
     readonly frameLoop?: SceneFrameLoop;
+    readonly groundHeightAt?: GroundHeightSampler;
     // (undocumented)
     readonly homePose?: SceneCameraPose;
     // (undocumented)
@@ -639,6 +745,8 @@ export interface SceneCanvasProps {
     readonly onCameraModeChange?: (mode: SceneCameraMode, source: SceneCameraChangeSource) => void;
     // (undocumented)
     readonly onCameraSettled?: (mode: Exclude<SceneCameraMode, "free">) => void;
+    readonly onContextLost?: () => void;
+    readonly onContextRestored?: () => void;
     // (undocumented)
     readonly onHoverChange?: (change: SceneHoverChange) => void;
     readonly onRetry?: () => void;
@@ -694,6 +802,24 @@ export interface SceneEnvironmentProps extends GroundGridProps {
 }
 
 // @public
+export interface SceneFollowSubject {
+    // (undocumented)
+    readonly distanceMeters?: number;
+    // (undocumented)
+    readonly eyeHeightMeters?: number;
+    readonly headingRadians: number;
+    // (undocumented)
+    readonly heightMeters?: number;
+    // (undocumented)
+    readonly lookAheadMeters?: number;
+    // (undocumented)
+    readonly lookAtHeightMeters?: number;
+    readonly mode?: FollowCameraMode;
+    // (undocumented)
+    readonly position: Vec3;
+}
+
+// @public
 export type SceneFrameLoop = "always" | "demand";
 
 // @public (undocumented)
@@ -729,6 +855,120 @@ export interface SceneInteractionState {
 }
 
 // @public (undocumented)
+export interface SceneLabel {
+    // (undocumented)
+    readonly id: string;
+    readonly maxDistanceMeters?: number;
+    readonly position: Vec3;
+    readonly priority?: number;
+    // (undocumented)
+    readonly selected?: boolean;
+    // (undocumented)
+    readonly text: string;
+    readonly widthPx?: number;
+}
+
+// @public (undocumented)
+export interface SceneLabelLayout {
+    // (undocumented)
+    readonly hidden: readonly {
+        readonly id: string;
+        readonly reason: ScreenLabelHiddenReason;
+    }[];
+    // (undocumented)
+    readonly placed: readonly PlacedSceneLabel[];
+}
+
+// @public
+export function SceneLabelOverlay({ layout, theme, renderLabel }: SceneLabelOverlayProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+export interface SceneLabelOverlayProps {
+    // (undocumented)
+    readonly layout: SceneLabelLayout;
+    readonly renderLabel?: (entry: PlacedSceneLabel) => ReactNode;
+    // (undocumented)
+    readonly theme: SceneVisualTheme;
+}
+
+// @public
+export function SceneLabelProjector({ labels, theme, onLayout, anchor, paddingPx, maxVisible, }: SceneLabelProjectorProps): null;
+
+// @public (undocumented)
+export interface SceneLabelProjectorProps {
+    // (undocumented)
+    readonly anchor?: ScreenLabelAnchor;
+    // (undocumented)
+    readonly labels: readonly SceneLabel[];
+    // (undocumented)
+    readonly maxVisible?: number;
+    readonly onLayout: (layout: SceneLabelLayout) => void;
+    // (undocumented)
+    readonly paddingPx?: number;
+    // (undocumented)
+    readonly theme: SceneVisualTheme;
+}
+
+// @public
+export interface SceneLabelTokens {
+    readonly accent: string;
+    // (undocumented)
+    readonly background: string;
+    // (undocumented)
+    readonly border: string;
+    // (undocumented)
+    readonly fontFamily: string;
+    // (undocumented)
+    readonly fontSizePx: number;
+    // (undocumented)
+    readonly fontWeight: number;
+    // (undocumented)
+    readonly lineHeightPx: number;
+    // (undocumented)
+    readonly paddingXPx: number;
+    // (undocumented)
+    readonly paddingYPx: number;
+    // (undocumented)
+    readonly radiusPx: number;
+    // (undocumented)
+    readonly text: string;
+}
+
+// @public
+export function SceneLayer({ id, children, onStatusChange, recoverable, retryKey, }: SceneLayerProps): react_jsx_runtime.JSX.Element;
+
+// @public (undocumented)
+export interface SceneLayerProps {
+    // (undocumented)
+    readonly children: ReactNode;
+    // (undocumented)
+    readonly id: string;
+    readonly onStatusChange: (id: string, status: SceneLayerStatus) => void;
+    readonly recoverable?: boolean;
+    readonly retryKey?: number;
+}
+
+// @public (undocumented)
+export interface SceneLayerRegistry {
+    // (undocumented)
+    readonly entries: readonly SceneLayerEntry[];
+    readonly report: (id: string, status: SceneLayerStatus) => void;
+    // (undocumented)
+    readonly summary: SceneLayerSummary;
+}
+
+// @public
+export interface SceneLineTokens {
+    readonly ribbonMinWidthPx: number;
+    // (undocumented)
+    readonly routeDashPx: number;
+    // (undocumented)
+    readonly routeGapPx: number;
+    readonly routeWidthPx: number;
+    readonly trailWidthPx: number;
+}
+
+// @public (undocumented)
 export interface SceneMaterialTokens {
     // (undocumented)
     readonly assetBody: string;
@@ -759,6 +999,20 @@ export interface SceneMaterialTokens {
     readonly text: string;
     // (undocumented)
     readonly warning: string;
+}
+
+// @public
+export interface SceneNatureTokens {
+    // (undocumented)
+    readonly pavement: string;
+    // (undocumented)
+    readonly skyHorizon: string;
+    // (undocumented)
+    readonly skyZenith: string;
+    // (undocumented)
+    readonly terrain: string;
+    // (undocumented)
+    readonly vegetation: string;
 }
 
 // @public (undocumented)
@@ -873,7 +1127,13 @@ export interface SceneStateMarkerProps {
 // @public (undocumented)
 export interface SceneThemeCustomization {
     // (undocumented)
+    readonly labels?: Readonly<Partial<SceneLabelTokens>>;
+    // (undocumented)
+    readonly lines?: Readonly<Partial<SceneLineTokens>>;
+    // (undocumented)
     readonly materials?: Readonly<Partial<SceneMaterialTokens>>;
+    // (undocumented)
+    readonly nature?: Readonly<Partial<SceneNatureTokens>>;
     // (undocumented)
     readonly scene?: SceneThemeOverrides;
 }
@@ -902,7 +1162,12 @@ export interface SceneVisualTheme {
     // (undocumented)
     readonly label: string;
     // (undocumented)
+    readonly labels?: SceneLabelTokens;
+    readonly lines?: SceneLineTokens;
+    // (undocumented)
     readonly materials: SceneMaterialTokens;
+    // (undocumented)
+    readonly nature?: SceneNatureTokens;
     // (undocumented)
     readonly scene: SceneThemeValues;
 }
@@ -965,6 +1230,18 @@ export interface SpatialStructureProps {
     readonly structure: SpatialStructure_2;
 }
 
+// @public (undocumented)
+export interface ThreeCameraPlacement {
+    readonly position: Vec3;
+    readonly target: Vec3;
+}
+
+// @public (undocumented)
+export interface ThreeCameraPlacementResult extends ThreeCameraPlacement {
+    // (undocumented)
+    readonly changed: boolean;
+}
+
 export { threeToCorePosition }
 
 export { threeToCoreQuaternion }
@@ -999,6 +1276,12 @@ export function useEntityInteraction(entityId: EntityId, options?: {
 
 // @public (undocumented)
 export function usePrefersReducedMotion(): boolean;
+
+// @public
+export function useSceneLayerRegistry(layerIds: readonly string[], options?: {
+    readonly required?: readonly string[];
+    readonly disabled?: readonly string[];
+}): SceneLayerRegistry;
 
 // @public (undocumented)
 export function useSceneRuntime(): SceneRuntimeValue;

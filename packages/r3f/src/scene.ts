@@ -1,4 +1,11 @@
 export { CameraRig, type CameraRigProps } from "./CameraRig.js";
+export {
+  CAMERA_OBSTACLE_USER_DATA_KEY,
+  clipThreeCameraBoom,
+  constrainThreeCameraPlacement,
+  type ThreeCameraPlacement,
+  type ThreeCameraPlacementResult,
+} from "./camera-rig-constraints.js";
 export { CoreSpace, type CoreSpaceProps } from "./CoreSpace.js";
 export { OrientationTriad } from "./OrientationTriad.js";
 export {
@@ -8,7 +15,18 @@ export {
   type SceneCameraKeyboardCommand,
   type SceneCameraKeyInput,
 } from "./scene-keyboard.js";
-export { type PathRibbonVariant } from "./path-ribbon.js";
+export {
+  drapePathPoints,
+  resolveMinimumScreenWidthMeters,
+  type PathGroundHeightSampler,
+  type PathRibbonVariant,
+} from "./path-ribbon.js";
+export {
+  resolveRobotPoseFreshnessVisual,
+  type RobotLocalizationUncertainty,
+  type RobotPoseFreshness,
+  type RobotPoseFreshnessVisual,
+} from "./robot-pose.js";
 export {
   SceneCanvas,
   type SceneCameraChangeSource,
@@ -98,3 +116,19 @@ export {
   type VoxelLayerProps,
   type VoxelLayerSnapshot,
 } from "./sensors.js";
+export {
+  SceneLabelOverlay,
+  SceneLabelProjector,
+  estimateSceneLabelWidthPx,
+  type PlacedSceneLabel,
+  type SceneLabel,
+  type SceneLabelLayout,
+  type SceneLabelOverlayProps,
+  type SceneLabelProjectorProps,
+} from "./labels.js";
+export {
+  SceneLayer,
+  useSceneLayerRegistry,
+  type SceneLayerProps,
+  type SceneLayerRegistry,
+} from "./layers.js";
