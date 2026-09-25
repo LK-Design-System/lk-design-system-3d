@@ -9,9 +9,9 @@
     "build-storybook": "storybook build --config-dir .storybook --output-dir ../../storybook-static"
   },
   "dependencies": {
-    "@lk-design-system/lds-core": "0.4.1",
-    "@lk-design-system/lds-product": "0.4.1",
-    "@lk-design-system/lds-theme": "0.4.1",
+    "@lk-design-system/lds-core": "0.4.2",
+    "@lk-design-system/lds-product": "0.4.2",
+    "@lk-design-system/lds-theme": "0.4.2",
     "@lk-design-system/lds-3d-assets": "workspace:*",
     "@lk-design-system/lds-3d-core": "workspace:*",
     "@lk-design-system/lds-3d-markers": "workspace:*",
