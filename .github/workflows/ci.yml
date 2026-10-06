@@ -145,7 +145,10 @@ jobs:
           "CHROME_PATH=$($chrome.Source)" >> $env:GITHUB_ENV
 
       - name: Run Visual Alpha runtime QA
-        run: pnpm visual-alpha:runtime-qa
+        run: |
+          # Installation uses local tarballs; QA compares the canonical version pin.
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json') apps/docs/package.json -Force
+          pnpm visual-alpha:runtime-qa
 
       - name: Run package consumer smoke test
         run: pnpm package-smoke
