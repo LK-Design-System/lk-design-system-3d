@@ -1,4 +1,5 @@
 import { Button } from "@lk-design-system/lds-core/components/buttons/Button";
+import ldsCorePackage from "@lk-design-system/lds-core/package.json";
 import { StatusBadge } from "@lk-design-system/lds-core/components/content/StatusBadge";
 import { SelectionInspector } from "@lk-design-system/lds-product/components/editor/SelectionInspector";
 import { ViewportStatusBar } from "@lk-design-system/lds-product/components/editor/ViewportStatusBar";
@@ -414,7 +415,7 @@ export function LdsFocusedViewerPage({
     <main
       className={`lds3d-focused-viewer-page is-${profile}`}
       data-lds3d-composition="actual"
-      data-lds-core-version="0.1.0"
+      data-lds-core-version={ldsCorePackage.version}
       data-lkds3d-profile={
         profile === "diagnostic" ? "diagnostic-technical" : "operational-neutral"
       }

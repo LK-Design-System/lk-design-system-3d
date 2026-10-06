@@ -1,6 +1,6 @@
 # 궁릉 3D 근거 기반 보완 계획
 
-- Status: Active — 결정 4건 확정, W1~W4와 G8 일부 구현(2026-09-25, 로컬 커밋). 남은 일은 "구현 현황" 참고
+- Status: Active — W1~W4와 G8 일부 구현·원격 main 검증 완료. 최근 확장분 패키지 발행과 제품 적용은 별도. 2026-10-05 재검증은 "구현 현황" 참고
 - Created: 2026-09-25
 - Owner surface: LDS3D 공개 원자와 camera·interaction·theme 계약
 - 근거 제품: `lkrobotics-control-gungneung` `origin/feat/3d-map`
@@ -215,12 +215,20 @@
   AmrRobot 위치 신뢰도, PathRibbon 지형 따라가기, `lds-scene-theme.ts` resolver.
 - 의도적으로 하지 않은 것: 가리는 물체 반투명 처리(호출자 재질을 바꾸게 됨), impostor·LOD.
 - 남은 일:
-  - G4 판정 함수(값 기준 + 시간 기준)는 Robotics UI 소유로 결정됐다. 2026-09-25에는
-    다른 세션이 Robotics를 수정 중이라 착수하지 않았다.
-  - LDS 저장소 `LDS3D_EXTERNAL_SURFACE.json`의 상위 토큰 목록 갱신(LDS 0.4.1 이전으로
-    `-foreground` 두 이름). LDS core 소유라 해당 세션에 요청했다.
+  - G4 판정 함수는 Robotics UI의 `evaluatePoseFreshness`로 구현됐다
+    (`8533e8b79b0f19a8c6e537ee1ff9499625f5bf02`의 공개 JS/type entry).
+  - 3D main `d9bcf7104802c9d6f03ce1d793b4769408dd798f`의 CI·runtime QA·Pages는
+    LDS 0.4.2 (`b27be6598a33cd68951c73653ce55109fea45ca0`) 조합으로 통과했다.
+    2026-10-05 상위 LDS는 0.4.3이지만 계약의 3D consumer profile은 검증된
+    0.4.2 핀을 유지한다. 계약 검사 스크립트가 허용하는 이 정책을 CLI가 3D에는
+    적용하지 않아 로컬 conformance가 실패했다. 상위 CLI의 LDS DOM 패키지 핀
+    규칙을 일치시키고 manifest·lockfile의 exact-match 검사는 유지한다. docs-app과
+    두 workflow의 기존 핀은 유지하며, 로컬 검증은 상위 LDS의
+    `LDS_SERIES_COMPLETENESS_AUDIT.json`에 기록한다. CLI 수정은 아직 미발행이다.
   - R3F 컴포넌트를 궁릉에 들이는 경로(compat-v8 또는 제품 스택 상향) 재결정.
-  - 원격 push와 릴리스(0.1.0-alpha.3)는 사용자 승인 후.
+  - 구현은 위 remote main에 반영됐다. 최근 확장분의 다음 alpha 발행은 미완료이며,
+    `.changeset/scene-extension-follow-labels.md`가 fixed release group의 발행 대상을 기록한다.
+    package version 변경·원격 tag/push·registry publication은 별도 release gate와 행위별 승인을 따른다.
 
 각 단계는 기존 공개 API 규칙을 따른다: api-report baseline, package-smoke, 스토리 계약
 (`scripts/storybook-contract.mjs`), 새 공개 원자는 owner 페이지와 리뷰 계약.
@@ -230,11 +238,19 @@
 | 항목 | 결정 | 남은 것 |
 | --- | --- | --- |
 | 스택 경로 | core 순수 함수 먼저 공급 | R3F 컴포넌트 도입 경로(compat-v8 또는 제품 스택 상향)는 core 공급 이후 재결정 |
-| 위치 신선도 소유 | Robotics UI | Robotics 쪽 판정 함수 설계와 짝 릴리스(별도 작업) |
+| 위치 신선도 소유 | Robotics UI | `evaluatePoseFreshness` 구현 완료; 실제 제품 적용 증거는 별도 |
 | 3D 테마 값 | 기존 semantic 역할 매핑, 자연색은 LDS3D 기본값 | 슬롯별 매핑표 확정 |
 | 궁릉 통보 | 지금은 하지 않음 | G6 테마 계약이 생기면 대안과 함께 알릴지 다시 묻는다. 궁릉은 다른 팀 저장소라 문구는 사용자 승인 후 |
 
 ## 근거 기록
+
+- 2026-10-05 좁은 AMR Story 검토의 DOM 소유자는 LDS Product
+  `DescriptionList`다. 읽기 순서는 WebGL 장면 → 공간 상태 메타데이터 → 검토 근거이며,
+  장면과 카메라·선택 동작은 LDS3D가 계속 소유한다. 320px 화면에서 기본형의 고정
+  용어 열과 두 열 메타데이터가 가로 스크롤을 만들었다. 공개 type/prompt와
+  `DataDescriptionList`의 좁은 상세 패널 예제에 있는 `variant="stacked"`, `columns={1}`로
+  AMR 메타데이터 및 공유 검토 근거를 배치한다. 용어를 값 위로 옮기는 의도된 구성
+  차이이며 토큰·컴포넌트 CSS·공개 API를 바꾸지 않는다. 전체 LDS 시각 동등성 판정은 별도다.
 
 - 조사 방법: 읽기 전용. `git show origin/feat/3d-map:<path>`와 `git diff
   origin/main...origin/feat/3d-map`만 사용했고 궁릉 작업트리는 바꾸지 않았다.

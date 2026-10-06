@@ -4,6 +4,7 @@ import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { createServer as createHttpServer } from "node:http";
 import { createServer as createNetServer } from "node:net";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { extname, join, resolve, sep } from "node:path";
 import process from "node:process";
@@ -12,6 +13,10 @@ import { setTimeout as delayTimer } from "node:timers/promises";
 import { URL } from "node:url";
 
 const root = process.cwd();
+const docsRequire = createRequire(resolve(root, "apps", "docs", "package.json"));
+const installedLdsCoreVersion = docsRequire("@lk-design-system/lds-core/package.json").version;
+const declaredLdsCoreVersion =
+  docsRequire("./package.json").dependencies["@lk-design-system/lds-core"];
 const storybookDirectory = resolve(root, "storybook-static");
 const visualEvidenceDirectory = resolve(root, "evidence", "visual-alpha");
 const evidenceDirectory = resolve(root, "evidence", "visual-alpha", "runtime-qa");
@@ -1203,9 +1208,12 @@ async function main() {
     const checks = {
       actualWebGlCanvas: operational.canvas === true && operational.webgl === true,
       actualGlbAssets: new Set(operational.glbResources).size >= 6,
+      currentLdsPackageVersion:
+        operational.ldsCoreVersion === installedLdsCoreVersion &&
+        installedLdsCoreVersion === declaredLdsCoreVersion,
       actualLdsComposition:
         operational.composition === "actual" &&
-        operational.ldsCoreVersion === "0.1.0" &&
+        operational.ldsCoreVersion === installedLdsCoreVersion &&
         operational.ldsViewerFrameCount === 1 &&
         operational.ldsInspectorValueCount >= 2 &&
         operational.ldsStatusValueCount >= 3 &&
@@ -1323,6 +1331,11 @@ async function main() {
       generatedAt: new Date().toISOString(),
       passed: Object.values(checks).every(Boolean),
       checks,
+      ldsPackageEvidence: {
+        declaredCoreVersion: declaredLdsCoreVersion,
+        installedCoreVersion: installedLdsCoreVersion,
+        renderedCoreVersion: operational.ldsCoreVersion,
+      },
       operational,
       interaction,
       diagnostic,

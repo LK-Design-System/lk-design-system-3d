@@ -248,6 +248,7 @@ export function PrimitiveReviewEvidence({
   return (
     <DescriptionList
       columns={1}
+      variant="stacked"
       items={[
         {
           term: "렌더러 근거",
@@ -666,7 +667,8 @@ export function AmrRobotExperience(): ReactNode {
             ))}
           </PrimitiveCanvas>
           <DescriptionList
-            columns={2}
+            columns={1}
+            variant="stacked"
             items={[
               { term: "변형", description: "이동 · 대기 · 일시정지 · 장애 · 오프라인 · 미확인" },
               { term: "선택", description: <Code>{selectedCopy(selected)}</Code> },
@@ -697,7 +699,8 @@ export function AmrRobotExperience(): ReactNode {
             ))}
           </PrimitiveCanvas>
           <DescriptionList
-            columns={2}
+            columns={1}
+            variant="stacked"
             items={[
               { term: "왼쪽", description: "fresh · 오차 0.35 m" },
               { term: "가운데", description: "stale · 마지막으로 받은 위치 · 오차 0.9 m" },
@@ -735,7 +738,8 @@ export function AmrRobotExperience(): ReactNode {
             />
           </PrimitiveCanvas>
           <DescriptionList
-            columns={2}
+            columns={1}
+            variant="stacked"
             items={[
               { term: "자산", description: <Code>robots/tron</Code> },
               {

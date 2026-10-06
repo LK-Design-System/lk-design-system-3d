@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+repo_root=$(git rev-parse --show-toplevel)
+if [ -f "$repo_root/scripts/lds-maintenance.mjs" ]; then
+  runner="$repo_root/scripts/lds-maintenance.mjs"
+else
+  runner="$repo_root/../lk-design-system/scripts/lds-maintenance.mjs"
+fi
+if [ ! -f "$runner" ]; then
+  echo 'LDS pre-push: the canonical lk-design-system checkout is required beside this repository.' >&2
+  exit 1
+fi
+exec node "$runner" check --repo "$repo_root"
