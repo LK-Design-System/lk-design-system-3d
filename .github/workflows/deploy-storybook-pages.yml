@@ -18,7 +18,7 @@ concurrency:
 jobs:
   build:
     name: Build Storybook
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -47,45 +47,45 @@ jobs:
       - name: Build public LDS packages
         working-directory: .lds-package-source
         run: |
-          npm.cmd ci
-          npm.cmd run build:workspaces
+          npm ci
+          npm run build:workspaces
 
       - name: Pack public LDS packages
-        shell: pwsh
         run: |
-          foreach ($package in 'core', 'product', 'theme') {
-            Push-Location ".lds-package-source/packages/$package"
-            npm.cmd pack --pack-destination "$env:GITHUB_WORKSPACE"
-            Pop-Location
-          }
+          for package in core product theme; do
+            (cd ".lds-package-source/packages/$package" && npm pack --pack-destination "$GITHUB_WORKSPACE")
+          done
 
       - name: Install dependencies
-        shell: pwsh
         run: |
-          $manifestBackup = Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json'
-          $workspaceConfigBackup = Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-workspace.yaml'
-          $lockfileBackup = Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml'
-          Copy-Item apps/docs/package.json $manifestBackup
-          Copy-Item pnpm-workspace.yaml $workspaceConfigBackup
-          Copy-Item pnpm-lock.yaml $lockfileBackup
-          $manifest = Get-Content -Raw apps/docs/package.json | ConvertFrom-Json
-          $overrides = [ordered]@{}
-          New-Item -ItemType Directory -Force apps/docs/vendor | Out-Null
-          foreach ($package in 'core', 'product', 'theme') {
-            $tarball = Get-ChildItem -Filter "lk-design-system-lds-$package-*.tgz" | Select-Object -First 1
-            if (-not $tarball) {
-              throw "The public LDS $package package could not be packed."
+          cp apps/docs/package.json "$RUNNER_TEMP/lds3d-docs-package.json"
+          cp pnpm-workspace.yaml "$RUNNER_TEMP/lds3d-pnpm-workspace.yaml"
+          cp pnpm-lock.yaml "$RUNNER_TEMP/lds3d-pnpm-lock.yaml"
+          node <<'NODE'
+          const fs = require('node:fs');
+          const manifestPath = 'apps/docs/package.json';
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+          const overrides = [];
+          fs.mkdirSync('apps/docs/vendor', { recursive: true });
+          for (const pkg of ['core', 'product', 'theme']) {
+            const name = `@lk-design-system/lds-${pkg}`;
+            const tarball = fs
+              .readdirSync('.')
+              .filter((file) => file.startsWith(`lk-design-system-lds-${pkg}-`) && file.endsWith('.tgz'))
+              .sort()[0];
+            if (!tarball) {
+              throw new Error(`The public LDS ${pkg} package could not be packed.`);
             }
-            $manifest.dependencies."@lk-design-system/lds-$package" = "file:../../$($tarball.Name)"
-            Copy-Item $tarball.FullName "apps/docs/vendor/$($tarball.Name)" -Force
-            $overrides."@lk-design-system/lds-$package" = "file:./$($tarball.Name)"
+            if (!Object.hasOwn(manifest.dependencies ?? {}, name)) {
+              throw new Error(`apps/docs/package.json does not depend on ${name}.`);
+            }
+            manifest.dependencies[name] = `file:../../${tarball}`;
+            fs.copyFileSync(tarball, `apps/docs/vendor/${tarball}`);
+            overrides.push(`  "${name}": "file:./${tarball}"`);
           }
-          $overrideYaml = "`noverrides:`n"
-          foreach ($entry in $overrides.GetEnumerator()) {
-            $overrideYaml += "  `"$($entry.Key)`": `"$($entry.Value)`"`n"
-          }
-          Add-Content -Path pnpm-workspace.yaml -Value $overrideYaml
-          $manifest | ConvertTo-Json -Depth 100 | Set-Content apps/docs/package.json
+          fs.appendFileSync('pnpm-workspace.yaml', `\noverrides:\n${overrides.join('\n')}\n`);
+          fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+          NODE
           pnpm install --lockfile=false
 
       - name: Configure GitHub Pages
@@ -97,19 +97,15 @@ jobs:
         run: pnpm build
 
       - name: Build Storybook
-        shell: pwsh
         run: |
-          & .\node_modules\.bin\storybook.cmd build --config-dir apps/docs/.storybook --output-dir storybook-static
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./node_modules/.bin/storybook build --config-dir apps/docs/.storybook --output-dir storybook-static
           node scripts/check-storybook.mjs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Restore release manifests
-        shell: pwsh
         run: |
-          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-docs-package.json') apps/docs/package.json -Force
-          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-workspace.yaml') pnpm-workspace.yaml -Force
-          Copy-Item (Join-Path $env:RUNNER_TEMP 'lds3d-pnpm-lock.yaml') pnpm-lock.yaml -Force
+          cp "$RUNNER_TEMP/lds3d-docs-package.json" apps/docs/package.json
+          cp "$RUNNER_TEMP/lds3d-pnpm-workspace.yaml" pnpm-workspace.yaml
+          cp "$RUNNER_TEMP/lds3d-pnpm-lock.yaml" pnpm-lock.yaml
 
       - name: Validate LDS conformance
         env:

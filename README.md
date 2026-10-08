@@ -17,7 +17,7 @@ wave입니다.
 기존 자동 CI는 아래 현행 경로를 유지한다. 전체 검증을 현재 PC로 fallback하거나 새
 VM/runner를 자동 등록하지 않는다. 상세 규칙은 [AGENTS.md](AGENTS.md#ci릴리스-실행-호스트-필수)를 따른다.
 
-CI는 GitHub-hosted Ubuntu, Storybook build는 Windows/Pages publish는 Ubuntu다. 전용 패키지 발행 workflow/runner는 구성되어 있지 않다. renderer runtime QA는 이 기존 CI 또는 승인된 server04 릴리스 환경에서 실행한다.
+CI와 Storybook build·Pages publish는 GitHub-hosted Ubuntu다. 2026-10-09부터 Linux가 정본 플랫폼이다(LDS 전체 결정). server04는 발행 전용이다. 전용 패키지 발행 workflow/runner는 구성되어 있지 않다. renderer runtime QA는 이 기존 CI 또는 승인된 server04 릴리스 환경에서 실행한다.
 
 ## Foundation Alpha.1 + Visual Alpha V0
 
