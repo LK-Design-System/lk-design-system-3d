@@ -10,6 +10,15 @@ Control Full과 Web Viz의 첫 적용은
 플랫폼 존속 여부를 판단하는 파일럿이 아니라 필수 마이그레이션의 첫 배포
 wave입니다.
 
+## CI·릴리스 실행 위치
+
+다른 PC의 checkout은 실행 호스트 변경 승인이 아니다. 개발은 로컬 미리보기·빠른 검사,
+패키지 릴리스는 **server04의 자격검증된 저장소 전용 격리 VM**으로 구분한다.
+기존 자동 CI는 아래 현행 경로를 유지한다. 전체 검증을 현재 PC로 fallback하거나 새
+VM/runner를 자동 등록하지 않는다. 상세 규칙은 [AGENTS.md](AGENTS.md#ci릴리스-실행-호스트-필수)를 따른다.
+
+CI는 GitHub-hosted Ubuntu, Storybook build는 Windows/Pages publish는 Ubuntu다. 전용 패키지 발행 workflow/runner는 구성되어 있지 않다. renderer runtime QA는 이 기존 CI 또는 승인된 server04 릴리스 환경에서 실행한다.
+
 ## Foundation Alpha.1 + Visual Alpha V0
 
 현재 로컬 후보에는 renderer-neutral `core`, manifest·ownership을 담당하는
@@ -44,6 +53,8 @@ renderer package에는 LDS 의존성을 넣지 않습니다.
 중첩되는 wide viewer는 이 variant로 자신의 border/radius만 제거하고, narrow의
 독립 viewer는 `standalone` 기본값을 유지합니다. 이는 LDS3D의 실제 docs composition에
 적용한 규칙이며, 아직 `lk_web_viz` 제품 migration을 의미하지 않습니다.
+
+다음 전체 검증 목록은 지정된 CI/릴리스 환경에서 실행한다. 개발 PC에서는 변경 범위의 검사와 미리보기만 사용한다.
 
 ```sh
 pnpm install
